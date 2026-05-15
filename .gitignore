@@ -1,0 +1,9 @@
+.DS_Store
+._*
+.idea/
+resources/
+CNAME
+sitemap.xml
+AGENTS.md
+DESIGN_GUIDE.md
+learncs_result_spec_for_codex.md
