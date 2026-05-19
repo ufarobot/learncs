@@ -9,6 +9,7 @@
 - `camps/index.html` — раздел летних интенсивов.
 - `camps/kazan/index.html` — страница лагеря в IT-лицее КФУ.
 - `camps/fethiye/index.html` — страница IT-интенсива в Fethiye.
+- `design-system/index.html` — живой каталог дизайн-блоков и рецептов страниц.
 - `assets/styles.css` — общий стиль.
 - `assets/main.js` — мобильное меню.
 - `assets/logo.svg`, `assets/logo-light.svg`, `assets/favicon.svg` — логотип в стиле LMS и favicon.
@@ -21,6 +22,22 @@
 - `assets/camp-it-lyceum.jpg`, `assets/teacher-danil-nafikov.jpg`, `assets/teacher-ilshat-safiullin.jpg`, `assets/docs/*` — материалы из архива лагеря.
 
 Сборка отсутствует: сайт можно публиковать как обычную статическую папку.
+
+## Дизайн-система
+
+Перед новым лендингом или крупным визуальным изменением смотри:
+
+```text
+http://127.0.0.1:8123/design-system/
+```
+
+Главный контракт описан в `DESIGN_GUIDE.md`: токены, разрешенные блоки, рецепты страниц и порядок изменений.
+
+Проверка дизайн-ограничений:
+
+```bash
+python3 tools/check-design.py
+```
 
 ## Публикация
 
