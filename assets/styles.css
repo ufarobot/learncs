@@ -3726,18 +3726,24 @@ summary::after {
   }
 }
 
-/* Requested learncs brand refinements over the OpenAI-inspired layout. */
+/* Design-system layer: effective tokens and brand refinements. */
 :root {
   --bg: #ffffff;
-  --accent-bg: #fcfcfa;
-  --card-bg: #f7f7f3;
+  --accent-bg: #f7fbff;
+  --card-bg: #f5f9fd;
   --blue: #155d96;
   --blue-dark: #0f426b;
-  --blue-soft: #f0f0ea;
+  --blue-soft: #eaf3fb;
+  --graphite: #1f2933;
+  --graphite-soft: #eef5fa;
+  --muted: #526170;
+  --line: #d7e5ef;
+  --line-soft: #e8f0f7;
   --radius: 16px;
   --radius-lg: 24px;
 }
 
+/* Design-system layer: base layout and brand chrome. */
 body,
 .hero,
 .program-hero,
@@ -3773,6 +3779,7 @@ body {
   grid-template-columns: minmax(0, 1fr) minmax(420px, 0.72fr);
 }
 
+/* Design-system layer: shared components. */
 .button {
   min-height: 56px;
   padding: 15px 24px;
@@ -3883,13 +3890,15 @@ body {
 }
 
 .hero-copy .hero-fact p {
-  color: var(--muted);
+  color: var(--graphite);
   font-size: 14px;
   line-height: 1.42;
 }
 
+/* Design-system page recipe: homepage summary strip. */
 .schedule-section {
   padding: 18px 0 72px;
+  background: var(--accent-bg);
 }
 
 .schedule-shell {
@@ -3907,7 +3916,7 @@ body {
   align-content: start;
   min-width: 0;
   padding: 24px;
-  background: var(--card-bg);
+  background: var(--surface);
   border: 1px solid var(--line-soft);
   border-radius: var(--radius-lg);
   box-shadow: none;
@@ -4027,7 +4036,7 @@ body {
 }
 
 .schedule-card p {
-  color: var(--muted);
+  color: var(--graphite);
   font-size: 14px;
   line-height: 1.36;
 }
