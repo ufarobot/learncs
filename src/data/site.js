@@ -8,6 +8,7 @@ export const site = {
 
 export const nav = [
   { label: 'Курс', href: './' },
+  { label: 'Лагерь в Фетхие', href: 'camps/fethiye/' },
   { label: 'Учебник', href: 'https://book.learncs.ru' }
 ];
 

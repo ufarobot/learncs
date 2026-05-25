@@ -89,7 +89,6 @@ ALLOWED_HEX = {
 HOMEPAGE_RECIPE = (
     "hero-split",
     "split-media",
-    "card-grid",
     "media-stack",
     "card-grid",
     "image-showcase",
@@ -477,8 +476,7 @@ def check_home_content_contract() -> list[str]:
         'template: "card-grid"',
         "Олимпиадная информатика",
         "C++ · Python · Java",
-        "Малая группа не отменяет индивидуальный маршрут",
-        "Преподаватель помогает",
+        "Материалы поддерживают траекторию",
         "3000 ₽ за занятие",
     )
     errors = [f"src/content/pages/home.md: missing required homepage content {item!r}" for item in required if item not in text]

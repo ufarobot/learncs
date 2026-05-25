@@ -8,7 +8,8 @@ const passthrough = [
   '.nojekyll',
   'robots.txt',
   'assets',
-  'apply'
+  'apply',
+  'camps'
 ];
 
 async function exists(path) {
