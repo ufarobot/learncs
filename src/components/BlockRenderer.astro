@@ -1,0 +1,32 @@
+---
+import HeroSplitBlock from './blocks/HeroSplitBlock.astro';
+import SplitMediaBlock from './blocks/SplitMediaBlock.astro';
+import CardGridBlock from './blocks/CardGridBlock.astro';
+import MediaStackBlock from './blocks/MediaStackBlock.astro';
+import ImageShowcaseBlock from './blocks/ImageShowcaseBlock.astro';
+import TwoColumnListBlock from './blocks/TwoColumnListBlock.astro';
+import CenteredSummaryBlock from './blocks/CenteredSummaryBlock.astro';
+import FaqAccordionBlock from './blocks/FaqAccordionBlock.astro';
+import CtaPanelBlock from './blocks/CtaPanelBlock.astro';
+
+const { block } = Astro.props;
+
+const templates = {
+  'hero-split': HeroSplitBlock,
+  'split-media': SplitMediaBlock,
+  'card-grid': CardGridBlock,
+  'media-stack': MediaStackBlock,
+  'image-showcase': ImageShowcaseBlock,
+  'two-column-list': TwoColumnListBlock,
+  'centered-summary': CenteredSummaryBlock,
+  'faq-accordion': FaqAccordionBlock,
+  'cta-panel': CtaPanelBlock,
+};
+
+const Component = templates[block.template];
+
+if (!Component) {
+  throw new Error(`Unknown landing block template: ${block.template}`);
+}
+---
+<Component block={block} />

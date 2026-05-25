@@ -1,0 +1,54 @@
+---
+import SectionIntro from '../SectionIntro.astro';
+
+const { block } = Astro.props;
+const sectionClass = ['section', block.surface === 'muted' && 'section-muted'];
+
+function linkKnownDomains(text) {
+  return text
+    .replace('book.learncs.ru', '<a href="https://book.learncs.ru">book.learncs.ru</a>')
+    .replace('lms.learncs.ru', '<a href="https://lms.learncs.ru">lms.learncs.ru</a>');
+}
+---
+<section class:list={sectionClass} id={block.id} data-template={block.template}>
+  <div class="container media-stack-layout">
+    <div class="media-stack-copy">
+      <SectionIntro eyebrow={block.eyebrow} title={block.title} text={block.text} className="section-intro-compact" />
+      {block.body && (
+        <div class="prose">
+          {block.body.map((paragraph) => <p set:html={linkKnownDomains(paragraph)} />)}
+        </div>
+      )}
+    </div>
+
+    <div class="media-stack">
+      {block.media.map((media) => (
+        <figure>
+          <img src={media.src} alt={media.alt} />
+        </figure>
+      ))}
+    </div>
+
+    {block.cards && (
+      <div class="support-card-grid" aria-label={block.title}>
+        {block.cards.map((card) => (
+          <article class="support-card">
+            <h3>{card.title}</h3>
+            {card.text && <p>{card.text}</p>}
+          </article>
+        ))}
+      </div>
+    )}
+
+    {block.metrics && (
+      <div class="metrics-row" aria-label={block.title}>
+        {block.metrics.map(([value, label]) => (
+          <div>
+            <strong>{value}</strong>
+            <span>{label}</span>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</section>

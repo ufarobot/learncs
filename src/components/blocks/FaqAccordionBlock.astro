@@ -1,0 +1,20 @@
+---
+import SectionIntro from '../SectionIntro.astro';
+
+const { block } = Astro.props;
+const sectionClass = ['section', block.surface === 'muted' && 'section-muted'];
+---
+<section class:list={sectionClass} id={block.id} data-template={block.template}>
+  <div class="container faq-layout">
+    <SectionIntro title={block.title} />
+
+    <div class="faq-list">
+      {block.items.map(([question, answer]) => (
+        <details>
+          <summary>{question}</summary>
+          <p>{answer}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

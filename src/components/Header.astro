@@ -1,0 +1,35 @@
+---
+import { nav, site } from '../data/site.js';
+
+const { basePath = '' } = Astro.props;
+const rootHref = basePath || './';
+const localHref = (href) => {
+  if (href.startsWith('http') || href.startsWith('#')) {
+    return href;
+  }
+  if (href === './') {
+    return rootHref;
+  }
+  return `${basePath}${href}`;
+};
+---
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a class="brand" href={rootHref} aria-label={site.name}>
+      <img class="brand-mark" src={`${basePath}assets/logo-icon-white-on-black.png?v=2`} alt="" />
+      <span class="brand-text">{site.name}</span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span class="visually-hidden">Открыть меню</span>
+    </button>
+
+    <nav class="site-nav" id="site-nav" aria-label="Основная навигация" data-nav>
+      {nav.map((item) => <a href={localHref(item.href)}>{item.label}</a>)}
+      <a class="nav-cta" href={localHref('apply/')}>Оставить заявку</a>
+    </nav>
+  </div>
+</header>

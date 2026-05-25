@@ -1,43 +1,76 @@
 # learncs.ru
 
-Первая статическая версия сайта для GitHub Pages.
+Astro-лендинг learncs.ru. Сейчас главный источник истины — главная страница.
 
 ## Структура
 
-- `index.html` — главная страница.
+- `src/pages/index.astro` — главная страница.
+- `src/content/pages/home.md` — контент главной в формате `blocks[]`.
+- `src/components/BlockRenderer.astro` и `src/components/blocks/` — approved layout-шаблоны для лендингов.
 - `apply/index.html` — страница заявки.
-- `camps/index.html` — раздел летних интенсивов.
-- `camps/kazan/index.html` — страница лагеря в IT-лицее КФУ.
-- `camps/fethiye/index.html` — страница IT-интенсива в Fethiye.
-- `design-system/index.html` — живой каталог дизайн-блоков и рецептов страниц.
+- `BRANDBOOK.md` — брендбук: позиционирование, цветовые роли, контраст, UX и маркетинговая логика.
+- `COMPONENTS.md` — реестр компонентов и разрешенных вариантов, чтобы одинаковые блоки не расходились между лендингами.
 - `assets/styles.css` — общий стиль.
 - `assets/main.js` — мобильное меню.
-- `assets/logo.svg`, `assets/logo-light.svg`, `assets/favicon.svg` — логотип в стиле LMS и favicon.
-- `assets/logo-icon-black-on-white.svg`, `assets/logo-icon-white-on-black.svg` — квадратные SVG-иконки логотипа.
-- `assets/logo-icon-black-on-white.png`, `assets/logo-icon-white-on-black.png` — PNG-экспорты 1024×1024.
-- `assets/logo-mark-black.svg`, `assets/logo-mark-white.svg` — прозрачные монохромные SVG-знаки.
-- `assets/*.svg` — локальные визуальные заглушки.
+- `assets/favicon.svg` — favicon.
+- `assets/logo-icon-white-on-black.png` — текущая иконка в шапке и футере.
 - `assets/og-image.png` — изображение для Open Graph.
-- `assets/teacher-airat.jpg`, `assets/platform-screen.jpg`, `assets/math-materials.jpg` — временные изображения из `resources`.
-- `assets/camp-it-lyceum.jpg`, `assets/teacher-danil-nafikov.jpg`, `assets/teacher-ilshat-safiullin.jpg`, `assets/docs/*` — материалы из архива лагеря.
+- `assets/hero-student-organic.png`, `assets/teacher-airat.jpg`, `assets/platform-screen.jpg`, `assets/math-materials.jpg`, `assets/reviews-learncs.jpg` — изображения главной.
 
-Сборка отсутствует: сайт можно публиковать как обычную статическую папку.
+Черновые страницы лагерей, учеников и подробной программы не входят в текущий рабочий контур. Новый дизайн сначала доводится на главной, затем при необходимости переносится на остальные страницы отдельным решением.
 
-## Дизайн-система
+## Дизайн
 
-Перед новым лендингом или крупным визуальным изменением смотри:
+Главные контракты описаны в `BRANDBOOK.md`, `DESIGN_GUIDE.md` и `COMPONENTS.md`: бренд, цветовые роли, токены, компоненты, разрешенные блоки и порядок изменений.
 
-```text
-http://127.0.0.1:8123/design-system/
-```
-
-Главный контракт описан в `DESIGN_GUIDE.md`: токены, разрешенные блоки, рецепты страниц и порядок изменений.
+Не добавляй новые page-specific визуальные семьи, дубли CSS или исключения без явного запроса. Если запрос ведет к усложнению проекта, сначала предупреди и предложи более простой вариант на базе главной.
 
 Проверка дизайн-ограничений:
 
 ```bash
 python3 tools/check-design.py
 ```
+
+## Astro workflow
+
+Astro — source-of-truth для главной. Данные главной лежат в `src/content/pages/home.md` как список `blocks[]`; каждый блок выбирает `template` из approved layout-шаблонов. В обычной контентной работе нужно менять Markdown/frontmatter, а не CSS.
+
+Локальная разработка после установки зависимостей:
+
+```bash
+npm install
+npm run dev
+```
+
+Astro dev-сервер настроен на тот же адрес: `http://127.0.0.1:8123/`. Если уже запущен `./preview.sh`, его нужно остановить перед `npm run dev`.
+
+Локальная сборка:
+
+```bash
+npm run build
+```
+
+Продакшн-проверка для агента:
+
+```bash
+npm run check:prod
+```
+
+Команда запускает дизайн-чек и сборку, затем проверяет `/`. Используется только `http://127.0.0.1:8123/`: если там уже запущен корректный preview, он остается работать; если порт свободен, команда сама временно поднимет preview на этом порту и остановит его после проверки. Если на `8123` работает некорректный сервер, команда завершается ошибкой вместо запуска дубля на другом порту. Порт `8000` не используется, он остается для `git-cs-book`.
+
+Если нужен временный preview для ручного просмотра агентом:
+
+```bash
+npm run preview:agent
+```
+
+Публикация без GitHub Actions:
+
+```bash
+npm run publish:local
+```
+
+Этот шаг копирует готовые файлы из `dist/` в статическую корневую публикацию. После него нужно проверить `./preview.sh`, затем коммитить результат обычным способом.
 
 ## Публикация
 

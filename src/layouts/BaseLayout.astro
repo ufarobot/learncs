@@ -1,0 +1,61 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site.js';
+
+const {
+  title,
+  description = site.description,
+  canonical = site.url,
+  ogImage = `${site.url}assets/og-image.png`,
+  basePath = '',
+  courseSchema = true
+} = Astro.props;
+
+const assetPath = (path) => `${basePath}${path}`;
+---
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#FFFFFF" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={canonical} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={assetPath('assets/favicon.svg')} type="image/svg+xml" />
+    <link rel="stylesheet" href={assetPath(`assets/styles.css?v=${site.stylesheetVersion}`)} />
+    <script defer src={assetPath(`assets/main.js?v=${site.scriptVersion}`)}></script>
+    {courseSchema && <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Course',
+      name: 'Олимпиадная информатика онлайн для школьников 5-11 классов',
+      description: 'Онлайн-занятия по олимпиадной информатике для школьников 5-11 классов.',
+      provider: {
+        '@type': 'Organization',
+        name: site.name,
+        url: site.url
+      },
+      offers: {
+        '@type': 'Offer',
+        price: '3000',
+        priceCurrency: 'RUB',
+        availability: 'https://schema.org/InStock'
+      }
+    })}></script>}
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">К основному содержанию</a>
+    <Header basePath={basePath} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer basePath={basePath} />
+  </body>
+</html>

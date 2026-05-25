@@ -1,0 +1,15 @@
+---
+const { block } = Astro.props;
+const sectionClass = ['section', block.surface === 'muted' && 'section-muted'];
+---
+<section class:list={sectionClass} id={block.id} data-template={block.template}>
+  <div class="container">
+    <div class="section-head">
+      <h2>{block.title}</h2>
+    </div>
+
+    <figure class:list={['image-showcase-media', block.size === 'large' && 'image-showcase-large']}>
+      <img src={block.media.src} alt={block.media.alt} />
+    </figure>
+  </div>
+</section>

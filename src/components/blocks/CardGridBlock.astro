@@ -1,0 +1,33 @@
+---
+import SectionIntro from '../SectionIntro.astro';
+
+const { block } = Astro.props;
+const sectionClass = ['section', block.surface === 'muted' && 'section-muted'];
+const columns = block.columns || 3;
+---
+<section class:list={sectionClass} id={block.id} data-template={block.template} data-card-style={block.cardStyle || 'plain'}>
+  <div class="container">
+    <SectionIntro eyebrow={block.eyebrow} title={block.title} text={block.text} />
+
+    <div class="card-grid-items" data-columns={columns} data-card-style={block.cardStyle || 'plain'}>
+      {block.cards.map((card, index) => (
+        <article class:list={['content-card', block.wideLast && index === block.cards.length - 1 && 'content-card-wide']}>
+          {card.media && (
+            <figure class="content-card-media">
+              <img src={card.media.src} alt={card.media.alt} />
+            </figure>
+          )}
+          <h3>{card.title}</h3>
+          {card.subtitle && <p class="content-card-subtitle">{card.subtitle}</p>}
+          {card.text && <p>{card.text}</p>}
+          {card.items && (
+            <ul class="plain-list">
+              {card.items.map((item) => <li>{item}</li>)}
+            </ul>
+          )}
+          {card.note && <p class="content-card-note">{card.note}</p>}
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

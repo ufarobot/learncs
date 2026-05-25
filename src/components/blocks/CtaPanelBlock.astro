@@ -1,0 +1,19 @@
+---
+const { block } = Astro.props;
+const sectionClass = ['section', block.surface === 'muted' && 'section-muted'];
+const buttonClasses = {
+  primary: 'button-primary',
+  secondary: 'button-secondary',
+  quiet: 'button-quiet',
+};
+---
+<section class:list={sectionClass} id={block.id} data-template={block.template}>
+  <div class="container cta-panel">
+    <div>
+      {block.eyebrow && <p class="eyebrow">{block.eyebrow}</p>}
+      <h2>{block.title}</h2>
+      {block.text && <p>{block.text}</p>}
+    </div>
+    <a class:list={['button', buttonClasses[block.action.style || 'primary']]} href={block.action.href}>{block.action.label}</a>
+  </div>
+</section>

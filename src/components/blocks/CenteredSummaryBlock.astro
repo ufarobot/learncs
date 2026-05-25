@@ -1,0 +1,13 @@
+---
+const { block } = Astro.props;
+const sectionClass = ['section', block.surface === 'muted' && 'section-muted'];
+---
+<section class:list={sectionClass} id={block.id} data-template={block.template}>
+  <div class="container centered-summary">
+    <h2>{block.title}</h2>
+    <div class="centered-summary-body">
+      {block.lines.map((line) => <p>{line}</p>)}
+    </div>
+    {block.highlight && <p class="centered-summary-highlight"><strong>{block.highlight}</strong></p>}
+  </div>
+</section>

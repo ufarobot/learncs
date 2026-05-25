@@ -1,0 +1,29 @@
+---
+import { footerLinks, site } from '../data/site.js';
+
+const { basePath = '' } = Astro.props;
+const rootHref = basePath || './';
+const localHref = (href) => {
+  if (href.startsWith('http') || href.startsWith('#')) {
+    return href;
+  }
+  if (href === './') {
+    return rootHref;
+  }
+  return `${basePath}${href}`;
+};
+---
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand footer-brand" href={rootHref} aria-label={site.name}>
+        <img class="brand-mark" src={`${basePath}assets/logo-icon-white-on-black.png?v=2`} alt="" />
+        <span class="brand-text">{site.name}</span>
+      </a>
+      <p>{site.description}</p>
+    </div>
+    <nav aria-label="Ссылки">
+      {footerLinks.map((item) => <a href={localHref(item.href)}>{item.label}</a>)}
+    </nav>
+  </div>
+</footer>

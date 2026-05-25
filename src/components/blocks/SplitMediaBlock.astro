@@ -1,0 +1,60 @@
+---
+const { block } = Astro.props;
+const sectionClass = ['section', block.surface === 'muted' && 'section-muted'];
+const headingPlacement = block.headingPlacement || 'side';
+---
+<section class:list={sectionClass} id={block.id} data-template={block.template} data-spacing={block.spacing}>
+  {headingPlacement === 'top' && (
+    <div class="container split-media-head">
+      {block.eyebrow && <p class="eyebrow">{block.eyebrow}</p>}
+      <h2>{block.title}</h2>
+      {block.lead && <p>{block.lead}</p>}
+    </div>
+  )}
+
+  <div class="container split-media-layout">
+    <figure class="split-media-visual">
+      <img src={block.media.src} alt={block.media.alt} />
+      {block.mediaTitle && <figcaption>{block.mediaTitle}</figcaption>}
+      {block.mediaText && <p>{block.mediaText}</p>}
+    </figure>
+
+    <div class:list={['split-media-copy', headingPlacement === 'top' && 'split-media-copy-topless']}>
+      {headingPlacement === 'side' && (
+        <>
+          {block.eyebrow && <p class="eyebrow">{block.eyebrow}</p>}
+          <h2>{block.title}</h2>
+          {block.lead && <p class="split-media-lead">{block.lead}</p>}
+        </>
+      )}
+
+      {block.cards && (
+        <div class="split-media-detail" aria-label={block.detailLabel || block.title}>
+          {block.detailLabel && <p class="split-media-detail-title">{block.detailLabel}</p>}
+
+          <div class="split-media-detail-grid" data-columns={block.detailColumns || 2}>
+            {block.cards.map((card) => (
+              <article class:list={[card.wide && 'split-media-detail-wide']}>
+                <h3>{card.title}</h3>
+                {card.text && <p>{card.text}</p>}
+                {card.items && (
+                  <ul class="plain-list">
+                    {card.items.map((item) => <li>{item}</li>)}
+                  </ul>
+                )}
+              </article>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {block.notes && (
+        <div class="split-media-notes">
+          {block.notes.map((note) => <p>{note}</p>)}
+        </div>
+      )}
+
+      {block.proof && <p class="split-media-proof">{block.proof}</p>}
+    </div>
+  </div>
+</section>

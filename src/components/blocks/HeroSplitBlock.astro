@@ -1,0 +1,47 @@
+---
+const { block } = Astro.props;
+
+const buttonClasses = {
+  primary: 'button-primary',
+  secondary: 'button-secondary',
+  quiet: 'button-quiet',
+};
+---
+<section class="hero" id={block.id} data-template={block.template}>
+  <div class="container hero-shell">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="pretitle">{block.eyebrow}</p>
+        <h1>{block.title}</h1>
+        <p class="lead">{block.lead}</p>
+        {block.languages && <p class="hero-languages">{block.languages}</p>}
+        <div class="button-row">
+          {block.actions.map((action) => (
+            <a class:list={['button', buttonClasses[action.style || 'quiet']]} href={action.href}>{action.label}</a>
+          ))}
+        </div>
+      </div>
+
+      <div class="hero-media">
+        <div class="hero-media-card">
+          <figure class="hero-visual">
+            <img src={block.media.src} alt={block.media.alt} />
+          </figure>
+        </div>
+      </div>
+
+      <div class="hero-facts hero-facts-card" aria-label="Факты о курсе">
+        {block.facts.map(([title, text]) => (
+          <article class="hero-fact">
+            <p class="fact-title">{title}</p>
+            {text
+              .split(/\n\s*\n/)
+              .map((paragraph) => paragraph.trim())
+              .filter(Boolean)
+              .map((paragraph) => <p>{paragraph}</p>)}
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
