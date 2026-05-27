@@ -4,7 +4,7 @@ import SectionIntro from '../SectionIntro.astro';
 const { block } = Astro.props;
 const sectionClass = ['section', block.surface === 'muted' && 'section-muted'];
 ---
-<section class:list={sectionClass} id={block.id} data-template={block.template}>
+<section class:list={sectionClass} id={block.id} data-template={block.template} data-spacing={block.spacing}>
   <div class="container faq-layout">
     <SectionIntro title={block.title} />
 

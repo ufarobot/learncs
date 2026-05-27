@@ -10,10 +10,10 @@ function linkKnownDomains(text) {
     .replace('lms.learncs.ru', '<a href="https://lms.learncs.ru">lms.learncs.ru</a>');
 }
 ---
-<section class:list={sectionClass} id={block.id} data-template={block.template}>
+<section class:list={sectionClass} id={block.id} data-template={block.template} data-spacing={block.spacing}>
   <div class="container media-stack-layout">
     <div class="media-stack-copy">
-      <SectionIntro eyebrow={block.eyebrow} title={block.title} text={block.text} className="section-intro-compact" />
+      <SectionIntro title={block.title} text={block.text} className="section-intro-compact" />
       {block.body && (
         <div class="prose">
           {block.body.map((paragraph) => <p set:html={linkKnownDomains(paragraph)} />)}

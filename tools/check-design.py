@@ -34,6 +34,11 @@ EXPECTED_TOKENS = {
     "--shadow-soft": "0 18px 42px rgba(17, 17, 17, 0.09)",
     "--radius": "16px",
     "--radius-lg": "24px",
+    "--section-y": "92px",
+    "--section-y-mobile": "62px",
+    "--section-connected-y": "42px",
+    "--section-connected-y-mobile": "36px",
+    "--media-caption-max": "1180px",
 }
 
 ALLOWED_HEX = {
@@ -74,9 +79,11 @@ ALLOWED_HEX = {
     "#f0f0ea",
     "#f0e8dc",
     "#f2ece3",
+    "#f2f7f3",
     "#f4eee5",
     "#f8f2ea",
     "#f5f9fd",
+    "#f6f9f6",
     "#f7f7f2",
     "#f7f7f3",
     "#f7fbff",
@@ -89,11 +96,11 @@ ALLOWED_HEX = {
 HOMEPAGE_RECIPE = (
     "hero-split",
     "split-media",
-    "media-stack",
+    "image-showcase",
     "card-grid",
     "image-showcase",
     "two-column-list",
-    "centered-summary",
+    "card-grid",
     "faq-accordion",
     "cta-panel",
 )
@@ -260,7 +267,8 @@ def check_brandbook() -> list[str]:
         "Contrast",
         "Usage Rules",
         "Marketing Fit",
-        "Subheadings, labels, meta, captions, and secondary text",
+        "Subheadings, meta, captions, and secondary text",
+        ".text-accent-practical",
         "Do not treat cream as a generic soft background",
         "Every user-requested or agent-proposed visual change",
     )
@@ -279,9 +287,11 @@ def check_component_registry() -> list[str]:
         "`split-media`",
         "`card-grid`",
         "Images must not depend on `width: 100%` alone",
-        "Text Labels",
+        "Hero Context",
         "`pretitle`",
-        "`eyebrow`",
+        "`connected`",
+        "`captionPlacement`",
+        ".text-accent-practical",
         "No visual variant is implicit",
     )
     return [f"COMPONENTS.md: missing {item!r} rule" for item in required if item not in text]
@@ -304,18 +314,7 @@ def check_pretitle_alignment(lines: list[str]) -> list[str]:
         if declarations.get(name) != value:
             errors.append(
                 f"{CSS_PATH.relative_to(ROOT)}: .pretitle must keep {name}: {value}; "
-                "hero pretitle must not look like a technical badge"
-            )
-
-    forbidden_selectors = (
-        ".home-landing .hero .eyebrow",
-        ".apply-hero .eyebrow",
-    )
-    for selector in forbidden_selectors:
-        if last_selector_declarations(css, selector):
-            errors.append(
-                f"{CSS_PATH.relative_to(ROOT)}: {selector} reintroduces page-specific hero label styling; "
-                "use the shared .pretitle component"
+                "hero pretitle must not look like a technical tag"
             )
 
     source_contracts = ((ROOT / "src" / "components" / "blocks" / "HeroSplitBlock.astro", 'class="pretitle"'),)
@@ -328,37 +327,27 @@ def check_pretitle_alignment(lines: list[str]) -> list[str]:
     return errors
 
 
-def check_eyebrow_alignment(lines: list[str]) -> list[str]:
+def check_no_section_label_component(lines: list[str]) -> list[str]:
     errors: list[str] = []
     css = "\n".join(lines)
-    expected = {
-        "display": "inline-flex",
-        "color": "var(--accent-dark)",
-        "background": "var(--accent-soft)",
-        "border": "1px solid var(--accent-line)",
-        "border-radius": "999px",
-        "padding": "5px 10px",
-    }
-    declarations = last_selector_declarations(css, ".eyebrow")
-    if not declarations:
-        errors.append(f"{CSS_PATH.relative_to(ROOT)}: missing shared .eyebrow component")
-    for name, value in expected.items():
-        if declarations.get(name) != value:
-            errors.append(f"{CSS_PATH.relative_to(ROOT)}: .eyebrow must keep {name}: {value}")
+    if last_selector_declarations(css, ".eyebrow"):
+        errors.append(f"{CSS_PATH.relative_to(ROOT)}: remove .eyebrow; section label pills are no longer part of the landing system")
 
-    forbidden_selectors = (
-        ".section-head p,",
-        ".section-head p {",
-        ".home-landing .section-head p {",
-        ".placeholder-panel p {",
-        ".system-example-card p,",
+    source_paths = (
+        ROOT / "src" / "content.config.ts",
+        ROOT / "src" / "content" / "pages" / "home.md",
+        ROOT / "src" / "components" / "SectionIntro.astro",
+        ROOT / "src" / "components" / "blocks" / "CardGridBlock.astro",
+        ROOT / "src" / "components" / "blocks" / "CtaPanelBlock.astro",
+        ROOT / "src" / "components" / "blocks" / "MediaStackBlock.astro",
+        ROOT / "src" / "components" / "blocks" / "SplitMediaBlock.astro",
+        ROOT / "apply" / "index.html",
+        ROOT / "camps" / "fethiye" / "index.html",
+        *collect_html_paths(),
     )
-    for selector in forbidden_selectors:
-        if selector in css:
-            errors.append(
-                f"{CSS_PATH.relative_to(ROOT)}: broad selector {selector!r} can override component labels; "
-                "exclude .eyebrow/.pretitle explicitly"
-            )
+    for path in source_paths:
+        if path.exists() and "eyebrow" in path.read_text(encoding="utf-8"):
+            errors.append(f"{path.relative_to(ROOT)}: remove legacy eyebrow section labels")
     return errors
 
 
@@ -445,6 +434,7 @@ def check_media_max_widths(lines: list[str]) -> list[str]:
         ".media-stack figure + figure img": "min(100%, var(--media-stack-secondary-max))",
         ".content-card-media img": "min(100%, var(--media-card-max))",
         ".image-showcase-large img": "min(100%, var(--media-showcase-max))",
+        ".image-showcase-wide img": "min(100%, var(--container))",
     }
     for selector, max_width in expected.items():
         declarations = last_selector_declarations(css, selector)
@@ -464,6 +454,86 @@ def check_media_max_widths(lines: list[str]) -> list[str]:
     return errors
 
 
+def check_caption_media_contract(lines: list[str]) -> list[str]:
+    errors: list[str] = []
+    css = "\n".join(lines)
+    required = (
+        '--media-caption-max: 1180px;',
+        '.card-grid-items[data-card-style="media"][data-columns="1"][data-caption-placement="below-media"] .content-card-media img',
+        'max-width: min(90%, var(--media-caption-max));',
+        'max-width: min(100%, var(--media-caption-max));',
+    )
+    for item in required:
+        if item not in css:
+            errors.append(f"{CSS_PATH.relative_to(ROOT)}: missing caption media contract {item!r}")
+    return errors
+
+
+def check_metrics_contract(lines: list[str]) -> list[str]:
+    errors: list[str] = []
+    css = "\n".join(lines)
+    card_declarations = last_selector_declarations(css, ".metrics-row div")
+    strong_declarations = last_selector_declarations(css, ".metrics-row strong")
+    span_declarations = last_selector_declarations(css, ".metrics-row span")
+
+    expected_card = {
+        "background": "var(--surface)",
+        "border": "1px solid rgba(17, 17, 17, 0.06)",
+        "box-shadow": "var(--shadow-soft)",
+    }
+    for name, value in expected_card.items():
+        if card_declarations.get(name) != value:
+            errors.append(
+                f"{CSS_PATH.relative_to(ROOT)}: .metrics-row div must keep {name}: {value}; "
+                "platform metrics should match factual white cards, not cream accent cards"
+            )
+
+    if strong_declarations.get("color") != "var(--ink)":
+        errors.append(f"{CSS_PATH.relative_to(ROOT)}: .metrics-row strong must use var(--ink)")
+    if span_declarations.get("color") != "var(--graphite)":
+        errors.append(
+            f"{CSS_PATH.relative_to(ROOT)}: .metrics-row span must use var(--graphite); "
+            "brown text on warm surfaces is reserved for short practical accents only"
+        )
+
+    return errors
+
+
+def check_practical_accent_contract(lines: list[str]) -> list[str]:
+    errors: list[str] = []
+    css = "\n".join(lines)
+    declarations = last_selector_declarations(css, ".text-accent-practical")
+    expected = {
+        "color": "var(--accent-strong)",
+        "font-weight": "500",
+        "line-height": "1.45",
+    }
+
+    if not declarations:
+        errors.append(f"{CSS_PATH.relative_to(ROOT)}: missing .text-accent-practical role")
+    for name, value in expected.items():
+        if declarations.get(name) != value:
+            errors.append(f"{CSS_PATH.relative_to(ROOT)}: .text-accent-practical must keep {name}: {value}")
+
+    forbidden_selectors = (
+        ".hero-fact:last-child p:last-child",
+        ".hero-fact:last-child",
+        ".hero-fact p {",
+    )
+    for selector in forbidden_selectors:
+        if selector in css:
+            errors.append(
+                f"{CSS_PATH.relative_to(ROOT)}: practical text accent must not depend on positional selector {selector!r}"
+            )
+
+    if HOME_CONTENT_PATH.exists():
+        text = HOME_CONTENT_PATH.read_text(encoding="utf-8")
+        if "emphasis:" not in text:
+            errors.append("src/content/pages/home.md: practical text accents should use the explicit emphasis field")
+
+    return errors
+
+
 def check_home_content_contract() -> list[str]:
     if not HOME_CONTENT_PATH.exists():
         return ["src/content/pages/home.md: missing editable homepage content source"]
@@ -476,7 +546,9 @@ def check_home_content_contract() -> list[str]:
         'template: "card-grid"',
         "Олимпиадная информатика",
         "C++ · Python · Java",
-        "Материалы поддерживают траекторию",
+        "Своя платформа",
+        "Открытый учебник-справочник",
+        'spacing: "connected"',
         "3000 ₽ за занятие",
     )
     errors = [f"src/content/pages/home.md: missing required homepage content {item!r}" for item in required if item not in text]
@@ -550,12 +622,15 @@ def main() -> int:
     errors.extend(check_brandbook())
     errors.extend(check_component_registry())
     errors.extend(check_pretitle_alignment(lines))
-    errors.extend(check_eyebrow_alignment(lines))
+    errors.extend(check_no_section_label_component(lines))
     errors.extend(check_home_content_contract())
     errors.extend(check_homepage_recipe())
     errors.extend(check_layout_template_contract())
     errors.extend(check_home_hero_media_contract(lines))
     errors.extend(check_media_max_widths(lines))
+    errors.extend(check_caption_media_contract(lines))
+    errors.extend(check_metrics_contract(lines))
+    errors.extend(check_practical_accent_contract(lines))
     errors.extend(check_source_assets())
 
     if errors:

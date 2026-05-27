@@ -20,7 +20,7 @@ Approved templates:
 - `split-media` — media on one side, copy on the other, optional detail cards and proof line.
 - `card-grid` — repeated cards with text or lists.
 - `media-stack` — copy plus one or more images/screenshots, optional support cards and metrics.
-- `image-showcase` — heading plus one large image or screenshot.
+- `image-showcase` — heading, optional text, plus one large centered image or screenshot.
 - `two-column-list` — two or more list panels in a responsive grid.
 - `centered-summary` — compact centered statement, price, terms, or key condition.
 - `faq-accordion` — question and answer list.
@@ -29,14 +29,19 @@ Approved templates:
 Allowed template controls:
 
 - `surface`: `white` or `muted`.
-- `columns`: `2`, `3`, or `4` where the template supports grids.
-- `cardStyle`: `plain` or `module`.
+- `columns`: `1`, `2`, `3`, or `4` where the template supports grids; `cardStyle: media` with `columns: 1` renders repeated media rows.
+- `cardStyle`: `plain`, `module`, or `media`; use `module` for compact scan cards with one key fact, and `media` for image-led cards where the image is part of the content argument.
+- `captionPlacement`: caption layout for image-led cards where the text is tied to the screenshot/photo, not a separate text column.
+- `captionPlacement: below-media` places title and text together under the image.
+- `captionPlacement: title-above-media` places the card title above a large image and keeps a muted caption below it; use for detailed screenshots that need most of the container width.
 - `wideLast`: boolean for grid layouts that need the final card to span the row.
-- `spacing`: `tight-top` for sections that should visually continue the previous block without default section spacing.
+- `spacing`: `connected` for neighboring sections that form one narrative group and need the same compact distance between blocks.
+- `size`: `normal`, `large`, or `wide` for `image-showcase`; use `wide` only for detailed screenshots that need the full container width.
+- `align: center` for `image-showcase` when the section is primarily a centered visual proof or gallery.
 
 New templates are allowed only for a new layout composition. New subject matter should use an existing template.
 
-## Text Labels
+## Hero Context
 
 ### `pretitle`
 
@@ -57,32 +62,8 @@ Use in:
 
 Do not use:
 
-- for section labels;
-- as a badge;
+- as a filled chip;
 - with beige fill or border.
-
-### `eyebrow`
-
-Use for section labels inside content sections.
-
-Default:
-
-- small pill/chip;
-- `color: var(--accent-dark)`
-- `background: var(--accent-soft)`
-- `border: 1px solid var(--accent-line)`
-
-Use in:
-
-- section intros;
-- compact category labels;
-- internal documentation section headings.
-
-Do not use:
-
-- in hero pretitle;
-- for clickable states.
-- for neutral meta or secondary copy; use `--muted` text without a badge instead.
 
 ## Actions
 
@@ -117,6 +98,7 @@ Approved card roles:
 
 - summary card;
 - content card;
+- module card;
 - support card;
 - payment card;
 - FAQ item.
@@ -138,7 +120,7 @@ Default:
 - `box-shadow: var(--shadow-soft)`;
 - no image;
 - headings use `--ink`, body text uses `--muted`.
-- one short practical condition can use `--accent-strong` when it must read as emphasis, not as a link.
+- one short practical condition can use the shared `.text-accent-practical` role when it must read as emphasis, not as a link.
 
 New card variants must define:
 
@@ -149,6 +131,18 @@ New card variants must define:
 - shadow behavior;
 - image behavior;
 - contrast requirements.
+
+### `module-card`
+
+Use for compact factual cards in a `card-grid` where each card carries one practical answer: schedule, format, price, curriculum module, or similar.
+
+Default:
+
+- white surface;
+- subtle neutral border;
+- `--shadow-soft` for separation on white backgrounds;
+- optional `subtitle` can carry one key fact such as duration or price;
+- optional `.text-accent-practical` can emphasize a short practical condition.
 
 ## Variants
 

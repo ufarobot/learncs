@@ -2,7 +2,7 @@
 const { block } = Astro.props;
 const sectionClass = ['section', block.surface === 'muted' && 'section-muted'];
 ---
-<section class:list={sectionClass} id={block.id} data-template={block.template}>
+<section class:list={sectionClass} id={block.id} data-template={block.template} data-spacing={block.spacing}>
   <div class="container two-column-list-layout">
     {block.columns.map((column) => (
       <div class:list={['list-panel', column.tone === 'muted' && 'list-panel-muted']}>

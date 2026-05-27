@@ -6,12 +6,20 @@ const buttonClasses = {
   secondary: 'button-secondary',
   quiet: 'button-quiet',
 };
+
+const normalizeFact = (fact) => {
+  if (Array.isArray(fact)) {
+    return { title: fact[0], text: fact[1] };
+  }
+
+  return fact;
+};
 ---
 <section class="hero" id={block.id} data-template={block.template}>
   <div class="container hero-shell">
     <div class="hero-grid">
       <div class="hero-copy">
-        <p class="pretitle">{block.eyebrow}</p>
+        <p class="pretitle">{block.pretitle}</p>
         <h1>{block.title}</h1>
         <p class="lead">{block.lead}</p>
         {block.languages && <p class="hero-languages">{block.languages}</p>}
@@ -31,16 +39,21 @@ const buttonClasses = {
       </div>
 
       <div class="hero-facts hero-facts-card" aria-label="Факты о курсе">
-        {block.facts.map(([title, text]) => (
+        {block.facts.map((fact) => {
+          const item = normalizeFact(fact);
+
+          return (
           <article class="hero-fact">
-            <p class="fact-title">{title}</p>
-            {text
+            <p class="fact-title">{item.title}</p>
+            {item.text
               .split(/\n\s*\n/)
               .map((paragraph) => paragraph.trim())
               .filter(Boolean)
               .map((paragraph) => <p>{paragraph}</p>)}
+            {item.emphasis && <p class="text-accent-practical">{item.emphasis}</p>}
           </article>
-        ))}
+          );
+        })}
       </div>
     </div>
   </div>

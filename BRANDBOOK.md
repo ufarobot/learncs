@@ -35,12 +35,12 @@ Color is assigned by role, not by taste. A color value can be changed only if it
 | Primary action hover | `--blue-dark` | `#0f426b` | CTA hover/focus and high-emphasis active states. |
 | Main text | `--ink` | `#111111` | Headings, hero facts, card headings, prices, key claims. |
 | Body text | `--graphite` | `#1f2933` | Paragraph text and main descriptive copy. |
-| Secondary text | `--muted` | `#526170` | Subheadings, labels, meta, captions, and secondary text. |
+| Secondary text | `--muted` | `#526170` | Subheadings, meta, captions, and secondary text. |
 | Hero pretitle | `--pretitle` | `#526071` | Quiet pretitle above the hero headline. No pill by default. |
-| Soft accent fill | `--accent-soft` | `#f8f2ea` | Small badges and compact accent chips only. |
-| Accent text | `--accent-dark` | `#6f604d` | Text inside beige badges or secondary facts on cream surfaces. |
+| Soft accent fill | `--accent-soft` | `#f8f2ea` | Compact accent chips only, not section headings. |
+| Accent text | `--accent-dark` | `#6f604d` | Text inside secondary facts on cream surfaces. |
 | Strong warm accent | `--accent-strong` | `#806044` | Short non-clickable emphasis lines for practical conditions inside cards. |
-| Accent line | `--accent-line` | `#eee2d0` | Subtle beige separators and badge borders. |
+| Accent line | `--accent-line` | `#eee2d0` | Subtle beige separators and compact chip borders. |
 | Neutral line | `--line` | `#e8dccb` | Low-emphasis separators where layout needs structure. |
 | Soft line | `--line-soft` | `#f0e8dc` | The lightest section and card separators. |
 
@@ -85,21 +85,22 @@ Black and graphite:
 
 Muted text:
 
-- Use `--muted` for subheadings, labels, meta, captions, helper text, and secondary copy.
+- Use `--muted` for subheadings, meta, captions, helper text, and secondary copy.
 - Reach for `--muted` before using brown/beige for neutral text.
 - Do not use `--muted` for H1/H2/H3, price numbers, or primary CTAs.
 
 Cream and beige:
 
-- Use for small badges, thin separators, selected warm section bands, and calm supporting areas.
+- Use for thin separators, selected warm section bands, and calm supporting areas.
 - Use sparingly in text; it should support hierarchy, not become the brand's main voice.
 - Use `--accent-strong` for one-line practical conditions inside cards, such as payment terms; do not use it for links, headings, CTAs, or long paragraphs.
+- Implement this role as `.text-accent-practical` or the matching content field for practical emphasis; do not target a specific card position or a specific phrase.
 - Do not treat cream as a generic soft background for every block.
 - Avoid a "craft" or "retro" feeling by keeping the main type black and the action color blue.
 
 Hero:
 
-- Hero pretitle is quiet text in `--pretitle`; no border and no filled technical label by default.
+- Hero pretitle is quiet text in `--pretitle`; no border and no filled technical tag by default.
 - Programming languages in the hero use `--ink`: they are a content signal, not a functional action.
 - Student image stays as a transparent illustration/media object, not a cropped rectangular photo card.
 
@@ -128,7 +129,7 @@ Conversion strategy:
 
 - Keep the primary CTA blue and visually isolated from decorative accents.
 - Use warm backgrounds to make long-form information less tiring.
-- Keep badges and meta quiet so the headline and CTA remain the first read.
+- Keep meta quiet so the headline and CTA remain the first read.
 
 ## Do Not
 

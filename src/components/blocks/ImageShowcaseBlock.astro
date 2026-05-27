@@ -1,15 +1,28 @@
 ---
+import SectionIntro from '../SectionIntro.astro';
+
 const { block } = Astro.props;
 const sectionClass = ['section', block.surface === 'muted' && 'section-muted'];
+const sizeClass = block.size === 'wide' ? 'image-showcase-wide' : block.size === 'large' && 'image-showcase-large';
+const introClass = block.align === 'center' && 'section-intro-center';
 ---
-<section class:list={sectionClass} id={block.id} data-template={block.template}>
+<section class:list={sectionClass} id={block.id} data-template={block.template} data-spacing={block.spacing}>
   <div class="container">
-    <div class="section-head">
-      <h2>{block.title}</h2>
-    </div>
+    <SectionIntro title={block.title} text={block.text} className={introClass} />
 
-    <figure class:list={['image-showcase-media', block.size === 'large' && 'image-showcase-large']}>
+    <figure class:list={['image-showcase-media', sizeClass]}>
       <img src={block.media.src} alt={block.media.alt} />
     </figure>
+
+    {block.metrics && (
+      <div class="metrics-row" aria-label={block.title}>
+        {block.metrics.map(([value, label]) => (
+          <div>
+            <strong>{value}</strong>
+            <span>{label}</span>
+          </div>
+        ))}
+      </div>
+    )}
   </div>
 </section>

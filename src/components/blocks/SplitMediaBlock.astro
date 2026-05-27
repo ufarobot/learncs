@@ -6,7 +6,6 @@ const headingPlacement = block.headingPlacement || 'side';
 <section class:list={sectionClass} id={block.id} data-template={block.template} data-spacing={block.spacing}>
   {headingPlacement === 'top' && (
     <div class="container split-media-head">
-      {block.eyebrow && <p class="eyebrow">{block.eyebrow}</p>}
       <h2>{block.title}</h2>
       {block.lead && <p>{block.lead}</p>}
     </div>
@@ -22,7 +21,6 @@ const headingPlacement = block.headingPlacement || 'side';
     <div class:list={['split-media-copy', headingPlacement === 'top' && 'split-media-copy-topless']}>
       {headingPlacement === 'side' && (
         <>
-          {block.eyebrow && <p class="eyebrow">{block.eyebrow}</p>}
           <h2>{block.title}</h2>
           {block.lead && <p class="split-media-lead">{block.lead}</p>}
         </>
@@ -32,7 +30,7 @@ const headingPlacement = block.headingPlacement || 'side';
         <div class="split-media-detail" aria-label={block.detailLabel || block.title}>
           {block.detailLabel && <p class="split-media-detail-title">{block.detailLabel}</p>}
 
-          <div class="split-media-detail-grid" data-columns={block.detailColumns || 2}>
+          <div class="split-media-detail-grid" data-columns={block.detailColumns || 2} data-card-tone={block.detailCardTone}>
             {block.cards.map((card) => (
               <article class:list={[card.wide && 'split-media-detail-wide']}>
                 <h3>{card.title}</h3>

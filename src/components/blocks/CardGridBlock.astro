@@ -4,30 +4,66 @@ import SectionIntro from '../SectionIntro.astro';
 const { block } = Astro.props;
 const sectionClass = ['section', block.surface === 'muted' && 'section-muted'];
 const columns = block.columns || 3;
+const buttonClasses = {
+  primary: 'button-primary',
+  secondary: 'button-secondary',
+  quiet: 'button-quiet',
+};
+const captionPlacements = ['below-media', 'title-above-media'];
 ---
-<section class:list={sectionClass} id={block.id} data-template={block.template} data-card-style={block.cardStyle || 'plain'}>
+<section class:list={sectionClass} id={block.id} data-template={block.template} data-card-style={block.cardStyle || 'plain'} data-spacing={block.spacing}>
   <div class="container">
-    <SectionIntro eyebrow={block.eyebrow} title={block.title} text={block.text} />
+    <SectionIntro title={block.title} text={block.text} />
+    {block.action && (
+      <div class="section-action">
+        <a class:list={['button', buttonClasses[block.action.style || 'secondary']]} href={block.action.href}>{block.action.label}</a>
+      </div>
+    )}
 
-    <div class="card-grid-items" data-columns={columns} data-card-style={block.cardStyle || 'plain'}>
+    <div
+      class="card-grid-items"
+      data-columns={columns}
+      data-card-style={block.cardStyle || 'plain'}
+      data-caption-placement={block.captionPlacement}
+    >
       {block.cards.map((card, index) => (
         <article class:list={['content-card', block.wideLast && index === block.cards.length - 1 && 'content-card-wide']}>
+          {block.captionPlacement === 'title-above-media' && <h3>{card.title}</h3>}
           {card.media && (
             <figure class="content-card-media">
               <img src={card.media.src} alt={card.media.alt} />
+              {captionPlacements.includes(block.captionPlacement) && (
+                <figcaption>
+                  {block.captionPlacement === 'below-media' && <strong>{card.title}:</strong>}
+                  {card.text && <span>{card.text}</span>}
+                  {card.action && <a class="content-card-link" href={card.action.href}>{card.action.label}</a>}
+                </figcaption>
+              )}
             </figure>
           )}
-          <h3>{card.title}</h3>
-          {card.subtitle && <p class="content-card-subtitle">{card.subtitle}</p>}
-          {card.text && <p>{card.text}</p>}
-          {card.items && (
-            <ul class="plain-list">
-              {card.items.map((item) => <li>{item}</li>)}
-            </ul>
+          {!captionPlacements.includes(block.captionPlacement) && (
+            <>
+              <h3>{card.title}</h3>
+              {card.subtitle && <p class="content-card-subtitle">{card.subtitle}</p>}
+              {card.text && <p>{card.text}</p>}
+              {card.items && (
+                <ul class="plain-list">
+                  {card.items.map((item) => <li>{item}</li>)}
+                </ul>
+              )}
+              {card.note && <p class="content-card-note">{card.note}</p>}
+              {card.emphasis && <p class="text-accent-practical">{card.emphasis}</p>}
+              {card.action && <a class="content-card-link" href={card.action.href}>{card.action.label}</a>}
+            </>
           )}
-          {card.note && <p class="content-card-note">{card.note}</p>}
         </article>
       ))}
     </div>
+
+    {block.notes && (
+      <div class="section-notes">
+        {block.notes.map((note) => <p>{note}</p>)}
+      </div>
+    )}
   </div>
 </section>
