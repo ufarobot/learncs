@@ -2,7 +2,7 @@ export const site = {
   name: 'learncs.ru',
   url: 'https://ufarobot.github.io/learncs/',
   description: 'Олимпиадная информатика для школьников 5-11 классов.',
-  stylesheetVersion: '20260527-schedule-cards',
+  stylesheetVersion: '20260529-cta-panel',
   scriptVersion: '20260513-3'
 };
 

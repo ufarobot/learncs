@@ -15,18 +15,18 @@ HTML_GLOBS = ("*.html", "*/*.html", "*/*/*.html")
 
 EXPECTED_TOKENS = {
     "--bg": "#ffffff",
-    "--accent-bg": "#fcfaf6",
-    "--card-bg": "#f8f2ea",
+    "--accent-bg": "#f2f7f3",
+    "--card-bg": "#f2f7f3",
     "--blue": "#155d96",
     "--blue-dark": "#0f426b",
-    "--blue-soft": "#fbf8f1",
+    "--blue-soft": "#f2f7f3",
     "--accent": "#c5ae8c",
     "--accent-dark": "#6f604d",
     "--accent-strong": "#806044",
-    "--accent-soft": "#f8f2ea",
+    "--accent-soft": "#f2f7f3",
     "--accent-line": "#eee2d0",
     "--graphite": "#1f2933",
-    "--graphite-soft": "#f2ece3",
+    "--graphite-soft": "#f2f7f3",
     "--muted": "#526170",
     "--pretitle": "#526071",
     "--line": "#e8dccb",
@@ -96,12 +96,14 @@ ALLOWED_HEX = {
 HOMEPAGE_RECIPE = (
     "hero-split",
     "split-media",
+    "split-media",
     "image-showcase",
     "card-grid",
-    "image-showcase",
-    "two-column-list",
+    "split-media",
     "card-grid",
     "faq-accordion",
+    "image-showcase",
+    "logo-grid",
     "cta-panel",
 )
 
@@ -113,6 +115,7 @@ APPROVED_TEMPLATES = {
     "image-showcase",
     "two-column-list",
     "centered-summary",
+    "logo-grid",
     "faq-accordion",
     "cta-panel",
 }
@@ -133,11 +136,11 @@ CONTRAST_PAIRS = (
     ("hero pretitle on white", "--pretitle", "--bg", 4.5),
     ("blue links on white", "--blue", "--bg", 4.5),
     ("white text on primary CTA", "--bg", "--blue", 4.5),
-    ("accent meta on cream", "--accent-dark", "--accent-soft", 4.5),
+    ("accent meta on soft green", "--accent-dark", "--accent-soft", 4.5),
     ("strong accent on white", "--accent-strong", "--bg", 4.5),
-    ("strong accent on warm card", "--accent-strong", "--card-bg", 4.5),
+    ("strong accent on soft card", "--accent-strong", "--card-bg", 4.5),
     ("muted text on card", "--muted", "--card-bg", 4.5),
-    ("ink on warm section", "--ink", "--accent-bg", 4.5),
+    ("ink on soft section", "--ink", "--accent-bg", 4.5),
 )
 
 FORBIDDEN_PATTERNS = (
@@ -156,7 +159,14 @@ def collect_html_paths() -> list[Path]:
     paths: list[Path] = []
     for pattern in HTML_GLOBS:
         paths.extend(ROOT.glob(pattern))
-    return sorted(set(paths))
+    ignored_parts = {"dist", "node_modules", ".astro"}
+    return sorted(
+        {
+            path
+            for path in paths
+            if not any(part in ignored_parts for part in path.relative_to(ROOT).parts)
+        }
+    )
 
 
 def last_css_tokens(lines: list[str]) -> dict[str, str]:
@@ -269,10 +279,27 @@ def check_brandbook() -> list[str]:
         "Marketing Fit",
         "Subheadings, meta, captions, and secondary text",
         ".text-accent-practical",
-        "Do not treat cream as a generic soft background",
-        "Every user-requested or agent-proposed visual change",
+        "Do not treat soft green as a generic soft background",
+        "Experiment mode",
+        "Production mode",
     )
     return [f"BRANDBOOK.md: missing {item!r} section" for item in required if item not in text]
+
+
+def check_design_guide() -> list[str]:
+    page = ROOT / "DESIGN_GUIDE.md"
+    if not page.exists():
+        return ["DESIGN_GUIDE.md: missing design guide"]
+    text = page.read_text(encoding="utf-8")
+    required = (
+        "Architecture Contract",
+        "Block Vocabulary",
+        "Page Recipes",
+        "Experiment mode",
+        "Production mode",
+        "`npm run check:prod`",
+    )
+    return [f"DESIGN_GUIDE.md: missing {item!r} rule" for item in required if item not in text]
 
 
 def check_component_registry() -> list[str]:
@@ -286,6 +313,7 @@ def check_component_registry() -> list[str]:
         "`hero-split`",
         "`split-media`",
         "`card-grid`",
+        "`logo-grid`",
         "Images must not depend on `width: 100%` alone",
         "Hero Context",
         "`pretitle`",
@@ -485,7 +513,7 @@ def check_metrics_contract(lines: list[str]) -> list[str]:
         if card_declarations.get(name) != value:
             errors.append(
                 f"{CSS_PATH.relative_to(ROOT)}: .metrics-row div must keep {name}: {value}; "
-                "platform metrics should match factual white cards, not cream accent cards"
+                "platform metrics should match factual white cards, not accent-tinted cards"
             )
 
     if strong_declarations.get("color") != "var(--ink)":
@@ -548,6 +576,8 @@ def check_home_content_contract() -> list[str]:
         "C++ · Python · Java",
         "Своя платформа",
         "Открытый учебник-справочник",
+        "Для кого",
+        "Как обучаем",
         'spacing: "connected"',
         "3000 ₽ за занятие",
     )
@@ -620,6 +650,7 @@ def main() -> int:
     errors.extend(check_box_shadows(lines))
     errors.extend(check_hardcoded_hex(paths))
     errors.extend(check_brandbook())
+    errors.extend(check_design_guide())
     errors.extend(check_component_registry())
     errors.extend(check_pretitle_alignment(lines))
     errors.extend(check_no_section_label_component(lines))

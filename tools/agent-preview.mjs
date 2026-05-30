@@ -126,7 +126,17 @@ async function waitForPreview(child, baseUrl) {
 
 async function checkRoute(baseUrl, route) {
   const url = new URL(route, baseUrl);
-  const response = await fetch(url, { method: 'HEAD' });
+  let response;
+  try {
+    response = await fetch(url, { method: 'HEAD' });
+  } catch (error) {
+    const detail = error.cause?.code || error.message;
+    throw new Error(
+      `${url.href} is not reachable from this check process (${detail}). ` +
+        `Port ${url.port} is already occupied, so no fallback preview was started. ` +
+        'Stop the existing server on that port and rerun the check, or verify the page manually in the browser.',
+    );
+  }
   if (!response.ok) {
     throw new Error(`${url.pathname} returned ${response.status}`);
   }

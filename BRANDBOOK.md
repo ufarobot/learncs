@@ -29,16 +29,16 @@ Color is assigned by role, not by taste. A color value can be changed only if it
 | Role | Token | Value | Use |
 | --- | --- | --- | --- |
 | Page background | `--bg` | `#ffffff` | Main page canvas. |
-| Warm section | `--accent-bg` | `#fcfaf6` | Selected warm section bands and final CTA area, not the default section fill. |
-| Warm card | `--card-bg` | `#f8f2ea` | Cards and soft summary blocks when a surface needs warmth. |
+| Soft section | `--accent-bg` | `#f2f7f3` | Selected soft section bands and final CTA area, not the default section fill. |
+| Soft card | `--card-bg` | `#f2f7f3` | Cards and soft summary blocks when a surface needs a quiet accent. |
 | Primary action | `--blue` | `#155d96` | CTA buttons, functional links, and active UI states. |
 | Primary action hover | `--blue-dark` | `#0f426b` | CTA hover/focus and high-emphasis active states. |
 | Main text | `--ink` | `#111111` | Headings, hero facts, card headings, prices, key claims. |
 | Body text | `--graphite` | `#1f2933` | Paragraph text and main descriptive copy. |
 | Secondary text | `--muted` | `#526170` | Subheadings, meta, captions, and secondary text. |
 | Hero pretitle | `--pretitle` | `#526071` | Quiet pretitle above the hero headline. No pill by default. |
-| Soft accent fill | `--accent-soft` | `#f8f2ea` | Compact accent chips only, not section headings. |
-| Accent text | `--accent-dark` | `#6f604d` | Text inside secondary facts on cream surfaces. |
+| Soft accent fill | `--accent-soft` | `#f2f7f3` | Compact accent chips and secondary hover states only, not section headings. |
+| Accent text | `--accent-dark` | `#6f604d` | Text inside secondary facts on soft accent surfaces. |
 | Strong warm accent | `--accent-strong` | `#806044` | Short non-clickable emphasis lines for practical conditions inside cards. |
 | Accent line | `--accent-line` | `#eee2d0` | Subtle beige separators and compact chip borders. |
 | Neutral line | `--line` | `#e8dccb` | Low-emphasis separators where layout needs structure. |
@@ -61,13 +61,14 @@ Minimum target for normal text is WCAG AA: 4.5:1. Large decorative shapes and se
 | `--pretitle` on `--bg` | 6.42:1 | Pass |
 | `--blue` on `--bg` | 6.91:1 | Pass |
 | white text on `--blue` | 6.91:1 | Pass |
-| `--accent-dark` on `--accent-soft` | 5.46:1 | Pass |
+| `--accent-dark` on `--accent-soft` | 5.61:1 | Pass |
 | `--accent-strong` on `--bg` | 5.72:1 | Pass |
-| `--accent-strong` on `--card-bg` | 5.14:1 | Pass |
-| `--muted` on `--card-bg` | 5.72:1 | Pass |
-| `--accent` on `--accent-soft` | 1.93:1 | Decoration only |
+| `--accent-strong` on `--card-bg` | 5.27:1 | Pass |
+| `--muted` on `--card-bg` | 5.87:1 | Pass |
+| `--accent` on `--accent-soft` | 1.98:1 | Decoration only |
+| `--ink` on `--accent-bg` | 17.42:1 | Strong |
 
-Rule: `--accent` is not a text color for normal UI text. Use it for fine lines, subtle markers, or non-essential decorative emphasis. Use `--accent-dark` when beige-accent text is needed. Use `--accent-strong` only for short non-clickable practical conditions where `--accent-dark` is too muted.
+Rule: `--accent` is not a text color for normal UI text. Use it for fine lines, subtle markers, or non-essential decorative emphasis. Use `--accent-dark` when accent text is needed. Use `--accent-strong` only for short non-clickable practical conditions where `--accent-dark` is too muted.
 
 ## Usage Rules
 
@@ -89,13 +90,14 @@ Muted text:
 - Reach for `--muted` before using brown/beige for neutral text.
 - Do not use `--muted` for H1/H2/H3, price numbers, or primary CTAs.
 
-Cream and beige:
+Soft green and beige:
 
-- Use for thin separators, selected warm section bands, and calm supporting areas.
+- Use soft green for selected section bands, card accents, compact chips, and secondary hover states.
+- Use beige mainly for thin separators and quiet practical text accents.
 - Use sparingly in text; it should support hierarchy, not become the brand's main voice.
 - Use `--accent-strong` for one-line practical conditions inside cards, such as payment terms; do not use it for links, headings, CTAs, or long paragraphs.
 - Implement this role as `.text-accent-practical` or the matching content field for practical emphasis; do not target a specific card position or a specific phrase.
-- Do not treat cream as a generic soft background for every block.
+- Do not treat soft green as a generic soft background for every block.
 - Avoid a "craft" or "retro" feeling by keeping the main type black and the action color blue.
 
 Hero:
@@ -108,8 +110,13 @@ Cards and sections:
 
 - Cards should not depend on visible borders for structure when spacing and headings already separate content.
 - Soft elevation is allowed through `--shadow-soft` when white cards sit on the white page canvas and need better scanability.
-- Warm surfaces are allowed for selected section bands, especially where they connect to the hero photo or reduce long-page fatigue.
+- Soft green surfaces are allowed for selected section bands, especially where they connect visual blocks or reduce long-page fatigue.
 - Avoid gray-on-gray stacks; they make the course feel generic and less premium.
+
+External logos:
+
+- External institution and partner logos may keep their original brand colors inside the registered `logo-grid` component.
+- Do not reuse colors from external logos as learncs accent colors, text colors, buttons, dividers, or card styling.
 
 ## Marketing Fit
 
@@ -122,13 +129,13 @@ Audience:
 Color strategy:
 
 - Blue carries competence, technology, and action.
-- Warm cream prevents the page from feeling cold or bureaucratic.
+- Soft green prevents the page from feeling cold or bureaucratic without pulling the site into beige craft styling.
 - Black preserves rigor and premium clarity.
 
 Conversion strategy:
 
 - Keep the primary CTA blue and visually isolated from decorative accents.
-- Use warm backgrounds to make long-form information less tiring.
+- Use soft accent backgrounds to make long-form information less tiring.
 - Keep meta quiet so the headline and CTA remain the first read.
 
 ## Do Not
@@ -145,9 +152,14 @@ Conversion strategy:
 - All colors must come from tokens in `assets/styles.css`, except documented one-off values such as `--pretitle` if they are promoted into tokens immediately.
 - Any new color must be added to `EXPECTED_TOKENS` or `ALLOWED_HEX` in `tools/check-design.py`.
 - Normal text pairs must pass 4.5:1 contrast and be listed in the automated contrast checks when they become reusable roles.
-- Every user-requested or agent-proposed visual change must be checked against this brandbook and `DESIGN_GUIDE.md` before implementation.
-- Every user-requested or agent-proposed visual change must also be checked against `COMPONENTS.md`.
+- Every visual change must be checked against this brandbook, `DESIGN_GUIDE.md`, and `COMPONENTS.md` before implementation.
 - If a requested or proposed change conflicts with the brandbook/design guide/component registry, the conflict must be stated explicitly and a compliant alternative must be proposed before editing.
 - Homepage source and generated root page must not show patterns that contradict approved homepage components.
-- Run `python3 tools/check-design.py` after visual changes.
-- Validate the homepage in local preview after visual changes.
+Experiment mode:
+
+- Keep edits narrow and reversible.
+- Do not run `check-design`, build, publish, or browser validation unless explicitly requested.
+
+Production mode:
+
+- When fixing a change for production, run `npm run check:prod`; it includes the design check and Astro build. The user reviews the already-running `8123` dev preview manually unless a shell-level preview check is explicitly requested.

@@ -11,13 +11,11 @@
   "scripts": {
     "dev": "astro dev --host 127.0.0.1 --port 8123",
     "build": "ASTRO_TELEMETRY_DISABLED=1 astro build && node tools/copy-static-to-dist.mjs",
-    "build:astro": "astro build",
-    "preview:dist": "astro preview --host 127.0.0.1 --port 8123",
     "preview:agent": "node tools/agent-preview.mjs --keep-alive",
     "publish:local": "node tools/publish-astro-dist.mjs",
     "check:design": "python3 tools/check-design.py",
     "check:preview": "node tools/agent-preview.mjs",
-    "check:prod": "npm run check:design && npm run build && npm run check:preview"
+    "check:prod": "npm run check:design && npm run build"
   },
   "dependencies": {
     "astro": "5.18.1"

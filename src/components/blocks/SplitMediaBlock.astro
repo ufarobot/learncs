@@ -2,6 +2,7 @@
 const { block } = Astro.props;
 const sectionClass = ['section', block.surface === 'muted' && 'section-muted'];
 const headingPlacement = block.headingPlacement || 'side';
+const mediaPlacement = block.mediaPlacement || 'left';
 ---
 <section class:list={sectionClass} id={block.id} data-template={block.template} data-spacing={block.spacing}>
   {headingPlacement === 'top' && (
@@ -11,7 +12,7 @@ const headingPlacement = block.headingPlacement || 'side';
     </div>
   )}
 
-  <div class="container split-media-layout">
+  <div class="container split-media-layout" data-media-placement={mediaPlacement} data-media-align={block.mediaAlign}>
     <figure class="split-media-visual">
       <img src={block.media.src} alt={block.media.alt} />
       {block.mediaTitle && <figcaption>{block.mediaTitle}</figcaption>}
@@ -30,10 +31,15 @@ const headingPlacement = block.headingPlacement || 'side';
         <div class="split-media-detail" aria-label={block.detailLabel || block.title}>
           {block.detailLabel && <p class="split-media-detail-title">{block.detailLabel}</p>}
 
-          <div class="split-media-detail-grid" data-columns={block.detailColumns || 2} data-card-tone={block.detailCardTone}>
+          <div
+            class="split-media-detail-grid"
+            data-columns={block.detailColumns || 2}
+            data-card-tone={block.detailCardTone}
+            data-detail-style={block.detailStyle}
+          >
             {block.cards.map((card) => (
-              <article class:list={[card.wide && 'split-media-detail-wide']}>
-                <h3>{card.title}</h3>
+              <article class:list={[card.wide && 'split-media-detail-wide', !card.title && 'split-media-detail-text-only']}>
+                {card.title && <h3>{card.title}</h3>}
                 {card.text && <p>{card.text}</p>}
                 {card.items && (
                   <ul class="plain-list">

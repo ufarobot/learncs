@@ -1,4 +1,5 @@
 import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
 
 const textPair = z.tuple([z.string(), z.string()]);
 
@@ -55,6 +56,8 @@ const splitMediaBlock = z.object({
   surface,
   spacing,
   headingPlacement: z.enum(['side', 'top']).optional(),
+  mediaPlacement: z.enum(['left', 'right']).optional(),
+  mediaAlign: z.enum(['top']).optional(),
   media,
   mediaTitle: z.string().optional(),
   mediaText: z.string().optional(),
@@ -62,6 +65,7 @@ const splitMediaBlock = z.object({
   lead: z.string().optional(),
   detailLabel: z.string().optional(),
   detailColumns: z.union([z.literal(1), z.literal(2)]).optional(),
+  detailStyle: z.enum(['list', 'bullets']).optional(),
   detailCardTone: z.enum(['green']).optional(),
   cards: z.array(card).optional(),
   notes: z.array(z.string()).optional(),
@@ -134,6 +138,21 @@ const centeredSummaryBlock = z.object({
   highlight: z.string().optional(),
 });
 
+const logoGridBlock = z.object({
+  template: z.literal('logo-grid'),
+  id: z.string().optional(),
+  surface,
+  spacing,
+  title: z.string(),
+  text: z.string().optional(),
+  logos: z.array(
+    z.object({
+      name: z.string(),
+      media,
+    }),
+  ).min(1),
+});
+
 const faqAccordionBlock = z.object({
   template: z.literal('faq-accordion'),
   id: z.string().optional(),
@@ -161,12 +180,16 @@ const block = z.discriminatedUnion('template', [
   imageShowcaseBlock,
   twoColumnListBlock,
   centeredSummaryBlock,
+  logoGridBlock,
   faqAccordionBlock,
   ctaPanelBlock,
 ]);
 
 const pages = defineCollection({
-  type: 'content',
+  loader: glob({
+    pattern: '*.md',
+    base: './src/content/pages',
+  }),
   schema: z.object({
     title: z.string(),
     description: z.string(),

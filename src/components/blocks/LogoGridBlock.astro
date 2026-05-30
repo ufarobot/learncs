@@ -1,0 +1,18 @@
+---
+import SectionIntro from '../SectionIntro.astro';
+
+const { block } = Astro.props;
+const sectionClass = ['section', block.surface === 'muted' && 'section-muted'];
+---
+<section class:list={sectionClass} id={block.id} data-template={block.template} data-spacing={block.spacing}>
+  <div class="container">
+    <SectionIntro title={block.title} text={block.text} className="section-intro-center" />
+    <ul class="logo-grid-list" aria-label={block.title}>
+      {block.logos.map((logo) => (
+        <li class="logo-grid-item">
+          <img src={logo.media.src} alt={logo.media.alt || logo.name} loading="lazy" />
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

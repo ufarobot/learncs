@@ -9,6 +9,8 @@ This registry prevents "CSS zoo" drift. A component is a reusable visual role wi
 - If a requested page-level change would make a shared component look different, either update the shared component everywhere or create a named variant.
 - Components used on the homepage or apply page must keep the approved styling from `assets/styles.css`.
 - Landing blocks are selected by layout template, not by content topic. Do not create `teacher-*`, `camp-*`, `student-*`, or course-name CSS families for ordinary landing content.
+- Responsive behavior is part of a component. Every template and variant must define a usable mobile layout, not only a desktop composition.
+- Prefer the mobile patterns already tested on the homepage before adding new component behavior.
 
 ## Layout Templates
 
@@ -23,6 +25,7 @@ Approved templates:
 - `image-showcase` — heading, optional text, plus one large centered image or screenshot.
 - `two-column-list` — two or more list panels in a responsive grid.
 - `centered-summary` — compact centered statement, price, terms, or key condition.
+- `logo-grid` — centered grid of partner, result, or institution logos without card frames.
 - `faq-accordion` — question and answer list.
 - `cta-panel` — closing action panel.
 
@@ -36,10 +39,21 @@ Allowed template controls:
 - `captionPlacement: title-above-media` places the card title above a large image and keeps a muted caption below it; use for detailed screenshots that need most of the container width.
 - `wideLast`: boolean for grid layouts that need the final card to span the row.
 - `spacing`: `connected` for neighboring sections that form one narrative group and need the same compact distance between blocks.
+- `mediaPlacement`: `left` or `right` for `split-media` when the same layout needs the media on a specific side.
 - `size`: `normal`, `large`, or `wide` for `image-showcase`; use `wide` only for detailed screenshots that need the full container width.
 - `align: center` for `image-showcase` when the section is primarily a centered visual proof or gallery.
 
 New templates are allowed only for a new layout composition. New subject matter should use an existing template.
+
+Temporary experiments should not create new templates, variants, or page-specific CSS families. Promote an experiment into this registry only when the user explicitly fixes it for production.
+
+Responsive expectations:
+
+- grids collapse before cards or text columns become too narrow;
+- `split-media` blocks collapse to one column on mobile, with content using the available page width;
+- headings and body copy must not break into word-per-line columns;
+- images keep explicit max-widths and must not grow just because a layout column grows;
+- mobile behavior should follow the proven homepage patterns unless a named variant documents another behavior.
 
 ## Hero Context
 
@@ -90,6 +104,24 @@ Default:
 
 All media templates must define a max-width for images. Images must not depend on `width: 100%` alone, because a wider layout column can otherwise upscale a photo.
 
+### `logo-grid`
+
+Use when a section consists primarily of several external logos: universities, partners, platforms, or result markers.
+
+Default:
+
+- centered section intro;
+- three columns on desktop and one column on mobile;
+- no cards, borders, shadows, or tinted surfaces around individual logos;
+- each image has an explicit max-width and max-height and uses `object-fit: contain`;
+- logos keep their original colors and proportions.
+
+Do not use:
+
+- for ordinary text cards;
+- as a decorative logo cloud without a concrete content claim;
+- with recolored logos unless the source brand system provides that version.
+
 ## Cards
 
 Cards are for repeated items or genuinely framed tools. Page sections should not become nested card stacks.
@@ -130,6 +162,7 @@ New card variants must define:
 - border behavior;
 - shadow behavior;
 - image behavior;
+- desktop, tablet, and mobile behavior;
 - contrast requirements.
 
 ### `module-card`
