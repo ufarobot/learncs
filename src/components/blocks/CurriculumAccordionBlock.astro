@@ -12,7 +12,7 @@ const sectionClass = ['section', block.surface === 'muted' && 'section-muted'];
       {block.modules.map((module, index) => (
         <details class="curriculum-item">
           <summary>
-            <span class="curriculum-module-index">{String(index + 1).padStart(2, '0')}</span>
+            <span class="curriculum-module-index">Модуль {String(index + 1).padStart(2, '0')}</span>
             <span class="curriculum-module-title">{module.title}</span>
             <span class="curriculum-toggle" aria-hidden="true"></span>
           </summary>
