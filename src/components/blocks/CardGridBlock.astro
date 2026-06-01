@@ -10,13 +10,18 @@ const buttonClasses = {
   quiet: 'button-quiet',
 };
 const captionPlacements = ['below-media', 'title-above-media'];
+
+const actionAttributes = (action) => ({
+  target: action.target,
+  rel: action.rel || (action.target === '_blank' ? 'noopener noreferrer' : undefined),
+});
 ---
 <section class:list={sectionClass} id={block.id} data-template={block.template} data-card-style={block.cardStyle || 'plain'} data-spacing={block.spacing}>
   <div class="container">
     <SectionIntro title={block.title} text={block.text} />
     {block.action && (
       <div class="section-action">
-        <a class:list={['button', buttonClasses[block.action.style || 'secondary']]} href={block.action.href}>{block.action.label}</a>
+        <a class:list={['button', buttonClasses[block.action.style || 'secondary']]} href={block.action.href} {...actionAttributes(block.action)}>{block.action.label}</a>
       </div>
     )}
 
@@ -36,7 +41,7 @@ const captionPlacements = ['below-media', 'title-above-media'];
                 <figcaption>
                   {block.captionPlacement === 'below-media' && <strong>{card.title}:</strong>}
                   {card.text && <span>{card.text}</span>}
-                  {card.action && <a class="content-card-link" href={card.action.href}>{card.action.label}</a>}
+                  {card.action && <a class="content-card-link" href={card.action.href} {...actionAttributes(card.action)}>{card.action.label}</a>}
                 </figcaption>
               )}
             </figure>
@@ -53,7 +58,7 @@ const captionPlacements = ['below-media', 'title-above-media'];
               )}
               {card.note && <p class="content-card-note">{card.note}</p>}
               {card.emphasis && <p class="text-accent-practical">{card.emphasis}</p>}
-              {card.action && <a class="content-card-link" href={card.action.href}>{card.action.label}</a>}
+              {card.action && <a class="content-card-link" href={card.action.href} {...actionAttributes(card.action)}>{card.action.label}</a>}
             </>
           )}
         </article>

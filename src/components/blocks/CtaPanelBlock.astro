@@ -6,13 +6,65 @@ const buttonClasses = {
   secondary: 'button-secondary',
   quiet: 'button-quiet',
 };
+
+const actionAttributes = (action) => ({
+  target: action.target,
+  rel: action.rel || (action.target === '_blank' ? 'noopener noreferrer' : undefined),
+});
+
+const fieldId = (field) => `${block.id || 'cta'}-${field.name}`;
+const fieldHintId = (field) => `${fieldId(field)}-hint`;
 ---
 <section class:list={sectionClass} id={block.id} data-template={block.template} data-spacing={block.spacing}>
-  <div class="container cta-panel">
+  <div class:list={['container', 'cta-panel', block.form && 'cta-panel-with-form']}>
     <div>
       <h2>{block.title}</h2>
       {block.text && <p>{block.text}</p>}
     </div>
-    <a class:list={['button', buttonClasses[block.action.style || 'primary']]} href={block.action.href}>{block.action.label}</a>
+    {block.action && (
+      <a class:list={['button', buttonClasses[block.action.style || 'primary']]} href={block.action.href} {...actionAttributes(block.action)}>{block.action.label}</a>
+    )}
+    {block.form && (
+      <form
+        class="order-form"
+        data-order-form
+        data-endpoint={block.form.endpoint}
+        data-success-text={block.form.successText}
+        data-error-text={block.form.errorText}
+      >
+        <div class="order-form-fields" data-form-fields>
+          {block.form.fields.map((field) => (
+            <label class="order-form-field" for={fieldId(field)}>
+              <span class="order-form-label">{field.label}</span>
+              <input
+                id={fieldId(field)}
+                name={field.name}
+                type="text"
+                placeholder={field.placeholder}
+                autocomplete={field.autocomplete}
+                required={field.required !== false}
+                aria-describedby={field.hint ? fieldHintId(field) : undefined}
+              />
+              {field.hint && <span class="order-form-hint" id={fieldHintId(field)}>{field.hint}</span>}
+            </label>
+          ))}
+          <button class:list={['button', buttonClasses.primary]} type="submit">{block.form.submitLabel}</button>
+        </div>
+        <p class="order-form-status" data-form-status role="status" aria-live="polite" hidden></p>
+        {block.form.directLinks && (
+          <div class="order-form-direct">
+            {block.form.directText && <span class="order-form-direct-text">{block.form.directText}</span>}
+            <span class="order-form-direct-links">
+              {block.form.directLinks.map((link, index) => (
+                <>
+                  {index > 0 && <span class="order-form-direct-separator">или</span>}
+                  <a href={link.href} {...actionAttributes(link)}>{link.label}</a>
+                </>
+              ))}
+            </span>
+          </div>
+        )}
+      </form>
+    )}
   </div>
 </section>

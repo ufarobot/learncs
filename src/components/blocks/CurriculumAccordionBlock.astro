@@ -1,0 +1,47 @@
+---
+import SectionIntro from '../SectionIntro.astro';
+
+const { block } = Astro.props;
+const sectionClass = ['section', block.surface === 'muted' && 'section-muted'];
+---
+<section class:list={sectionClass} id={block.id} data-template={block.template} data-spacing={block.spacing}>
+  <div class="container curriculum-layout">
+    <SectionIntro title={block.title} text={block.text} />
+
+    <div class="curriculum-list">
+      {block.modules.map((module, index) => (
+        <details class="curriculum-item">
+          <summary>
+            <span class="curriculum-module-index">{String(index + 1).padStart(2, '0')}</span>
+            <span class="curriculum-module-title">{module.title}</span>
+            <span class="curriculum-toggle" aria-hidden="true"></span>
+          </summary>
+
+          <div class:list={['curriculum-panel', !module.media && 'curriculum-panel-text-only']}>
+            {module.media && (
+              <figure class="curriculum-media">
+                <img src={module.media.src} alt={module.media.alt} loading="lazy" />
+              </figure>
+            )}
+
+            <div class="curriculum-copy">
+              {module.intro?.map((paragraph) => <p>{paragraph}</p>)}
+
+              {module.sections?.map((section) => (
+                <section class="curriculum-topic">
+                  <h3>{section.title}</h3>
+                  {section.text && <p>{section.text}</p>}
+                  {section.items && (
+                    <ul class="plain-list">
+                      {section.items.map((item) => <li>{item}</li>)}
+                    </ul>
+                  )}
+                </section>
+              ))}
+            </div>
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

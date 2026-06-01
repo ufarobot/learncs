@@ -2,17 +2,13 @@ export const site = {
   name: 'learncs.ru',
   url: 'https://ufarobot.github.io/learncs/',
   description: 'Олимпиадная информатика для школьников 5-11 классов.',
-  stylesheetVersion: '20260529-cta-panel',
-  scriptVersion: '20260513-3'
+  stylesheetVersion: '20260530-curriculum',
+  scriptVersion: '20260530-order-form'
 };
 
 export const nav = [
   { label: 'Курс', href: './' },
-  { label: 'Лагерь в Фетхие', href: 'camps/fethiye/' },
   { label: 'Учебник', href: 'https://book.learncs.ru' }
 ];
 
-export const footerLinks = [
-  { label: 'Учебник', href: 'https://book.learncs.ru' },
-  { label: 'Заявка', href: 'apply/' }
-];
+export const footerLinks = [];

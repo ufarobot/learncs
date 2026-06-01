@@ -5,6 +5,9 @@ const { basePath = '' } = Astro.props;
 const rootHref = basePath || './';
 const localHref = (href) => {
   if (href.startsWith('http') || href.startsWith('#')) {
+    if (href.startsWith('#')) {
+      return `${rootHref}${href}`;
+    }
     return href;
   }
   if (href === './') {
@@ -29,7 +32,7 @@ const localHref = (href) => {
 
     <nav class="site-nav" id="site-nav" aria-label="Основная навигация" data-nav>
       {nav.map((item) => <a href={localHref(item.href)}>{item.label}</a>)}
-      <a class="nav-cta" href={localHref('apply/')}>Оставить заявку</a>
+      <a class="nav-cta" href={localHref('#order')}>Оставить заявку</a>
     </nav>
   </div>
 </header>

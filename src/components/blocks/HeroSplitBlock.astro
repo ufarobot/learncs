@@ -7,6 +7,11 @@ const buttonClasses = {
   quiet: 'button-quiet',
 };
 
+const actionAttributes = (action) => ({
+  target: action.target,
+  rel: action.rel || (action.target === '_blank' ? 'noopener noreferrer' : undefined),
+});
+
 const normalizeFact = (fact) => {
   if (Array.isArray(fact)) {
     return { title: fact[0], text: fact[1] };
@@ -25,7 +30,7 @@ const normalizeFact = (fact) => {
         {block.languages && <p class="hero-languages">{block.languages}</p>}
         <div class="button-row">
           {block.actions.map((action) => (
-            <a class:list={['button', buttonClasses[action.style || 'quiet']]} href={action.href}>{action.label}</a>
+            <a class:list={['button', buttonClasses[action.style || 'quiet']]} href={action.href} {...actionAttributes(action)}>{action.label}</a>
           ))}
         </div>
       </div>

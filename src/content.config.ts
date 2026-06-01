@@ -16,6 +16,27 @@ const action = z.object({
   label: z.string(),
   href: z.string(),
   style: z.enum(['primary', 'secondary', 'quiet']).optional(),
+  target: z.string().optional(),
+  rel: z.string().optional(),
+});
+
+const formField = z.object({
+  name: z.string(),
+  label: z.string(),
+  placeholder: z.string().optional(),
+  hint: z.string().optional(),
+  autocomplete: z.string().optional(),
+  required: z.boolean().optional(),
+});
+
+const ctaForm = z.object({
+  endpoint: z.string(),
+  submitLabel: z.string(),
+  successText: z.string(),
+  errorText: z.string(),
+  fields: z.array(formField).min(1),
+  directText: z.string().optional(),
+  directLinks: z.array(action).optional(),
 });
 
 const media = z.object({
@@ -37,6 +58,19 @@ const card = z.object({
 
 const surface = z.enum(['white', 'muted']).optional();
 const spacing = z.enum(['connected']).optional();
+
+const curriculumSection = z.object({
+  title: z.string(),
+  text: z.string().optional(),
+  items: z.array(z.string()).optional(),
+});
+
+const curriculumModule = z.object({
+  title: z.string(),
+  media: media.optional(),
+  intro: z.array(z.string()).optional(),
+  sections: z.array(curriculumSection).optional(),
+});
 
 const heroSplitBlock = z.object({
   template: z.literal('hero-split'),
@@ -162,6 +196,16 @@ const faqAccordionBlock = z.object({
   items: z.array(textPair).min(1),
 });
 
+const curriculumAccordionBlock = z.object({
+  template: z.literal('curriculum-accordion'),
+  id: z.string().optional(),
+  surface,
+  spacing,
+  title: z.string(),
+  text: z.string().optional(),
+  modules: z.array(curriculumModule).min(1),
+});
+
 const ctaPanelBlock = z.object({
   template: z.literal('cta-panel'),
   id: z.string().optional(),
@@ -169,7 +213,8 @@ const ctaPanelBlock = z.object({
   spacing,
   title: z.string(),
   text: z.string().optional(),
-  action,
+  action: action.optional(),
+  form: ctaForm.optional(),
 });
 
 const block = z.discriminatedUnion('template', [
@@ -182,6 +227,7 @@ const block = z.discriminatedUnion('template', [
   centeredSummaryBlock,
   logoGridBlock,
   faqAccordionBlock,
+  curriculumAccordionBlock,
   ctaPanelBlock,
 ]);
 

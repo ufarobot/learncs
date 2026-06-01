@@ -27,7 +27,12 @@ Approved templates:
 - `centered-summary` — compact centered statement, price, terms, or key condition.
 - `logo-grid` — centered grid of partner, result, or institution logos without card frames.
 - `faq-accordion` — question and answer list.
+- `curriculum-accordion` — long course-program accordion with optional module media and structured topic lists.
 - `cta-panel` — closing action panel.
+
+`cta-panel` may render either one primary action link or a compact order form when the conversion needs to happen on the page. The form variant keeps the same soft panel surface, uses standard primary button styling, stacks fields on mobile, may include quiet direct-contact links, and posts to an external endpoint without adding a page-specific visual family.
+
+`curriculum-accordion` is for long expandable content where each item can include an image plus paragraphs, topic headings, and lists. It uses the shared section intro, neutral divider rows, native `details` controls, and collapses to a single-column panel on mobile so images and copy never create horizontal overflow.
 
 Allowed template controls:
 

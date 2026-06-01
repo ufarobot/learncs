@@ -101,6 +101,7 @@ HOMEPAGE_RECIPE = (
     "card-grid",
     "split-media",
     "card-grid",
+    "curriculum-accordion",
     "faq-accordion",
     "image-showcase",
     "logo-grid",
@@ -117,6 +118,7 @@ APPROVED_TEMPLATES = {
     "centered-summary",
     "logo-grid",
     "faq-accordion",
+    "curriculum-accordion",
     "cta-panel",
 }
 
@@ -314,6 +316,7 @@ def check_component_registry() -> list[str]:
         "`split-media`",
         "`card-grid`",
         "`logo-grid`",
+        "`curriculum-accordion`",
         "Images must not depend on `width: 100%` alone",
         "Hero Context",
         "`pretitle`",
