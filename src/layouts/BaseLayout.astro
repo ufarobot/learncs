@@ -31,6 +31,18 @@ const assetPath = (path) => `${basePath}${path}`;
     <link rel="icon" href={assetPath('assets/favicon.svg')} type="image/svg+xml" />
     <link rel="stylesheet" href={assetPath(`assets/styles.css?v=${site.stylesheetVersion}`)} />
     <script defer src={assetPath(`assets/main.js?v=${site.scriptVersion}`)}></script>
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" is:inline>
+      (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+      })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109571501', 'ym');
+
+      ym(109571501, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <!-- /Yandex.Metrika counter -->
     {courseSchema && <script type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'Course',
@@ -51,6 +63,7 @@ const assetPath = (path) => `${basePath}${path}`;
     <title>{title}</title>
   </head>
   <body>
+    <noscript><div><img src="https://mc.yandex.ru/watch/109571501" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <a class="skip-link" href="#main">К основному содержанию</a>
     <Header basePath={basePath} />
     <main id="main">
