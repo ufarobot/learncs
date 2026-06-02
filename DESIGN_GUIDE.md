@@ -44,6 +44,7 @@ Buttons:
 
 - Primary CTA: learncs blue background, white text.
 - Secondary CTA: off-white background, black text.
+- Soft accent CTA: soft green surface for one time-sensitive secondary action; it must not compete with the primary blue CTA.
 - Minimum height around 56px on desktop and full width on narrow screens.
 
 Accent color:

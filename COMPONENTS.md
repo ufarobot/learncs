@@ -94,6 +94,10 @@ Use for the primary conversion action. It must stay learncs blue.
 
 Use for secondary navigation or lower-emphasis actions. They must not compete with the primary CTA.
 
+### `button-accent`
+
+Use for one time-sensitive secondary action that needs a soft visual cue without competing with the primary blue CTA. It follows `button-secondary` sizing, text color, weight, and border behavior, with only the default surface changed to `--accent-soft`.
+
 ## Media
 
 ### `hero-visual`

@@ -15,10 +15,9 @@ const heroFact = z.union([
 const action = z.object({
   label: z.string(),
   href: z.string(),
-  style: z.enum(['primary', 'secondary', 'quiet']).optional(),
+  style: z.enum(['primary', 'secondary', 'quiet', 'accent']).optional(),
   target: z.string().optional(),
   rel: z.string().optional(),
-  visibility: z.enum(['mobile']).optional(),
 });
 
 const formField = z.object({

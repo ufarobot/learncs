@@ -307,14 +307,17 @@ h3 {
   background: var(--blue-dark);
 }
 
-.button-mobile-only {
-  display: none;
-}
-
 .button-secondary,
 .button-quiet {
   color: var(--graphite);
   background: var(--surface);
+  border-color: var(--line-soft);
+  font-weight: 650;
+}
+
+.button-accent {
+  color: var(--graphite);
+  background: var(--accent-soft);
   border-color: var(--line-soft);
   font-weight: 650;
 }
@@ -324,6 +327,13 @@ h3 {
 .button-quiet:focus-visible {
   color: var(--ink);
   background: var(--accent-soft);
+  border-color: var(--line);
+}
+
+.button-accent:hover,
+.button-accent:focus-visible {
+  color: var(--ink);
+  background: var(--surface);
   border-color: var(--line);
 }
 
@@ -1713,11 +1723,6 @@ code {
   }
 
   .button-row .button-primary {
-    grid-column: 1 / -1;
-  }
-
-  .button-row .button-mobile-only {
-    display: inline-flex;
     grid-column: 1 / -1;
   }
 
