@@ -16,7 +16,7 @@ Astro-лендинг learncs.ru. Сейчас главный источник и
 - `assets/favicon.svg` — favicon.
 - `assets/logo-icon-white-on-black.png` — текущая иконка в шапке и футере.
 - `assets/og-image.png` — изображение для Open Graph.
-- `assets/hero-student-organic.png`, `assets/teacher-airat.jpg`, `assets/platform-screen.jpg`, `assets/math-materials.jpg`, `assets/reviews-learncs.jpg` — изображения главной.
+- `assets/hero-student-organic.webp`, `assets/teacher-airat.jpg`, `assets/platform-screen.webp`, `assets/reviews-learncs.jpg` — изображения главной.
 
 Черновые страницы лагерей, учеников и подробной программы не входят в текущий рабочий контур. Новый дизайн сначала доводится на главной, затем при необходимости переносится на остальные страницы отдельным решением.
 

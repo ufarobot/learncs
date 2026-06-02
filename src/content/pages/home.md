@@ -9,7 +9,7 @@ blocks:
     lead: "Углубленная подготовка к олимпиадам и экзаменам по информатике: математика, алгоритмы, программирование и проекты."
     languages: "C++ · Python · Java"
     media:
-      src: "assets/hero-student-organic.png"
+      src: "assets/hero-student-organic.webp"
       alt: "Ученица занимается за ноутбуком"
     actions:
       - label: "Оставить заявку"
@@ -63,7 +63,7 @@ blocks:
     headingPlacement: "side"
     mediaPlacement: "right"
     media:
-      src: "assets/student-laptop-noroot.png"
+      src: "assets/student-laptop-noroot.webp"
       alt: "Школьник занимается за ноутбуком"
     title: "Для кого"
     lead: "Для школьников 5–11 классов, которым нужна база по информатике: для олимпиад, поступления, современных ИТ-направлений и собственных проектов."
@@ -87,7 +87,7 @@ blocks:
     text: "Богатый функционал платформы и качественные материалы позволяют проходить большинство тем самостоятельно, что даёт возможность выстраивать для каждого ученика индивидуальную траекторию."
     size: "wide"
     media:
-      src: "assets/platform-screen.png?v=20260526-1"
+      src: "assets/platform-screen.webp"
       alt: "Экран платформы learncs со структурой курса, учебником, тренажерами и видеоразборами"
     metrics:
       - ["12+ модулей", "от основ программирования до графов и олимпиадной практики"]
@@ -110,17 +110,17 @@ blocks:
     cards:
       - title: "Математика"
         media:
-          src: "assets/book-math-showcase.png?v=20260526-desktop"
+          src: "assets/book-math-showcase.webp"
           alt: "Страницы учебника learncs.ru по математике"
         text: "Примеры глав: множества, диаграммы Эйлера-Венна, комбинаторика."
       - title: "Информатика"
         media:
-          src: "assets/book-informatics-showcase.png?v=20260526-desktop"
+          src: "assets/book-informatics-showcase.webp"
           alt: "Страницы учебника learncs.ru по информатике"
         text: "Примеры глав: логика, системы счисления, кодирование информации."
       - title: "Программирование"
         media:
-          src: "assets/book-programming-showcase.png?v=20260526-desktop"
+          src: "assets/book-programming-showcase.webp"
           alt: "Страницы учебника learncs.ru по программированию"
         text: "Примеры глав: основы программирования на Java, C++, Python и API библиотек."
     notes:
@@ -134,7 +134,7 @@ blocks:
     mediaPlacement: "right"
     mediaAlign: "top"
     media:
-      src: "assets/method-student-girl.jpg"
+      src: "assets/method-student-girl.webp"
       alt: "Школьница занимается онлайн за ноутбуком"
     title: "Как обучаем"
     lead: "Занятия строятся вокруг деятельности учеников с минимальной лекционной частью, с упором на практику и при активной поддержке преподавателя."

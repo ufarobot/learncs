@@ -446,11 +446,11 @@ def check_home_hero_media_contract(lines: list[str]) -> list[str]:
         if image_declarations.get(name) != value:
             errors.append(
                 f"{CSS_PATH.relative_to(ROOT)}: home hero image must keep {name}: {value}; "
-                "so the transparent student PNG is not clipped into a rectangular card"
+                "so the transparent student image is not clipped into a rectangular card"
             )
 
-    if HOME_CONTENT_PATH.exists() and "assets/hero-student-organic.png" not in HOME_CONTENT_PATH.read_text(encoding="utf-8"):
-        errors.append("src/content/pages/home.md: homepage hero must use assets/hero-student-organic.png")
+    if HOME_CONTENT_PATH.exists() and "assets/hero-student-organic.webp" not in HOME_CONTENT_PATH.read_text(encoding="utf-8"):
+        errors.append("src/content/pages/home.md: homepage hero must use assets/hero-student-organic.webp")
 
     return errors
 
