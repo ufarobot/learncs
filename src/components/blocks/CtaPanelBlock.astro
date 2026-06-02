@@ -49,6 +49,16 @@ const fieldHintId = (field) => `${fieldId(field)}-hint`;
               {field.hint && <span class="order-form-hint" id={fieldHintId(field)}>{field.hint}</span>}
             </label>
           ))}
+          {block.form.consent && (
+            <label class="order-form-consent">
+              <input type="checkbox" name="personalDataConsent" required />
+              <span>
+                {block.form.consent.text}
+                {' '}
+                <a href={block.form.consent.href}>{block.form.consent.linkLabel}</a>.
+              </span>
+            </label>
+          )}
           <button class:list={['button', buttonClasses.primary]} type="submit">{block.form.submitLabel}</button>
         </div>
         <p class="order-form-status" data-form-status role="status" aria-live="polite" hidden></p>

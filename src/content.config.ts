@@ -35,6 +35,11 @@ const ctaForm = z.object({
   successText: z.string(),
   errorText: z.string(),
   fields: z.array(formField).min(1),
+  consent: z.object({
+    text: z.string(),
+    linkLabel: z.string(),
+    href: z.string(),
+  }).optional(),
   directText: z.string().optional(),
   directLinks: z.array(action).optional(),
 });

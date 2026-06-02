@@ -1,4 +1,43 @@
 (() => {
+  const METRIKA_COUNTER_ID = 109571501;
+
+  window.learncsReachGoal = (goal, params = {}) => {
+    if (!goal || typeof window.ym !== "function") return;
+    window.ym(METRIKA_COUNTER_ID, "reachGoal", goal, params);
+  };
+
+  const isOrderLink = (link) => {
+    const href = link.getAttribute("href") || "";
+    return href === "#order" || href.endsWith("/#order") || link.hash === "#order";
+  };
+
+  const isChatLink = (link) => {
+    const host = link.hostname.replace(/^www\./, "");
+    return host === "t.me" || host === "max.ru";
+  };
+
+  document.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) return;
+
+    const link = event.target.closest("a[href]");
+    if (!(link instanceof HTMLAnchorElement)) return;
+
+    const goal = isOrderLink(link)
+      ? "ym-open-leadform"
+      : isChatLink(link)
+        ? "ym-open-chat"
+        : "";
+
+    if (!goal) return;
+
+    window.learncsReachGoal(goal, {
+      href: link.href,
+      text: link.textContent.trim(),
+    });
+  });
+})();
+
+(() => {
   const header = document.querySelector("[data-header]");
   const nav = document.querySelector("[data-nav]");
   const toggle = document.querySelector("[data-nav-toggle]");
@@ -74,6 +113,12 @@
         form.classList.add("is-sent");
         status.textContent = form.dataset.successText;
         status.className = "order-form-status is-success";
+
+        if (typeof window.learncsReachGoal === "function") {
+          window.learncsReachGoal("ym-submit-leadform", {
+            page: window.location.href,
+          });
+        }
       } catch {
         status.textContent = form.dataset.errorText;
         status.className = "order-form-status is-error";

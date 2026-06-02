@@ -483,6 +483,10 @@ blocks:
         - name: "contact"
           label: "Контакт для связи"
           hint: "Телефон, email или @username в Telegram"
+      consent:
+        text: "Я соглашаюсь на обработку персональных данных и принимаю"
+        linkLabel: "политику обработки персональных данных"
+        href: "privacy/"
       directText: "Можно также написать мне напрямую"
       directLinks:
         - label: "Telegram"
