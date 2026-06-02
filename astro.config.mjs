@@ -5,5 +5,5 @@ export default defineConfig({
   output: 'static',
   outDir: './dist',
   publicDir: './public',
-  site: 'https://ufarobot.github.io/learncs/'
+  site: 'https://learncs.ru/'
 });

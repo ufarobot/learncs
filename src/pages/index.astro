@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BlockRenderer from '../components/BlockRenderer.astro';
+import { site } from '../data/site.js';
 import { getEntry } from 'astro:content';
 
 const homeEntry = await getEntry('pages', 'home');
@@ -10,8 +11,24 @@ if (!homeEntry) {
 }
 
 const home = homeEntry.data;
+const faqBlock = home.blocks.find((block) => block.template === 'faq-accordion');
+const faqStructuredData = faqBlock ? {
+  '@type': 'FAQPage',
+  '@id': new URL('#faq', site.url).href,
+  isPartOf: { '@id': new URL('#website', site.url).href },
+  inLanguage: 'ru-RU',
+  mainEntity: faqBlock.items.map(([question, answer]) => ({
+    '@type': 'Question',
+    name: question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: answer
+    }
+  }))
+} : null;
+const structuredData = [faqStructuredData].filter(Boolean);
 ---
-<BaseLayout title={home.title} description={home.description}>
+<BaseLayout title={home.title} description={home.description} canonical={site.url} structuredData={structuredData}>
   <div class="home-landing">
     {home.blocks.map((block) => <BlockRenderer block={block} />)}
   </div>

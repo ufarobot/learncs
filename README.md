@@ -100,9 +100,9 @@ npm run publish:local
 
 ## Публикация
 
-Текущая GitHub Pages-публикация рассчитана на адрес `https://ufarobot.github.io/learncs/`.
+Текущая публикация рассчитана на адрес `https://learncs.ru/`.
 
-`learncs.ru` пока остается на старом сайте; поэтому `CNAME` и `sitemap.xml` не публикуются в репозиторий.
+`CNAME`, `robots.txt` и `sitemap.xml` входят в SEO-поверхность сайта. `sitemap.xml` генерируется Astro из `src/pages/sitemap.xml.js`, затем `npm run publish:local` копирует его из `dist/` в корень вместе с обновленной главной страницей.
 
 ## Локальный просмотр
 
