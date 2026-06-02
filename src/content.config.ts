@@ -18,6 +18,7 @@ const action = z.object({
   style: z.enum(['primary', 'secondary', 'quiet']).optional(),
   target: z.string().optional(),
   rel: z.string().optional(),
+  visibility: z.enum(['mobile']).optional(),
 });
 
 const formField = z.object({

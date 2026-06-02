@@ -307,6 +307,10 @@ h3 {
   background: var(--blue-dark);
 }
 
+.button-mobile-only {
+  display: none;
+}
+
 .button-secondary,
 .button-quiet {
   color: var(--graphite);
@@ -1709,6 +1713,11 @@ code {
   }
 
   .button-row .button-primary {
+    grid-column: 1 / -1;
+  }
+
+  .button-row .button-mobile-only {
+    display: inline-flex;
     grid-column: 1 / -1;
   }
 

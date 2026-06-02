@@ -10,7 +10,13 @@ export const site = {
 };
 
 export const nav = [
-  { label: 'Учебник', href: 'https://book.learncs.ru' }
+  { label: 'Учебник', href: 'https://book.learncs.ru' },
+  {
+    label: 'Интенсив в Казани 15–24 июня',
+    href: 'https://pcms.kpfu.ru/',
+    title: 'Летний интенсив по олимпиадной информатике 15–24 июня в Казанском СУНЦ IT-лицее',
+    ariaLabel: 'Летний интенсив по олимпиадной информатике 15–24 июня в Казанском СУНЦ IT-лицее. Регистрация до 10 июня'
+  }
 ];
 
 export const footerLinks = [];

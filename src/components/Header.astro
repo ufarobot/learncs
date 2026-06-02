@@ -31,7 +31,7 @@ const localHref = (href) => {
     </button>
 
     <nav class="site-nav" id="site-nav" aria-label="Основная навигация" data-nav>
-      {nav.map((item) => <a href={localHref(item.href)}>{item.label}</a>)}
+      {nav.map((item) => <a href={localHref(item.href)} title={item.title} aria-label={item.ariaLabel}>{item.label}</a>)}
       <a class="nav-cta" href={localHref('#order')}>Оставить заявку</a>
     </nav>
   </div>
