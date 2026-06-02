@@ -58,13 +58,21 @@
       : isChatLink(link)
         ? "ym-open-chat"
         : "";
+    const sourceGoal = link.dataset.metrikaGoal || "";
+    const source = link.dataset.metrikaSource || "";
 
     if (!goal) return;
 
-    window.learncsReachGoal(goal, {
+    const goalParams = {
       href: link.href,
+      source,
       text: link.textContent.trim(),
-    });
+    };
+
+    window.learncsReachGoal(goal, goalParams);
+    if (sourceGoal && sourceGoal !== goal) {
+      window.learncsReachGoal(sourceGoal, goalParams);
+    }
 
     if (goal === "ym-open-leadform" && isSamePageHashLink(link)) {
       event.preventDefault();

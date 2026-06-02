@@ -31,7 +31,13 @@ const normalizeFact = (fact) => {
         {block.languages && <p class="hero-languages">{block.languages}</p>}
         <div class="button-row">
           {block.actions.map((action) => (
-            <a class:list={['button', buttonClasses[action.style || 'quiet']]} href={action.href} {...actionAttributes(action)}>{action.label}</a>
+            <a
+              class:list={['button', buttonClasses[action.style || 'quiet']]}
+              href={action.href}
+              data-metrika-goal={action.href === '#order' ? 'ym-open-leadform-hero' : undefined}
+              data-metrika-source={action.href === '#order' ? 'hero' : undefined}
+              {...actionAttributes(action)}
+            >{action.label}</a>
           ))}
         </div>
       </div>

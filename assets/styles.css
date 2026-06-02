@@ -1420,6 +1420,10 @@ details p {
   border-radius: var(--radius-lg);
 }
 
+.section[data-template="cta-panel"] {
+  padding-bottom: calc(var(--section-y) + 260px);
+}
+
 .cta-panel p:last-child {
   max-width: 760px;
   color: var(--graphite);
@@ -2007,6 +2011,10 @@ code {
     grid-template-columns: 1fr;
     gap: 24px;
     padding: 28px;
+  }
+
+  .section[data-template="cta-panel"] {
+    padding-bottom: calc(var(--section-y-mobile) + 180px);
   }
 
   .order-form {
