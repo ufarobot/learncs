@@ -10,7 +10,7 @@ const sectionClass = ['section', block.surface === 'muted' && 'section-muted'];
     <ul class="logo-grid-list" aria-label={block.title}>
       {block.logos.map((logo) => (
         <li class="logo-grid-item">
-          <img src={logo.media.src} alt={logo.media.alt || logo.name} loading="lazy" />
+          <img src={logo.media.src} alt={logo.media.alt || logo.name} loading="lazy" decoding="async" />
         </li>
       ))}
     </ul>

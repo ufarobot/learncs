@@ -24,7 +24,7 @@ function linkKnownDomains(text) {
     <div class="media-stack">
       {block.media.map((media) => (
         <figure>
-          <img src={media.src} alt={media.alt} />
+          <img src={media.src} alt={media.alt} loading="lazy" decoding="async" />
         </figure>
       ))}
     </div>

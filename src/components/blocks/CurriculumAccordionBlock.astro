@@ -20,7 +20,7 @@ const sectionClass = ['section', block.surface === 'muted' && 'section-muted'];
           <div class:list={['curriculum-panel', !module.media && 'curriculum-panel-text-only']}>
             {module.media && (
               <figure class="curriculum-media">
-                <img src={module.media.src} alt={module.media.alt} loading="lazy" />
+                <img src={module.media.src} alt={module.media.alt} loading="lazy" decoding="async" />
               </figure>
             )}
 

@@ -11,7 +11,7 @@ const introClass = block.align === 'center' && 'section-intro-center';
     <SectionIntro title={block.title} text={block.text} className={introClass} />
 
     <figure class:list={['image-showcase-media', sizeClass]}>
-      <img src={block.media.src} alt={block.media.alt} />
+      <img src={block.media.src} alt={block.media.alt} loading="lazy" decoding="async" />
     </figure>
 
     {block.metrics && (

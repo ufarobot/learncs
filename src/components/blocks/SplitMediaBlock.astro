@@ -14,7 +14,7 @@ const mediaPlacement = block.mediaPlacement || 'left';
 
   <div class="container split-media-layout" data-media-placement={mediaPlacement} data-media-align={block.mediaAlign}>
     <figure class="split-media-visual">
-      <img src={block.media.src} alt={block.media.alt} />
+      <img src={block.media.src} alt={block.media.alt} loading="lazy" decoding="async" />
       {block.mediaTitle && <figcaption>{block.mediaTitle}</figcaption>}
       {block.mediaText && <p>{block.mediaText}</p>}
     </figure>

@@ -36,7 +36,7 @@ const actionAttributes = (action) => ({
           {block.captionPlacement === 'title-above-media' && <h3>{card.title}</h3>}
           {card.media && (
             <figure class="content-card-media">
-              <img src={card.media.src} alt={card.media.alt} />
+              <img src={card.media.src} alt={card.media.alt} loading="lazy" decoding="async" />
               {captionPlacements.includes(block.captionPlacement) && (
                 <figcaption>
                   {block.captionPlacement === 'below-media' && <strong>{card.title}:</strong>}

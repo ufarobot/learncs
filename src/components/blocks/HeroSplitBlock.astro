@@ -38,7 +38,7 @@ const normalizeFact = (fact) => {
       <div class="hero-media">
         <div class="hero-media-card">
           <figure class="hero-visual">
-            <img src={block.media.src} alt={block.media.alt} />
+            <img src={block.media.src} alt={block.media.alt} loading="eager" fetchpriority="high" decoding="async" />
           </figure>
         </div>
       </div>
