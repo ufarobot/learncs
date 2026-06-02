@@ -16,6 +16,37 @@
     return host === "t.me" || host === "max.ru";
   };
 
+  const isSamePageHashLink = (link) => {
+    if (link.hash !== "#order") return false;
+    return link.origin === window.location.origin && link.pathname === window.location.pathname;
+  };
+
+  const scrollToOrder = () => {
+    const target = document.querySelector("#order");
+    if (!target) return;
+
+    const header = document.querySelector("[data-header]");
+    const headerOffset = header ? header.getBoundingClientRect().height + 16 : 82;
+    const scroll = (behavior = "smooth") => {
+      const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+      window.scrollTo({ top, behavior });
+    };
+    const targetTop = target.getBoundingClientRect().top + window.scrollY;
+    const imagesBeforeTarget = Array.from(document.querySelectorAll("img")).filter((image) => {
+      return image.getBoundingClientRect().top + window.scrollY < targetTop;
+    });
+
+    scroll();
+    imagesBeforeTarget.forEach((image) => {
+      if (!image.complete) {
+        image.addEventListener("load", () => scroll("auto"), { once: true });
+      }
+    });
+    [350, 900, 1600, 2600, 4200, 6200].forEach((delay) => {
+      window.setTimeout(() => scroll("auto"), delay);
+    });
+  };
+
   document.addEventListener("click", (event) => {
     if (!(event.target instanceof Element)) return;
 
@@ -34,6 +65,11 @@
       href: link.href,
       text: link.textContent.trim(),
     });
+
+    if (goal === "ym-open-leadform" && isSamePageHashLink(link)) {
+      event.preventDefault();
+      scrollToOrder();
+    }
   });
 })();
 

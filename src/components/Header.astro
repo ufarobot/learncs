@@ -6,6 +6,9 @@ const rootHref = basePath || './';
 const localHref = (href) => {
   if (href.startsWith('http') || href.startsWith('#')) {
     if (href.startsWith('#')) {
+      if (!basePath) {
+        return href;
+      }
       return `${rootHref}${href}`;
     }
     return href;
