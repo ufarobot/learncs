@@ -1421,7 +1421,7 @@ details p {
 }
 
 .section[data-template="cta-panel"] {
-  padding-bottom: calc(var(--section-y) + 260px);
+  padding-bottom: calc(var(--section-y) + 80px);
 }
 
 .cta-panel p:last-child {
@@ -2014,7 +2014,7 @@ code {
   }
 
   .section[data-template="cta-panel"] {
-    padding-bottom: calc(var(--section-y-mobile) + 180px);
+    padding-bottom: calc(var(--section-y-mobile) + 48px);
   }
 
   .order-form {
