@@ -5,7 +5,7 @@ export const site = {
   ogImage: 'assets/og-image.png',
   ogImageAlt: 'Онлайн-курс learncs.ru по олимпиадной информатике для школьников',
   logo: 'assets/logo-icon-white-on-black.png',
-  stylesheetVersion: '20260603-cta-spacing',
+  stylesheetVersion: '20260608-footer-cta-color',
   scriptVersion: '20260602-order-click-sources'
 };
 
@@ -18,6 +18,14 @@ export const nav = [
     ariaLabel: 'Летний интенсив по олимпиадной информатике 15–24 июня в Казанском СУНЦ IT-лицее. Регистрация до 10 июня'
   }
 ];
+
+export const footerCta = {
+  title: 'Канал об ИТ-образовании для родителей',
+  label: 'Подписаться',
+  href: 'https://t.me/techleaderschool',
+  target: '_blank',
+  rel: 'noopener noreferrer'
+};
 
 export const footerLinks = [
   { label: 'Политика обработки персональных данных', href: 'privacy/' }

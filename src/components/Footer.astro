@@ -1,5 +1,5 @@
 ---
-import { footerLinks, site } from '../data/site.js';
+import { footerCta, footerLinks, site } from '../data/site.js';
 
 const { basePath = '' } = Astro.props;
 const rootHref = basePath || './';
@@ -15,6 +15,10 @@ const localHref = (href) => {
   }
   return `${basePath}${href}`;
 };
+const linkAttributes = (item) => ({
+  target: item.target,
+  rel: item.rel || (item.target === '_blank' ? 'noopener noreferrer' : undefined)
+});
 ---
 <footer class="site-footer">
   <div class="container footer-grid">
@@ -25,10 +29,18 @@ const localHref = (href) => {
       </a>
       <p>{site.description}</p>
     </div>
-    {footerLinks.length > 0 && (
-      <nav aria-label="Ссылки">
-        {footerLinks.map((item) => <a href={localHref(item.href)}>{item.label}</a>)}
-      </nav>
-    )}
+    <div class="footer-actions">
+      {footerCta && (
+        <div class="footer-cta">
+          <p class="footer-cta-title">{footerCta.title}</p>
+          <a class="button button-primary footer-cta-button" href={localHref(footerCta.href)} {...linkAttributes(footerCta)}>{footerCta.label}</a>
+        </div>
+      )}
+      {footerLinks.length > 0 && (
+        <nav class="footer-links" aria-label="Ссылки">
+          {footerLinks.map((item) => <a href={localHref(item.href)} {...linkAttributes(item)}>{item.label}</a>)}
+        </nav>
+      )}
+    </div>
   </div>
 </footer>

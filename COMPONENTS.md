@@ -98,6 +98,10 @@ Use for secondary navigation or lower-emphasis actions. They must not compete wi
 
 Use for one time-sensitive secondary action that needs a soft visual cue without competing with the primary blue CTA. It follows `button-secondary` sizing, text color, weight, and border behavior, with only the default surface changed to `--accent-soft`.
 
+### `footer-cta`
+
+Use for one context-backed footer action, such as subscribing to a related external channel. It must include a short title explaining the action before the button, use the standard `button-primary` styling for the action itself, and keep legal/navigation links visually quiet.
+
 ## Media
 
 ### `hero-visual`

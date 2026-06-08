@@ -4,6 +4,7 @@
 node_modules/
 dist/
 .astro/
+.codex/
 resources/
 AGENTS.md
 learncs_result_spec_for_codex.md

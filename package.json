@@ -10,6 +10,7 @@
   },
   "scripts": {
     "dev": "astro dev --host 127.0.0.1 --port 8123",
+    "preview:dev": "node tools/ensure-dev-server.mjs",
     "build": "ASTRO_TELEMETRY_DISABLED=1 astro build && node tools/copy-static-to-dist.mjs",
     "preview:agent": "node tools/agent-preview.mjs --keep-alive",
     "publish:local": "node tools/publish-astro-dist.mjs",

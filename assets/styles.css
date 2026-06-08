@@ -1583,14 +1583,39 @@ details p {
   margin-bottom: 12px;
 }
 
-.site-footer nav {
+.footer-actions {
+  display: grid;
+  width: min(100%, 430px);
+  gap: 18px;
+  justify-items: start;
+}
+
+.footer-cta {
+  display: grid;
+  width: 100%;
+  gap: 14px;
+}
+
+.footer-cta-title {
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 680;
+  line-height: 1.35;
+}
+
+.footer-cta-button {
+  width: 100%;
+}
+
+.site-footer nav,
+.footer-links {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
-.site-footer a {
+.site-footer a:not(.button) {
   color: var(--graphite);
   text-decoration: none;
 }
@@ -2028,5 +2053,9 @@ code {
 
   .site-footer nav {
     justify-content: flex-start;
+  }
+
+  .footer-actions {
+    width: 100%;
   }
 }
