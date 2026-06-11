@@ -1,7 +1,9 @@
 import { site } from '../data/site.js';
+import { getCollection } from 'astro:content';
 
 const routes = [
   { path: '/', priority: '1.0' },
+  { path: '/navigator/', priority: '0.8' },
 ];
 
 const escapeXml = (value) => value
@@ -13,8 +15,13 @@ const escapeXml = (value) => value
 
 const urlFor = (path) => new URL(path, site.url).href;
 
-export function GET() {
-  const urls = routes.map((route) => [
+export async function GET() {
+  const materials = await getCollection('materials');
+  const materialRoutes = materials.map((entry) => ({
+    path: `/materials/${entry.id}/`,
+    priority: '0.7',
+  }));
+  const urls = [...routes, ...materialRoutes].map((route) => [
     '  <url>',
     `    <loc>${escapeXml(urlFor(route.path))}</loc>`,
     `    <priority>${route.priority}</priority>`,

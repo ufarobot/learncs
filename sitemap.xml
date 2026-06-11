@@ -4,4 +4,28 @@
     <loc>https://learncs.ru/</loc>
     <priority>1.0</priority>
   </url>
+  <url>
+    <loc>https://learncs.ru/navigator/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://learncs.ru/materials/ege-i-olimpiady/</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://learncs.ru/materials/kak-vyrastit-itshnika/</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://learncs.ru/materials/karta-vozmozhnostey/</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://learncs.ru/materials/olimpiadnoe-programmirovanie-podcast/</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://learncs.ru/materials/zachem-izuchat-programmirovanie-v-shkole/</loc>
+    <priority>0.7</priority>
+  </url>
 </urlset>

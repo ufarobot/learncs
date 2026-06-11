@@ -248,4 +248,24 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { pages };
+const materials = defineCollection({
+  loader: glob({
+    pattern: '*.md',
+    base: './src/content/materials',
+  }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    category: z.string(),
+    sourceLabel: z.string(),
+    sourceUrl: z.string().url(),
+    publishedAt: z.string(),
+    readingTime: z.string(),
+    image: media.optional(),
+    tags: z.array(z.string()).optional(),
+    featured: z.boolean().optional(),
+    order: z.number().optional(),
+  }),
+});
+
+export const collections = { pages, materials };

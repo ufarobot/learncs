@@ -1,7 +1,7 @@
 ---
 import { nav, site } from '../data/site.js';
 
-const { basePath = '' } = Astro.props;
+const { basePath = '', showCta = true } = Astro.props;
 const rootHref = basePath || './';
 const localHref = (href) => {
   if (href.startsWith('http') || href.startsWith('#')) {
@@ -35,12 +35,14 @@ const localHref = (href) => {
 
     <nav class="site-nav" id="site-nav" aria-label="Основная навигация" data-nav>
       {nav.map((item) => <a href={localHref(item.href)} title={item.title} aria-label={item.ariaLabel}>{item.label}</a>)}
-      <a
-        class="nav-cta"
-        href={localHref('#order')}
-        data-metrika-goal="ym-open-leadform-header"
-        data-metrika-source="header"
-      >Оставить заявку</a>
+      {showCta && (
+        <a
+          class="nav-cta"
+          href={localHref('#order')}
+          data-metrika-goal="ym-open-leadform-header"
+          data-metrika-source="header"
+        >Оставить заявку</a>
+      )}
     </nav>
   </div>
 </header>

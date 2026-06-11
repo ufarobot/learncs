@@ -1,0 +1,314 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site.js';
+import { getCollection } from 'astro:content';
+
+const materialEntries = (await getCollection('materials')).sort((left, right) => {
+  const leftOrder = left.data.order ?? 100;
+  const rightOrder = right.data.order ?? 100;
+
+  return leftOrder - rightOrder;
+});
+const materialById = Object.fromEntries(materialEntries.map((entry) => [entry.id, entry]));
+const materialPath = (entry) => `../materials/${entry.id}/`;
+const assetFromNavigator = (src) => src.replace('../../assets/', '../assets/');
+const formatDate = (date) => new Intl.DateTimeFormat('ru-RU', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+}).format(new Date(date)).replace('.', '');
+const featuredMaterial = materialById['zachem-izuchat-programmirovanie-v-shkole'] || materialEntries[0];
+const articleCards = [
+  materialById['kak-vyrastit-itshnika'],
+  materialById['zachem-izuchat-programmirovanie-v-shkole'],
+  materialById['olimpiadnoe-programmirovanie-podcast'],
+  materialById['ege-i-olimpiady'],
+].filter(Boolean);
+const quickStart = [
+  {
+    title: 'Как вырастить ИТшника',
+    text: 'Опорная статья для родителей о траектории, базе и выборе возможностей.',
+    href: materialPath(materialById['kak-vyrastit-itshnika']),
+    marker: '01',
+  },
+  {
+    title: 'Карта возможностей',
+    text: 'Обзор траекторий, ресурсов и следующих шагов для школьника.',
+    href: '#map',
+    marker: '02',
+  },
+  {
+    title: 'ЕГЭ и олимпиады',
+    text: 'Как связать олимпиадную базу с подготовкой к экзамену.',
+    href: materialPath(materialById['ege-i-olimpiady']),
+    marker: '03',
+  },
+  {
+    title: 'Олимпиадное программирование',
+    text: 'Конспект подкаста о пользе, рисках и балансе с проектами.',
+    href: materialPath(materialById['olimpiadnoe-programmirovanie-podcast']),
+    marker: '04',
+  },
+];
+const routes = [
+  {
+    title: '5-7 классы: старт',
+    text: 'Первые шаги в программировании, алгоритмах, любопытстве и регулярности.',
+    items: ['Введение в программирование', 'Алгоритмическое мышление', 'Первые проекты'],
+    href: materialPath(materialById['zachem-izuchat-programmirovanie-v-shkole']),
+  },
+  {
+    title: '8-9 классы: олимпиадная база',
+    text: 'Углубляем алгоритмы и структуры данных, решаем задачи, участвуем в олимпиадах.',
+    items: ['Алгоритмы и структуры данных', 'Олимпиадные задачи', 'Участие в соревнованиях'],
+    href: materialPath(materialById['olimpiadnoe-programmirovanie-podcast']),
+  },
+  {
+    title: '10-11 классы: ЕГЭ и поступление',
+    text: 'Подготовка к ЕГЭ по информатике, портфолио и поступление в ИТ-вуз.',
+    items: ['ЕГЭ по информатике', 'Вступительные испытания', 'Выбор вуза и программы'],
+    href: materialPath(materialById['ege-i-olimpiady']),
+  },
+  {
+    title: 'Проекты и портфолио',
+    text: 'Идея проектов, командная работа, публикация и презентация результатов.',
+    items: ['Идея и планирование', 'Разработка и публикация', 'Портфолио и презентация'],
+    href: materialPath(materialById['karta-vozmozhnostey']),
+  },
+];
+const resources = [
+  {
+    title: 'Кружки и школы программирования',
+    text: 'Как сравнивать онлайн и офлайн-возможности без перегруза ссылками.',
+    href: materialPath(materialById['karta-vozmozhnostey']),
+    label: 'Разобраться',
+  },
+  {
+    title: 'Олимпиады и соревнования',
+    text: 'Где олимпиадная подготовка помогает, а где нужен другой формат практики.',
+    href: materialPath(materialById['olimpiadnoe-programmirovanie-podcast']),
+    label: 'Открыть конспект',
+  },
+  {
+    title: 'Учебник learncs',
+    text: 'Открытые материалы по математике, информатике и программированию.',
+    href: 'https://book.learncs.ru/',
+    label: 'Открыть учебник',
+    target: '_blank',
+  },
+  {
+    title: 'Карта в Miro',
+    text: 'Визуальная доска с траекториями, темами и возможными следующими шагами.',
+    href: 'https://miro.com/app/board/uXjVJtKPqE8=/?share_link_id=64364167175',
+    label: 'Открыть Miro',
+    target: '_blank',
+  },
+];
+const canonical = new URL('navigator/', site.url).href;
+const title = 'Навигатор материалов по ИТ-образованию школьников — learncs.ru';
+const description = 'Справочник learncs.ru: авторские статьи, маршруты, карта возможностей, подкасты и полезные ресурсы по ИТ-образованию школьников.';
+const collectionStructuredData = {
+  '@type': 'CollectionPage',
+  '@id': canonical,
+  isPartOf: { '@id': new URL('#website', site.url).href },
+  inLanguage: 'ru-RU',
+  name: 'Навигатор материалов по ИТ-образованию школьников',
+  description,
+  about: [
+    'ИТ-образование школьников',
+    'олимпиадная информатика',
+    'Computer Science',
+    'ЕГЭ по информатике',
+    'образовательные траектории'
+  ],
+};
+---
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  courseSchema={false}
+  basePath="../"
+  showHeaderCta={false}
+  showFooterCta={false}
+  extraStylesheets={['assets/styles.css?v=20260609-navigator-images-v2']}
+  structuredData={[collectionStructuredData]}
+>
+  <div class="navigator-hub">
+    <section class="navigator-hero" id="top">
+      <div class="container navigator-hero-grid">
+        <div class="navigator-hero-copy">
+          <p class="pretitle">Материалы и траектории</p>
+          <h1>Навигатор</h1>
+          <p class="lead">Авторские статьи, карты и заметки о том, как школьнику двигаться в ИТ. Основные материалы теперь можно читать здесь, не уходя каждый раз в Telegram или Habr.</p>
+          <nav class="navigator-tabs" aria-label="Разделы навигатора">
+            <a href="#start">Начать отсюда</a>
+            <a href="#map">Карта</a>
+            <a href="#routes">Маршруты</a>
+            <a href="#articles">Статьи</a>
+          </nav>
+        </div>
+        <figure class="navigator-hero-visual">
+          <img src="../assets/navigator-hero-students.jpg" alt="Школьники вместе разбирают задачу по программированию за ноутбуком" width="1280" height="800" loading="eager" decoding="async" />
+        </figure>
+      </div>
+    </section>
+
+    <section class="navigator-section" aria-labelledby="featured-title">
+      <div class="container navigator-top-grid">
+        <article class="navigator-feature-card">
+          <div class="navigator-feature-copy">
+            <p class="navigator-kicker">{featuredMaterial.data.category}</p>
+            <h2 id="featured-title">{featuredMaterial.data.title}</h2>
+            <p>{featuredMaterial.data.description}</p>
+            <div class="navigator-meta">
+              <span>{formatDate(featuredMaterial.data.publishedAt)}</span>
+              <span>{featuredMaterial.data.readingTime}</span>
+              <span>Материал на сайте</span>
+            </div>
+            <a class="content-card-link" href={materialPath(featuredMaterial)}>Читать материал</a>
+          </div>
+          {featuredMaterial.data.image && (
+            <figure class="navigator-feature-media">
+              <img src={assetFromNavigator(featuredMaterial.data.image.src)} alt={featuredMaterial.data.image.alt} width="1280" height="800" loading="lazy" decoding="async" />
+            </figure>
+          )}
+        </article>
+
+        <aside class="navigator-start-panel" id="start" aria-labelledby="start-title">
+          <h2 id="start-title">Начать отсюда</h2>
+          <div class="navigator-start-list">
+            {quickStart.map((item) => (
+              <a class="navigator-start-item" href={item.href}>
+                <span>{item.marker}</span>
+                <strong>{item.title}</strong>
+                <small>{item.text}</small>
+              </a>
+            ))}
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="navigator-section navigator-map-section" id="map" aria-labelledby="map-title">
+      <div class="container navigator-map-card">
+        <div class="navigator-map-copy">
+          <h2 id="map-title">Карта возможностей</h2>
+          <p>Карта помогает увидеть целое поле возможностей: направления, темы, ресурсы, активности и следующие шаги. Здесь она дана как обзор, а полная доска остается в Miro.</p>
+          <a class="button button-secondary" href="https://miro.com/app/board/uXjVJtKPqE8=/?share_link_id=64364167175" target="_blank" rel="noopener noreferrer">Открыть Miro-карту</a>
+        </div>
+        <div class="navigator-map-board" aria-label="Схема карты возможностей">
+          <div class="navigator-board-head">
+            <strong>miro</strong>
+            <span>Карта возможностей для школьников</span>
+          </div>
+          <div class="navigator-board-columns">
+            <div>
+              <strong>Исследую</strong>
+              <span>Введение в программирование</span>
+              <span>Базовые алгоритмы</span>
+              <span>Основы сетей</span>
+              <span>Небольшие проекты</span>
+            </div>
+            <div>
+              <strong>Пробую</strong>
+              <span>Алгоритмы на практике</span>
+              <span>Структуры данных</span>
+              <span>SQL и базы данных</span>
+              <span>Git и командная работа</span>
+            </div>
+            <div>
+              <strong>Углубляюсь</strong>
+              <span>Олимпиадные задачи</span>
+              <span>Проекты и исследования</span>
+              <span>Машинное обучение</span>
+              <span>Портфолио</span>
+            </div>
+            <div>
+              <strong>Поступаю</strong>
+              <span>Подготовка к ЕГЭ</span>
+              <span>Тренировки и сборы</span>
+              <span>Сети в вузе</span>
+              <span>Data Science</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="navigator-section" id="routes" aria-labelledby="routes-title">
+      <div class="container">
+        <div class="navigator-section-head">
+          <h2 id="routes-title">Популярные маршруты</h2>
+          <p>Маршруты помогают выбрать ближайшую ситуацию и не читать все материалы подряд.</p>
+        </div>
+        <div class="navigator-route-grid">
+          {routes.map((route) => (
+            <article class="navigator-route-card">
+              <h3>{route.title}</h3>
+              <p>{route.text}</p>
+              <ul>
+                {route.items.map((item) => <li>{item}</li>)}
+              </ul>
+              <a class="content-card-link" href={route.href}>Смотреть маршрут</a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="navigator-section" id="articles" aria-labelledby="articles-title">
+      <div class="container">
+        <div class="navigator-section-head">
+          <h2 id="articles-title">Большие статьи и подкасты</h2>
+          <p>Первые материалы уже перенесены внутрь сайта в виде локальных редакционных версий. Внешние источники оставлены внутри статей как ссылки на оригинал.</p>
+        </div>
+        <div class="navigator-article-grid">
+          {articleCards.map((entry) => (
+            <article class="navigator-article-card">
+              {entry.data.image && (
+                <figure>
+                  <img src={assetFromNavigator(entry.data.image.src)} alt={entry.data.image.alt} width="1280" height="800" loading="lazy" decoding="async" />
+                </figure>
+              )}
+              <div>
+                <p class="navigator-kicker">{entry.data.category}</p>
+                <h3>{entry.data.title}</h3>
+                <p>{entry.data.description}</p>
+                <div class="navigator-meta">
+                  <span>{formatDate(entry.data.publishedAt)}</span>
+                  <span>{entry.data.readingTime}</span>
+                </div>
+                <a class="content-card-link" href={materialPath(entry)}>Читать на сайте</a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="navigator-section" id="resources" aria-labelledby="resources-title">
+      <div class="container">
+        <div class="navigator-resource-panel">
+          <h2 id="resources-title">Полезные ресурсы</h2>
+          <div class="navigator-resource-list">
+            {resources.map((item) => (
+              <a class="navigator-resource-row" href={item.href} target={item.target} rel={item.target === '_blank' ? 'noopener noreferrer' : undefined}>
+                <strong>{item.title}</strong>
+                <span>{item.text}</span>
+                <em>{item.label}</em>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="navigator-section navigator-note-section" aria-labelledby="note-title">
+      <div class="container navigator-note">
+        <h2 id="note-title">Что осталось внешним</h2>
+        <p>Telegram и Habr больше не являются основным способом чтения навигатора. Они остаются источниками и местом для свежих обновлений, а устойчивые материалы постепенно будут переноситься на сайт.</p>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

@@ -190,6 +190,39 @@ Default:
 - optional `subtitle` can carry one key fact such as duration or price;
 - optional `.text-accent-practical` can emphasize a short practical condition.
 
+## Utility Page Patterns
+
+### `navigator-hub`
+
+Use only for `/navigator/`, where the page is an editorial directory rather than a course landing page.
+
+Default:
+
+- no sales CTA in the header or footer;
+- first screen explains that this is a material navigator, not course enrollment;
+- cards link primarily to local site materials, with external Telegram/Habr/Miro links used as sources or secondary resources;
+- visual hierarchy may use a featured article, start list, route cards, a map preview, article cards, and resource rows;
+- generated editorial 16:10 images are allowed for the hero and material covers when they make the directory easier to scan, but they must stay calm, realistic, text-free, logo-free, and non-salesy;
+- responsive behavior collapses all multi-column layouts to one readable column on mobile.
+
+Do not use:
+
+- on the homepage;
+- as a replacement for course landing blocks;
+- with a subscription or lead-form closing CTA unless explicitly requested for this page.
+
+### `article-page`
+
+Use only for local editorial pages under `/materials/`.
+
+Default:
+
+- no sales CTA in the header or footer;
+- title, description, date, reading time, and source link appear before the article body;
+- external Habr/Telegram/podcast links are treated as sources, not the primary reading path;
+- material cover images can reuse the navigator's generated editorial 16:10 covers and should display as complete image-led media, not as tiny thumbnails inside decorative frames;
+- prose uses the shared typography scale and collapses to one column on mobile.
+
 ## Variants
 
 No visual variant is implicit. To create one:

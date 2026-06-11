@@ -1,7 +1,7 @@
 ---
 import { footerCta, footerLinks, site } from '../data/site.js';
 
-const { basePath = '' } = Astro.props;
+const { basePath = '', showCta = true } = Astro.props;
 const rootHref = basePath || './';
 const localHref = (href) => {
   if (href.startsWith('http') || href.startsWith('#')) {
@@ -30,7 +30,7 @@ const linkAttributes = (item) => ({
       <p>{site.description}</p>
     </div>
     <div class="footer-actions">
-      {footerCta && (
+      {showCta && footerCta && (
         <div class="footer-cta">
           <p class="footer-cta-title">{footerCta.title}</p>
           <a class="button button-primary footer-cta-button" href={localHref(footerCta.href)} {...linkAttributes(footerCta)}>{footerCta.label}</a>

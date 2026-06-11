@@ -11,7 +11,10 @@ const {
   ogImageAlt = site.ogImageAlt,
   robots = 'index, follow',
   basePath = '',
+  showHeaderCta = true,
+  showFooterCta = true,
   courseSchema = true,
+  extraStylesheets = [],
   structuredData = []
 } = Astro.props;
 
@@ -102,7 +105,7 @@ const structuredDataPayload = {
     <meta name="twitter:image:alt" content={ogImageAlt} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href={assetPath('assets/favicon.svg')} type="image/svg+xml" />
-    <link rel="stylesheet" href={assetPath(`assets/styles.css?v=${site.stylesheetVersion}`)} />
+    <link rel="stylesheet" href={assetPath(`assets/styles.css?v=${site.stylesheetVersion}`)} />{extraStylesheets.map((href) => <link rel="stylesheet" href={assetPath(href)} />)}
     <script defer src={assetPath(`assets/main.js?v=${site.scriptVersion}`)}></script>
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript" is:inline>
@@ -122,10 +125,10 @@ const structuredDataPayload = {
   <body>
     <noscript><div><img src="https://mc.yandex.ru/watch/109571501" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <a class="skip-link" href="#main">К основному содержанию</a>
-    <Header basePath={basePath} />
+    <Header basePath={basePath} showCta={showHeaderCta} />
     <main id="main">
       <slot />
     </main>
-    <Footer basePath={basePath} />
+    <Footer basePath={basePath} showCta={showFooterCta} />
   </body>
 </html>
