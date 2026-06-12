@@ -162,4 +162,6 @@ Experiment mode:
 
 Production mode:
 
-- When fixing a change for production, run `npm run check:prod`; it includes the design check and Astro build. The user reviews the already-running `8123` dev preview manually unless a shell-level preview check is explicitly requested.
+- When fixing a change for production, run `npm run check:prod`; it includes the design check and Astro build.
+- Before the final response, run the central preview gate:
+  `bash "/Users/airatishimbaev/Developer/Personal manager/tools/site-previews.sh" ensure --project learncs`.

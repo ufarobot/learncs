@@ -2,25 +2,29 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { site } from '../../data/site.js';
 import { getCollection, render } from 'astro:content';
+import { canonicalMaterialSlug, isDuplicateMaterialSlug, isHiddenMaterialSlug } from '../../lib/material-duplicates.js';
 
 export async function getStaticPaths() {
   const entries = await getCollection('materials');
 
-  return entries.map((entry) => ({
-    params: { slug: entry.id },
-    props: { entry },
-  }));
+  return entries
+    .filter((entry) => !isHiddenMaterialSlug(entry.id))
+    .map((entry) => ({
+      params: { slug: entry.id },
+      props: { entry },
+    }));
 }
 
 const { entry } = Astro.props;
+const isDuplicate = isDuplicateMaterialSlug(entry.id);
+const canonicalSlug = canonicalMaterialSlug(entry.id);
+const redirectPath = `/materials/${canonicalSlug}/`;
+const redirectUrl = new URL(redirectPath, site.url).href;
 const { Content } = await render(entry);
 const material = entry.data;
-const canonical = new URL(`materials/${entry.id}/`, site.url).href;
-const formattedDate = new Intl.DateTimeFormat('ru-RU', {
-  day: 'numeric',
-  month: 'long',
-  year: 'numeric',
-}).format(new Date(material.publishedAt));
+const rawBody = entry.body?.trimStart() ?? '';
+const shouldRenderRawHtml = rawBody.startsWith('<');
+const canonical = isDuplicate ? redirectUrl : new URL(`materials/${entry.id}/`, site.url).href;
 const articleStructuredData = {
   '@type': 'Article',
   '@id': canonical,
@@ -37,51 +41,42 @@ const articleStructuredData = {
   publisher: { '@id': new URL('#organization', site.url).href },
 };
 ---
-<BaseLayout
-  title={`${material.title} — learncs.ru`}
-  description={material.description}
-  canonical={canonical}
-  basePath="../../"
-  courseSchema={false}
-  showHeaderCta={false}
-  showFooterCta={false}
-  extraStylesheets={['assets/styles.css?v=20260609-navigator-images-v2']}
-  structuredData={[articleStructuredData]}
->
-  <article class="article-page">
-    <header class="container article-hero">
-      <a class="article-back-link" href="../../navigator/">Навигатор</a>
-      <p class="pretitle">{material.category}</p>
-      <h1>{material.title}</h1>
-      <p class="lead">{material.description}</p>
-      <div class="article-meta">
-        <span>{formattedDate}</span>
-        <span>{material.readingTime}</span>
-        <a href={material.sourceUrl} target="_blank" rel="noopener noreferrer">{material.sourceLabel}</a>
-      </div>
-      {material.image && (
-        <figure class="article-cover">
-          <img src={material.image.src} alt={material.image.alt} width="1280" height="800" loading="eager" decoding="async" />
-        </figure>
-      )}
-    </header>
+{isDuplicate ? (
+  <html lang="ru">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="robots" content="noindex" />
+      <meta http-equiv="refresh" content={`0; url=${redirectPath}`} />
+      <link rel="canonical" href={redirectUrl} />
+      <title>{material.title} — learncs.ru</title>
+    </head>
+    <body>
+      <p><a href={redirectPath}>Открыть статью</a></p>
+    </body>
+  </html>
+) : (
+  <BaseLayout
+    title={`${material.title} — learncs.ru`}
+    description={material.description}
+    canonical={canonical}
+    basePath="../../"
+    courseSchema={false}
+    showHeaderCta={false}
+    showFooterCta={false}
+    extraStylesheets={['assets/styles.css?v=20260612-navigator-clean-v3']}
+    structuredData={[articleStructuredData]}
+  >
+    <article class="article-page">
+      <header class="container article-hero">
+        <a class="article-back-link" href="../../navigator/">Навигатор</a>
+        <h1>{material.title}</h1>
+      </header>
 
-    <div class="container article-layout">
-      <div class="article-prose">
-        <Content />
-      </div>
-      <aside class="article-sidebar" aria-label="Источник и навигация">
-        <div class="article-source-card">
-          <p class="article-source-title">Источник</p>
-          <p>Это локальная редакционная версия материала. Полный оригинал доступен по внешней ссылке.</p>
-          <a class="content-card-link" href={material.sourceUrl} target="_blank" rel="noopener noreferrer">{material.sourceLabel}</a>
+      <div class="container article-layout article-layout-single">
+        <div class="article-prose">
+          {shouldRenderRawHtml ? <Fragment set:html={entry.body} /> : <Content />}
         </div>
-        {material.tags && material.tags.length > 0 && (
-          <div class="article-tags">
-            {material.tags.map((tag) => <span>{tag}</span>)}
-          </div>
-        )}
-      </aside>
-    </div>
-  </article>
-</BaseLayout>
+      </div>
+    </article>
+  </BaseLayout>
+)}

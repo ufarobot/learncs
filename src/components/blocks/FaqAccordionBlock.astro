@@ -3,6 +3,10 @@ import SectionIntro from '../SectionIntro.astro';
 
 const { block } = Astro.props;
 const sectionClass = ['section', block.surface === 'muted' && 'section-muted'];
+const answerParagraphs = (answer) => answer
+  .split(/\n\s*\n/)
+  .map((paragraph) => paragraph.trim())
+  .filter(Boolean);
 ---
 <section class:list={sectionClass} id={block.id} data-template={block.template} data-spacing={block.spacing}>
   <div class="container faq-layout">
@@ -12,7 +16,9 @@ const sectionClass = ['section', block.surface === 'muted' && 'section-muted'];
       {block.items.map(([question, answer]) => (
         <details>
           <summary>{question}</summary>
-          <p>{answer}</p>
+          <div class="faq-answer">
+            {answerParagraphs(answer).map((paragraph) => <p>{paragraph}</p>)}
+          </div>
         </details>
       ))}
     </div>

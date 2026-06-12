@@ -52,13 +52,21 @@ npm run dev
 
 Astro dev-сервер настроен на тот же адрес: `http://127.0.0.1:8123/`. Если уже запущен `./preview.sh`, его нужно остановить перед `npm run dev`.
 
-Быстрый idempotent-preview для Codex и ручной проверки:
+Canonical preview gate для Codex и ручной проверки после site-правок:
+
+```bash
+bash "/Users/airatishimbaev/Developer/Personal manager/tools/site-previews.sh" ensure --project learncs
+```
+
+Команда проверяет `http://127.0.0.1:8123/`, восстанавливает canonical LaunchAgent при конфликте порта или недоступном preview и печатает URL. Внешние браузеры для preview не открывай: видимую проверку делай только в правом Codex in-app Browser. Не запускай fallback preview-порты для learncs.
+
+Repo-local debug fallback:
 
 ```bash
 npm run preview:dev
 ```
 
-Команда проверяет `http://127.0.0.1:8123/`; если Astro dev-сервер уже доступен, она просто печатает ссылку, а если нет — поднимает его в фоне и пишет лог в `.codex/preview-dev.log`. Эту команду можно безопасно запускать после первой правки сайта в новом Codex-сеансе, чтобы ссылка на preview уже была готова.
+Используй его только когда нужно отладить сам learncs preview helper.
 
 Локальная сборка:
 
@@ -73,6 +81,11 @@ npm run check:prod
 ```
 
 Команда запускает дизайн-чек и сборку Astro. Она не проверяет уже запущенный dev-сервер на `8123`, потому что обычно он открыт вручную через `npm run dev`, а shell-проверка может не иметь доступа к этому процессу.
+После browser-visible site-правок все равно запусти central preview gate:
+
+```bash
+bash "/Users/airatishimbaev/Developer/Personal manager/tools/site-previews.sh" ensure --project learncs
+```
 
 Если нужно отдельно проверить доступность preview из shell:
 
@@ -80,7 +93,7 @@ npm run check:prod
 npm run check:preview
 ```
 
-Если нужен временный preview для ручного просмотра агентом:
+Если пользователь явно разрешил временный fallback preview для ручного просмотра агентом:
 
 ```bash
 npm run preview:agent
@@ -92,7 +105,8 @@ npm run preview:agent
 npm run publish:local
 ```
 
-Этот шаг копирует готовые файлы из `dist/` в статическую корневую публикацию. После него нужно проверить `./preview.sh`, затем коммитить результат обычным способом.
+Этот шаг копирует готовые файлы из `dist/` в статическую корневую публикацию. После него нужно пройти central preview gate, затем коммитить результат обычным способом.
+Этот шаг копирует готовые файлы из `dist/` в статическую корневую публикацию. После него нужно пройти central preview gate, затем коммитить результат обычным способом.
 
 Быстрый ручной деплой с проверкой, публикацией, коммитом и push:
 
@@ -115,7 +129,8 @@ npm run publish:local
 ## Локальный просмотр
 
 ```bash
-./preview.sh
+bash "/Users/airatishimbaev/Developer/Personal manager/tools/site-previews.sh" ensure --project learncs
 ```
 
-Скрипт всегда поднимает сайт по адресу `http://127.0.0.1:8123/`.
+Canonical preview всегда использует `http://127.0.0.1:8123/`.
+Локальный `./preview.sh` оставлен как совместимая обертка и делегирует в этот же central preview manager.

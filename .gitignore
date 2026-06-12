@@ -9,3 +9,13 @@ resources/
 AGENTS.md
 learncs_result_spec_for_codex.md
 DEPLOY_LOG.md
+
+# MkDocs navigator generated files.
+public/navigator/
+navigator-docs/mkdocs.yml
+navigator-docs/docs/archive.md
+navigator-docs/docs/index.md
+navigator-docs/docs/materials/
+navigator-docs/docs/topics/
+navigator-docs/docs/javascripts/
+navigator-docs/docs/stylesheets/extra.css

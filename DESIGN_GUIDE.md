@@ -167,4 +167,6 @@ Production mode:
 - Use this when the user says "фиксируем", "вноси", "делаем", "в прод", or asks for deploy.
 - Reconcile the change with `BRANDBOOK.md`, this guide, and `COMPONENTS.md`.
 - Run `npm run check:prod`.
-- Do not automatically probe the already-running `8123` dev server; use `npm run check:preview` only when server availability itself is being debugged.
+- Run the central preview gate before the final response:
+  `bash "/Users/airatishimbaev/Developer/Personal manager/tools/site-previews.sh" ensure --project learncs`.
+- Use `npm run check:preview` only when server availability itself is being debugged.

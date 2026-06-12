@@ -196,13 +196,25 @@ Default:
 
 Use only for `/navigator/`, where the page is an editorial directory rather than a course landing page.
 
+Architecture:
+
+- `/navigator/` may be built as a separate MkDocs subsite on the same domain;
+- source material text remains in `src/content/materials`, and generated MkDocs material pages should not be edited by hand;
+- `public/navigator` is generated only so Astro dev preview can serve the same MkDocs navigator locally;
+- shared MkDocs UI files may be copied from `git-cs-book` during the build, but only one-way from textbook to navigator;
+- navigator work must not write to `git-cs-book`, and navigator-specific overrides must stay in `navigator-docs/docs/stylesheets/navigator.css`.
+
 Default:
 
 - no sales CTA in the header or footer;
 - first screen explains that this is a material navigator, not course enrollment;
-- cards link primarily to local site materials, with external Telegram/Habr/Miro links used as sources or secondary resources;
-- visual hierarchy may use a featured article, start list, route cards, a map preview, article cards, and resource rows;
-- generated editorial 16:10 images are allowed for the hero and material covers when they make the directory easier to scan, but they must stay calm, realistic, text-free, logo-free, and non-salesy;
+- default presentation is a clean document-style index: local material links grouped under quiet section labels, with a short "Главное" block, topic blocks, and a topic-grouped channel archive when many imported posts exist;
+- keep navigator lists link-first: no source labels, reading time, descriptions, pretitle clutter, redundant section explanations, card grids, sidebars, numbered cards, date-heavy blog listings, oversized hero type, or route panels;
+- when channel posts clearly form a sequence, the topic sections should link to a local series page rather than several separate posts;
+- links in the navigator should primarily point to local `/materials/` pages;
+- external Telegram/Habr post links should not be visible primary actions in the navigator;
+- a more visual variant may use a featured article, start list, route cards, a map preview, article cards, and resource rows only when explicitly chosen again;
+- illustrations must help explain the material: use images from the source article/post, diagrams, screenshots, maps, or technical visuals; do not generate realistic people for navigator or material covers;
 - responsive behavior collapses all multi-column layouts to one readable column on mobile.
 
 Do not use:
@@ -218,9 +230,10 @@ Use only for local editorial pages under `/materials/`.
 Default:
 
 - no sales CTA in the header or footer;
-- title, description, date, reading time, and source link appear before the article body;
+- title, description, date, reading time, and source label appear before the article body;
 - external Habr/Telegram/podcast links are treated as sources, not the primary reading path;
-- material cover images can reuse the navigator's generated editorial 16:10 covers and should display as complete image-led media, not as tiny thumbnails inside decorative frames;
+- material cover images should come from the corresponding source material or be a useful diagram, screenshot, map, or technical visual; omit the cover when no relevant source image exists;
+- do not use generated realistic people for material covers;
 - prose uses the shared typography scale and collapses to one column on mobile.
 
 ## Variants

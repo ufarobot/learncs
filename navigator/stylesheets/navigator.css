@@ -1,0 +1,205 @@
+/* Local overrides for the MkDocs navigator. The base UI is copied from git-cs-book. */
+
+:root {
+    --color-page-bg: var(--color-surface);
+    --color-nav-hover-bg: rgba(0, 0, 0, 0.055);
+    --shadow-content: none;
+}
+
+.md-header {
+    box-shadow: none !important;
+}
+
+.md-content {
+    border-radius: 4px;
+}
+
+.md-content__inner {
+    padding-top: 1.4rem;
+    padding-bottom: 3rem;
+}
+
+.md-typeset h1 {
+    font-size: 1.45rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    margin-bottom: 1.2rem;
+}
+
+.md-typeset h2 {
+    font-size: 1.05rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    margin-top: 2rem;
+    margin-bottom: 0.8rem;
+}
+
+.md-typeset h3 {
+    letter-spacing: 0;
+}
+
+.md-nav__link {
+    line-height: 1.35;
+}
+
+.md-sidebar--secondary {
+    display: none;
+}
+
+.md-nav__link:hover {
+    color: var(--color-heading-text) !important;
+}
+
+.md-nav__item .md-nav__link--active,
+.md-nav__item .md-nav__link[aria-current="page"] {
+    color: var(--color-nav-active) !important;
+}
+
+.md-nav__source,
+.md-nav--primary .md-nav__title {
+    background: transparent !important;
+    color: var(--color-heading-text) !important;
+}
+
+.md-nav--primary .md-nav__title {
+    display: none;
+}
+
+.md-nav--primary .md-nav__title::before,
+.md-nav--primary .md-nav__title a {
+    color: var(--color-heading-text) !important;
+}
+
+.md-typeset a {
+    color: var(--color-book-blue);
+    text-decoration: underline;
+    text-decoration-thickness: 0.06em;
+    text-underline-offset: 0.16em;
+}
+
+.md-typeset a:hover {
+    color: var(--color-inline-code);
+}
+
+.md-typeset .telegram-original,
+.md-typeset .habr-original {
+    color: var(--color-body-text);
+    line-height: 1.65;
+}
+
+.md-typeset .telegram-original figure,
+.md-typeset .habr-original figure {
+    margin: 1.2rem 0;
+}
+
+.md-typeset .telegram-original img,
+.md-typeset .habr-original img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.md-typeset .telegram-series hr {
+    border: 0;
+    border-top: 1px solid var(--color-slides-border);
+    margin: 2rem 0;
+}
+
+.md-typeset .navigator-link-list {
+    list-style: none;
+    margin: 0 0 1.9rem;
+    max-width: 46rem;
+    padding: 0;
+}
+
+.md-typeset .navigator-link-list li {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 0;
+    padding: 0;
+}
+
+.md-typeset .navigator-link-list li:first-child {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.md-typeset .navigator-link-list a {
+    align-items: center;
+    color: var(--color-heading-text);
+    display: flex;
+    font-weight: 500;
+    gap: 1rem;
+    justify-content: space-between;
+    padding: 0.55rem 0;
+    text-decoration: none;
+}
+
+.md-typeset .navigator-link-list a::after {
+    color: var(--color-book-blue);
+    content: "→";
+    flex: 0 0 auto;
+    font-weight: 500;
+    opacity: 0.7;
+}
+
+.md-typeset .navigator-link-list a:hover {
+    color: var(--color-book-blue);
+    text-decoration: underline;
+}
+
+.md-typeset h2.navigator-home-direction {
+    align-items: center;
+    display: flex;
+    font-size: 1.08rem;
+    font-weight: 600;
+    gap: 0.45rem;
+    margin: 1.75rem 0 0.75rem;
+}
+
+.md-typeset h2.navigator-home-direction::after {
+    background: rgba(0, 0, 0, 0.12);
+    content: "";
+    flex: 1 1 auto;
+    height: 1px;
+    min-width: 2rem;
+}
+
+.md-typeset .series-contents {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    margin: 0 0 1.6rem;
+    padding: 0.85rem 0 0.95rem;
+}
+
+.md-typeset .series-contents strong {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+}
+
+.md-typeset .series-contents ol {
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.md-typeset .series-contents li {
+    margin-bottom: 0.2rem;
+}
+
+.md-typeset .series-part-anchor {
+    display: block;
+    position: relative;
+    top: -3rem;
+}
+
+.md-typeset figcaption {
+    color: var(--color-muted-text);
+    font-size: 0.85em;
+    line-height: 1.45;
+    margin-top: 0.4rem;
+}
+
+@media screen and (max-width: 76.1875em) {
+    .md-content__inner {
+        padding-top: 1rem;
+    }
+}

@@ -1,0 +1,12 @@
+---
+title: "Приглашаю школьников 5–10 классов на онлайн-занятия по олимпиадному программированию."
+description: "Приглашаю школьников 5–10 классов на онлайн-занятия по олимпиадному программированию."
+category: "Telegram"
+sourceLabel: "Пост канала"
+sourceUrl: "https://t.me/techleaderschool/304"
+publishedAt: "2025-12-25"
+readingTime: ""
+order: 1304
+---
+
+<div class="telegram-original"><b>Приглашаю школьников 5–10 классов на онлайн-занятия по олимпиадному программированию.</b><br/><br/>Подходит для любого уровня: на входе провожу диагностику, по результатам выстраиваю индивидуальную траекторию. Если есть пробелы по математике, закрываем их по мере необходимости – ровно то, что упирается в задачи.<br/><br/>Язык: начинаем с Java. Дальше основную олимпиадную базу можно проходить на Java / Python / C++.<br/><br/>Время по Москве:<br/> • среда 17:00–19:20 (3×40 минут),<br/> • воскресенье 10:00–12:20 (3×40 минут).<br/>Можно выбрать один слот или оба.<br/><br/>Оплата: 3 000 ₽ за одно занятие (3×40 минут).<br/>Оплата в конце месяца по факту посещённых занятий.<br/><br/>Узнать подробности о формате, программе и условиях: <a href="http://learncs.ru/" target="_blank" rel="noopener">learncs.ru</a><br/><br/>Также можно посмотреть визуально образовательные возможности и траектории на моей авторской <a href="/materials/karta-vozmozhnostey/">Miro-карте</a>.<br/><br/>Для записи и по любым вопросам могу созвониться и провести консультационную встречу – обсудим общие детали и программу курса. Пишите мне в Telegram: @aishimbaev<br/><br/>Буду благодарен за репост и рекомендации.<figure><img src="/assets/tg-techleaderschool-304-01.jpg" alt="" loading="lazy" decoding="async" /></figure><figure><img src="/assets/tg-techleaderschool-304-02.jpg" alt="" loading="lazy" decoding="async" /></figure><figure><img src="/assets/tg-techleaderschool-304-03.jpg" alt="" loading="lazy" decoding="async" /></figure><figure><img src="/assets/tg-techleaderschool-304-04.jpg" alt="" loading="lazy" decoding="async" /></figure><figure><img src="/assets/tg-techleaderschool-304-05.jpg" alt="" loading="lazy" decoding="async" /></figure><figure><img src="/assets/tg-techleaderschool-304-06.jpg" alt="" loading="lazy" decoding="async" /></figure><figure><img src="/assets/tg-techleaderschool-304-07.jpg" alt="" loading="lazy" decoding="async" /></figure><figure><img src="/assets/tg-techleaderschool-304-08.jpg" alt="" loading="lazy" decoding="async" /></figure><figure><img src="/assets/tg-techleaderschool-304-09.jpg" alt="" loading="lazy" decoding="async" /></figure></div>

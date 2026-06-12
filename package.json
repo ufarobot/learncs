@@ -9,9 +9,11 @@
     "npm": ">=9.6.5"
   },
   "scripts": {
+    "predev": "npm run build:navigator",
     "dev": "astro dev --host 127.0.0.1 --port 8123",
     "preview:dev": "node tools/ensure-dev-server.mjs",
-    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build && node tools/copy-static-to-dist.mjs",
+    "build": "npm run build:navigator && ASTRO_TELEMETRY_DISABLED=1 astro build && node tools/copy-static-to-dist.mjs && npm run build:navigator",
+    "build:navigator": "node tools/build-navigator-docs.mjs",
     "preview:agent": "node tools/agent-preview.mjs --keep-alive",
     "publish:local": "node tools/publish-astro-dist.mjs",
     "check:design": "python3 tools/check-design.py",
