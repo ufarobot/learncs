@@ -485,7 +485,7 @@ blocks:
     title: "Записаться на занятия"
     text: "Оставьте имя и контакт для связи. Я свяжусь с вами, чтобы обсудить детали занятий."
     form:
-      endpoint: "https://script.google.com/macros/s/AKfycbz9D5aIvT2z62ZbuhqiPMO_DL7uT0GnPY0L8R-tUbcwVSY2GDJ7ErlsuFhxCy6sErgOhg/exec"
+      endpoint: "https://script.google.com/macros/s/AKfycbxfG0NoZhTz6LapPXOCfjel9xXXMrJuMec_hD-z61Aw5uk1smr8gO65vHJrFoMz9Gw-ow/exec"
       submitLabel: "Отправить заявку"
       successText: "Спасибо, заявка отправлена. Я свяжусь с вами, чтобы обсудить детали занятий."
       errorText: "Не удалось отправить заявку. Попробуйте позже или напишите мне напрямую."
