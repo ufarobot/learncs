@@ -71,6 +71,9 @@ Images:
 - Do not crop photos by default; prefer full image display with `object-fit: contain` or natural height.
 - Every landing image must have an explicit template max-width; do not rely on `width: 100%` alone because layout changes can upscale photos.
 - Do not blur, darken, or rectangularly clip the hero student image.
+- Public landing photos should use a photo hygiene pass before WebP export: convert source photos from Display P3, Adobe RGB, or other wide/nonstandard profiles to sRGB, then export the WebP from that sRGB version at high quality. This is color/profile normalization, not AI enhancement or stylization.
+- Do not run a blind batch enhancement across all assets. Apply the photo hygiene pass only to public-facing photos where the source profile can affect browser color, and verify the rendered page in preview.
+- Do not apply this rule to logos, screenshots, book spreads, diagrams, Telegram images, or other non-photo assets unless there is a visible color problem and a source-preserving fix has been reviewed.
 - On mobile, keep the hero student image as a compact centered illustration below the CTA: about 74-78vw wide, capped near 270-300px.
 - On tablet/medium screens, scale the hero title and image down before switching to mobile layout; never let hero headings break inside words.
 
