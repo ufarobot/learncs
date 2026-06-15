@@ -12,10 +12,8 @@ export const site = {
 export const nav = [
   { label: 'Учебник', href: 'https://book.learncs.ru' },
   {
-    label: 'Интенсив в Казани 15–24 июня',
-    href: 'https://pcms.kpfu.ru/',
-    title: 'Летний интенсив по олимпиадной информатике 15–24 июня в Казанском СУНЦ IT-лицее',
-    ariaLabel: 'Летний интенсив по олимпиадной информатике 15–24 июня в Казанском СУНЦ IT-лицее. Регистрация до 10 июня'
+    label: 'Интенсив',
+    href: 'https://sites.google.com/view/learncsm1/%D0%BA%D0%B0%D1%80%D1%82%D0%B0-%D0%BA%D1%83%D1%80%D1%81%D0%B0'
   }
 ];
 
