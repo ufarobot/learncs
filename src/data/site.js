@@ -12,10 +12,6 @@ export const site = {
 export const nav = [
   { label: 'Учебник', href: 'https://book.learncs.ru' },
   {
-    label: 'Интенсив',
-    href: 'https://sites.google.com/view/learncsm1/%D0%BA%D0%B0%D1%80%D1%82%D0%B0-%D0%BA%D1%83%D1%80%D1%81%D0%B0'
-  },
-  {
     label: 'IntelliJ IDEA',
     href: 'https://github.com/JetBrains/intellij-community/releases'
   }
