@@ -9,6 +9,10 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://learncs.ru/students/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://learncs.ru/materials/ege-i-olimpiady/</loc>
     <priority>0.7</priority>
   </url>

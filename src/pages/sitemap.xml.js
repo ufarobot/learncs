@@ -5,6 +5,7 @@ import { isDuplicateMaterialSlug, isHiddenMaterialSlug } from '../lib/material-d
 const routes = [
   { path: '/', priority: '1.0' },
   { path: '/navigator/', priority: '0.8' },
+  { path: '/students/', priority: '0.8' },
 ];
 
 const escapeXml = (value) => value

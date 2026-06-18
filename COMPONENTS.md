@@ -236,6 +236,19 @@ Default:
 - do not use generated realistic people for material covers;
 - prose uses the shared typography scale and collapses to one column on mobile.
 
+### `resource-links`
+
+Use for compact utility pages where the primary job is to collect external and internal links, such as `/students/`.
+
+Default:
+
+- compact page heading with one explanatory line;
+- link groups separated by quiet top dividers;
+- blue is used only for functional links;
+- helper text stays muted and short;
+- no nested cards, decorative media, or conversion panel by default;
+- on mobile the layout remains one readable column with normal page gutters.
+
 ## Variants
 
 No visual variant is implicit. To create one:

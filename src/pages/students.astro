@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site.js';
+
+const title = 'Ученикам — learncs.ru';
+const description = 'Полезные ссылки для учеников learncs.ru: курс, задачи, среда разработки и записи модулей.';
+const canonical = new URL('students/', site.url).href;
+
+const linkGroups = [
+  {
+    id: 'course',
+    title: 'Курс',
+    links: [
+      {
+        label: 'Карта курса',
+        href: 'https://sites.google.com/view/learncsm1/%D0%BA%D0%B0%D1%80%D1%82%D0%B0-%D0%BA%D1%83%D1%80%D1%81%D0%B0',
+        note: 'Стартовые модули, материалы и последовательность занятий.'
+      },
+      {
+        label: 'Учебник learncs.ru',
+        href: 'https://book.learncs.ru',
+        note: 'Основные материалы курса.'
+      }
+    ]
+  },
+  {
+    id: 'tasks',
+    title: 'Задачи',
+    links: [
+      {
+        label: 'Informatics: основной вход',
+        href: 'https://informatics.msk.ru/enrol/index.php?id=5742',
+        note: 'Если сайт просит кодовое слово, возьмите его у преподавателя.'
+      },
+      {
+        label: 'Informatics: запасной вход',
+        href: 'https://informatics.mccme.ru/enrol/index.php?id=5742',
+        note: 'Используйте, если основной адрес не открывается.'
+      }
+    ]
+  },
+  {
+    id: 'video',
+    title: 'Видео',
+    links: [
+      {
+        label: 'Модуль 1: плейлист VK',
+        href: 'https://vkvideo.ru/playlist/-230710117_1',
+        note: 'Записи и материалы первого модуля.'
+      },
+      {
+        label: 'Модуль 2: плейлист VK',
+        href: 'https://vkvideo.ru/playlist/-230710117_2',
+        note: 'Записи и материалы второго модуля.'
+      },
+      {
+        label: 'Создание проекта в IntelliJ IDEA',
+        href: 'https://vkvideo.ru/video-230710117_456239026?list=ln-Bs3zfhMiMpTZmdiwiO',
+        note: 'Короткая запись по настройке проекта.'
+      }
+    ]
+  },
+  {
+    id: 'tools',
+    title: 'Среда разработки',
+    links: [
+      {
+        label: 'IntelliJ IDEA Community Edition',
+        href: 'https://github.com/JetBrains/intellij-community/releases',
+        note: 'Страница релизов бесплатной версии IntelliJ IDEA.'
+      }
+    ]
+  }
+];
+---
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  courseSchema={false}
+  basePath="../"
+>
+  <section class="section resource-page">
+    <div class="container">
+      <div class="section-head resource-page-head">
+        <p class="pretitle">learncs.ru</p>
+        <h1>Ученикам</h1>
+        <p>Ссылки, которые нужны для занятий: курс, задачи, среда разработки и записи модулей.</p>
+      </div>
+
+      <div class="resource-link-layout" aria-label="Полезные ссылки">
+        {linkGroups.map((group) => (
+          <section class="resource-link-group" aria-labelledby={`resource-${group.id}`}>
+            <h2 id={`resource-${group.id}`}>{group.title}</h2>
+            <ul class="resource-link-list">
+              {group.links.map((link) => (
+                <li class="resource-link-item">
+                  <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
+                  <p>{link.note}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

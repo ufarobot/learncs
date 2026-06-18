@@ -2063,6 +2063,79 @@ h3 {
   line-height: 1.6;
 }
 
+.resource-page-head h1 {
+  max-width: 760px;
+  font-size: 56px;
+  line-height: 1;
+}
+
+.resource-page-head > p:not(.pretitle) {
+  max-width: 720px;
+  color: var(--graphite);
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.resource-link-layout {
+  display: grid;
+  gap: 28px;
+  max-width: 900px;
+}
+
+.resource-link-group {
+  display: grid;
+  gap: 12px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.resource-link-group:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.resource-link-group h2 {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 520;
+  line-height: 1.4;
+}
+
+.resource-link-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.resource-link-item {
+  display: grid;
+  gap: 3px;
+  color: var(--graphite);
+}
+
+.resource-link-item a {
+  color: var(--blue);
+  font-size: 17px;
+  font-weight: 620;
+  line-height: 1.35;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.resource-link-item a:hover {
+  color: var(--blue-dark);
+}
+
+.resource-link-item p {
+  max-width: 680px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
 .faq-layout {
   display: grid;
   gap: 28px;
@@ -2772,6 +2845,30 @@ code {
   }
 
   .navigator-link-item a {
+    font-size: 16px;
+    line-height: 1.38;
+  }
+
+  .resource-page-head h1 {
+    font-size: 42px;
+    line-height: 1;
+  }
+
+  .resource-page-head > p:not(.pretitle) {
+    font-size: 16px;
+    line-height: 1.48;
+  }
+
+  .resource-link-layout {
+    gap: 24px;
+  }
+
+  .resource-link-group {
+    gap: 10px;
+    padding-top: 18px;
+  }
+
+  .resource-link-item a {
     font-size: 16px;
     line-height: 1.38;
   }

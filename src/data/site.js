@@ -5,16 +5,13 @@ export const site = {
   ogImage: 'assets/og-image.png',
   ogImageAlt: 'Онлайн-курс learncs.ru по олимпиадной информатике для школьников',
   logo: 'assets/logo-icon-white-on-black.png',
-  stylesheetVersion: '20260608-footer-cta-color',
+  stylesheetVersion: '20260618-students-links',
   scriptVersion: '20260602-order-click-sources'
 };
 
 export const nav = [
   { label: 'Учебник', href: 'https://book.learncs.ru' },
-  {
-    label: 'IntelliJ IDEA',
-    href: 'https://github.com/JetBrains/intellij-community/releases'
-  }
+  { label: 'Ученикам', href: 'students/' }
 ];
 
 export const footerCta = {
