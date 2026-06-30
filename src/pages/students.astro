@@ -3,91 +3,76 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../data/site.js';
 
 const title = 'Ученикам — learncs.ru';
-const description = 'Полезные ссылки для учеников learncs.ru: курс, задачи, среда разработки и записи модулей.';
+const description = 'Ссылки для первого занятия learncs.ru: Code.org, Google Sites, IntelliJ IDEA, Karel и Informatics.';
 const canonical = new URL('students/', site.url).href;
 
 const linkGroups = [
   {
+    id: 'start',
+    title: '1. С чего начать',
+    links: [
+      {
+        label: 'Code.org: стартовый раздел',
+        href: 'https://studio.code.org/sections/VBKDMT',
+        note: 'Откройте раздел и пройдите первые задания перед основным курсом.'
+      }
+    ]
+  },
+  {
     id: 'course',
-    title: 'Курс',
+    title: '2. Курс на Google Sites',
     links: [
       {
         label: 'Карта курса',
         href: 'https://sites.google.com/view/learncsm1/%D0%BA%D0%B0%D1%80%D1%82%D0%B0-%D0%BA%D1%83%D1%80%D1%81%D0%B0',
-        note: 'Стартовые модули, материалы и последовательность занятий.'
-      },
-      {
-        label: 'Karel: стартовый проект',
-        href: 'https://lms.learncs.ru/asset-v1:Ishimbaev+Karel+2026+type@asset+block@learncs-karel-course-project.zip',
-        note: 'Скачайте архив и откройте всю распакованную папку в IntelliJ IDEA.'
-      },
-      {
-        label: 'Учебник learncs.ru',
-        href: 'https://book.learncs.ru',
-        note: 'Основные материалы курса.'
-      }
-    ]
-  },
-  {
-    id: 'tasks',
-    title: 'Задачи',
-    links: [
-      {
-        label: 'Informatics: основной вход',
-        href: 'https://informatics.msk.ru/enrol/index.php?id=5742',
-        note: 'Если сайт просит кодовое слово, возьмите его у преподавателя.'
-      },
-      {
-        label: 'Informatics: запасной вход',
-        href: 'https://informatics.mccme.ru/enrol/index.php?id=5742',
-        note: 'Используйте, если основной адрес не открывается.'
-      }
-    ]
-  },
-  {
-    id: 'video',
-    title: 'Видео',
-    links: [
-      {
-        label: 'Модуль 1: плейлист VK',
-        href: 'https://vkvideo.ru/playlist/-230710117_1',
-        note: 'Записи и материалы первого модуля.'
-      },
-      {
-        label: 'Модуль 2: плейлист VK',
-        href: 'https://vkvideo.ru/playlist/-230710117_2',
-        note: 'Записи и материалы второго модуля.'
-      },
-      {
-        label: 'Создание проекта в IntelliJ IDEA',
-        href: 'https://vkvideo.ru/video-230710117_456239026?list=ln-Bs3zfhMiMpTZmdiwiO',
-        note: 'Короткая запись по настройке проекта.'
+        note: 'Сначала заведите Gmail. Затем отправьте письмо учителю на ufarobot@gmail.com: напишите имя ученика. После этого можно работать с картой курса.'
       }
     ]
   },
   {
     id: 'tools',
-    title: 'Среда разработки',
+    title: '3. IntelliJ IDEA и Karel',
     links: [
       {
-        label: 'IntelliJ IDEA Community: Windows 10/11 Intel или AMD',
+        label: 'IntelliJ IDEA Community Edition: Windows',
         href: 'https://download.jetbrains.com/idea/ideaIC-2025.2.6.2.exe',
-        note: 'Обычная версия для большинства компьютеров на Windows.'
+        note: 'Версия для обычных компьютеров на Windows 10/11.'
       },
       {
-        label: 'IntelliJ IDEA Community: Windows 11 ARM64 / Parallels',
+        label: 'IntelliJ IDEA Community Edition: Windows ARM64 / Parallels',
         href: 'https://download.jetbrains.com/idea/ideaIC-2025.2.6.2-aarch64.exe',
         note: 'Версия для Windows 11 ARM, например в Parallels на Mac.'
       },
       {
-        label: 'IntelliJ IDEA Community: Mac Apple Silicon',
+        label: 'IntelliJ IDEA Community Edition: Mac Apple Silicon',
         href: 'https://download.jetbrains.com/idea/ideaIC-2025.2.6.2-aarch64.dmg',
-        note: 'Для Mac с процессорами Apple M1, M2, M3 и новее.'
+        note: 'Для Mac с процессорами Apple M1, M2, M3, M4 и новее.'
       },
       {
-        label: 'IntelliJ IDEA Community: Mac Intel',
+        label: 'IntelliJ IDEA Community Edition: Mac Intel',
         href: 'https://download.jetbrains.com/idea/ideaIC-2025.2.6.2.dmg',
         note: 'Для старых Mac с процессором Intel.'
+      },
+      {
+        label: 'Karel: свежий стартовый архив',
+        href: 'https://lms.learncs.ru/asset-v1:Ishimbaev+Karel+2026+type@asset+block@learncs-karel-course-project.zip',
+        note: 'Скачайте архив, распакуйте его и откройте всю папку проекта в IntelliJ IDEA.'
+      }
+    ]
+  },
+  {
+    id: 'informatics',
+    title: '4. Informatics',
+    links: [
+      {
+        label: 'Informatics: основной вход',
+        href: 'https://informatics.msk.ru/enrol/index.php?id=5742',
+        note: 'Если у ученика есть Gmail, сначала попробуйте войти через восстановление пароля: укажите Gmail и задайте новый пароль.'
+      },
+      {
+        label: 'Informatics: запасной вход',
+        href: 'https://informatics.mccme.ru/enrol/index.php?id=5742',
+        note: 'Используйте, если основной адрес не открывается. Вход и восстановление пароля работают так же.'
       }
     ]
   }
@@ -105,7 +90,7 @@ const linkGroups = [
       <div class="section-head resource-page-head">
         <p class="pretitle">learncs.ru</p>
         <h1>Ученикам</h1>
-        <p>Ссылки, которые нужны для занятий: курс, задачи, среда разработки и записи модулей.</p>
+        <p>Откройте ссылки по порядку: сначала Code.org, затем карта курса, установка среды и вход в Informatics.</p>
       </div>
 
       <div class="resource-link-layout" aria-label="Полезные ссылки">
