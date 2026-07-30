@@ -1,0 +1,385 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site.js';
+import rating from '../data/rating-2026.json';
+
+const title = 'Рейтинг школ по информатике по итогам ВсОШ 2026';
+const description = 'Рейтинг школ и регионов по результатам заключительного этапа ВсОШ по информатике, профиль «Программирование», 2025/26 учебный год.';
+const canonical = new URL('rating/', site.url).href;
+const scoreFormatter = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
+const regions = [...new Set(rating.schools.map((school) => school.region))]
+  .sort((a, b) => a.localeCompare(b, 'ru'));
+const topSchools = rating.schools.slice(0, 5);
+const maxSchoolScore = topSchools[0]?.score2026 ?? 1;
+
+const shortSchoolNames = new Map([
+  ['ГБОУ "Школа № 179"', 'Школа № 179'],
+  ['СУНЦ МГУ', 'СУНЦ МГУ'],
+  ['ГБОУ "Лицей вторая школа"', 'Лицей «Вторая школа»'],
+  ['АНО Центра педагогического мастерства', 'ЦПМ'],
+  ['МБОУ "Физико-математический лицей № 31" г. Челябинска', 'ФМЛ № 31']
+]);
+
+const formatScore = (value) => scoreFormatter.format(Math.round(value));
+const changeDetails = (entry) => {
+  if (entry.changePercent === null) {
+    return {
+      label: 'нет сравнения',
+      className: 'is-new',
+      title: 'В рейтинге за 2025 год результата нет'
+    };
+  }
+
+  const percent = Math.round(entry.changePercent * 100);
+  if (percent === 0) {
+    return {
+      label: '0%',
+      className: 'is-flat',
+      title: 'Изменение относительно рейтинга 2025 года: 0%'
+    };
+  }
+
+  return {
+    label: `${entry.trend} ${percent > 0 ? '+' : ''}${percent}%`,
+    className: percent > 0 ? 'is-up' : 'is-down',
+    title: `Изменение относительно рейтинга 2025 года: ${percent > 0 ? '+' : ''}${percent}%`
+  };
+};
+
+const datasetSchema = {
+  '@type': 'Dataset',
+  '@id': `${canonical}#dataset`,
+  name: title,
+  description,
+  url: canonical,
+  inLanguage: 'ru-RU',
+  dateModified: rating.updatedAt,
+  temporalCoverage: rating.academicYear,
+  spatialCoverage: {
+    '@type': 'Country',
+    name: 'Россия'
+  },
+  isBasedOn: rating.sources.protocol,
+  creator: {
+    '@id': new URL('#organization', site.url).href
+  },
+  variableMeasured: [
+    'Баллы рейтинга',
+    'Победители',
+    'Призеры',
+    'Участники'
+  ]
+};
+---
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  ogImage={new URL('assets/og-rating-2026.png', site.url).href}
+  ogImageAlt="Рейтинг школ по информатике по итогам ВсОШ 2026"
+  courseSchema={false}
+  basePath="../"
+  showHeaderCta={false}
+  pageAudience="parents"
+  extraStylesheets={['assets/rating.css?v=20260730']}
+  structuredData={[datasetSchema]}
+>
+  <article class="rating-page" data-ranking-app>
+    <header class="rating-hero">
+      <div class="container">
+        <div class="rating-hero-copy">
+          <p class="pretitle">ВсОШ по информатике · 2025/26</p>
+          <h1>Рейтинг школ по информатике по итогам ВсОШ 2026</h1>
+          <p class="lead">
+            Третий ежегодный рейтинг по результатам заключительного этапа,
+            профиль «Программирование».
+          </p>
+        </div>
+
+        <dl class="rating-summary" aria-label="Данные рейтинга">
+          <div>
+            <dt>Участники</dt>
+            <dd>{rating.participantCount}</dd>
+          </div>
+          <div>
+            <dt>Школы</dt>
+            <dd>{rating.schoolCount}</dd>
+          </div>
+          <div>
+            <dt>Регионы</dt>
+            <dd>{rating.regionCount}</dd>
+          </div>
+          <div>
+            <dt>Профиль</dt>
+            <dd>{rating.profile}</dd>
+          </div>
+        </dl>
+      </div>
+    </header>
+
+    <section class="rating-insights" aria-labelledby="rating-insights-title">
+      <div class="container rating-insights-layout">
+        <div class="rating-insights-copy">
+          <p class="pretitle">Что изменилось</p>
+          <h2 id="rating-insights-title">Первая пятерка</h2>
+          <ul>
+            <li>Школа № 179 сохраняет первое место: 2133 балла.</li>
+            <li>СУНЦ МГУ прибавил 41% к результату 2025 года и занял второе место.</li>
+            <li>Четыре школы из первой пятерки находятся в Москве.</li>
+            <li>Челябинская область прибавила 21% и заняла четвертое место среди регионов.</li>
+          </ul>
+        </div>
+
+        <figure class="rating-bars">
+          <figcaption>Баллы школ в 2026 году</figcaption>
+          <ol>
+            {topSchools.map((school) => (
+              <li>
+                <div class="rating-bar-label">
+                  <span title={school.name}>{shortSchoolNames.get(school.name) ?? school.name}</span>
+                  <strong>{formatScore(school.score2026)}</strong>
+                </div>
+                <div class="rating-bar-track" aria-hidden="true">
+                  <span style={`--bar-size: ${(school.score2026 / maxSchoolScore) * 100}%`}></span>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </figure>
+      </div>
+    </section>
+
+    <section class="rating-tool-section" aria-labelledby="rating-table-title">
+      <div class="container">
+        <div class="rating-tool-head">
+          <div>
+            <p class="pretitle">Все результаты</p>
+            <h2 id="rating-table-title">Рейтинг</h2>
+          </div>
+          <p>Баллы округлены до целых. Изменение рассчитано относительно рейтинга 2025 года.</p>
+        </div>
+
+        <div class="ranking-controls">
+          <div class="ranking-tabs" role="tablist" aria-label="Вид рейтинга">
+            <button
+              id="ranking-tab-schools"
+              type="button"
+              role="tab"
+              aria-selected="true"
+              aria-controls="ranking-panel-schools"
+              data-ranking-tab="schools"
+            >
+              Школы
+            </button>
+            <button
+              id="ranking-tab-regions"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="ranking-panel-regions"
+              data-ranking-tab="regions"
+              tabindex="-1"
+            >
+              Регионы
+            </button>
+          </div>
+
+          <label class="ranking-field ranking-search">
+            <span>Поиск</span>
+            <input
+              type="search"
+              placeholder="Название школы"
+              autocomplete="off"
+              data-ranking-search
+            />
+          </label>
+
+          <label class="ranking-field ranking-region-filter" data-ranking-region-field>
+            <span>Регион</span>
+            <select data-ranking-region>
+              <option value="">Все регионы</option>
+              {regions.map((region) => <option value={region}>{region}</option>)}
+            </select>
+          </label>
+
+          <button class="ranking-reset" type="button" data-ranking-reset>
+            Сбросить
+          </button>
+        </div>
+
+        <div class="ranking-status" aria-live="polite">
+          <span data-ranking-count>{rating.schoolCount} школ</span>
+          <span class="ranking-legend">
+            ↑ от 2% · ↑↑ от 10% · ↓ от 2% · ↓↓ от 10%
+          </span>
+        </div>
+
+        <div
+          id="ranking-panel-schools"
+          class="ranking-panel"
+          role="tabpanel"
+          aria-labelledby="ranking-tab-schools"
+          data-ranking-panel="schools"
+        >
+          <div class="ranking-table-frame">
+            <table class="ranking-table ranking-table-schools">
+              <caption class="visually-hidden">Рейтинг школ по итогам ВсОШ по информатике 2026 года</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Место</th>
+                  <th scope="col">Школа</th>
+                  <th scope="col">Регион</th>
+                  <th scope="col">2026</th>
+                  <th scope="col">2025</th>
+                  <th scope="col">Изменение</th>
+                  <th scope="col">Победители</th>
+                  <th scope="col">Призеры</th>
+                  <th scope="col">Участники</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rating.schools.map((school) => {
+                  const change = changeDetails(school);
+                  return (
+                    <tr
+                      data-ranking-row
+                      data-query={`${school.name} ${school.region}`}
+                      data-region={school.region}
+                    >
+                      <td class="ranking-rank" data-label="Место">{school.rank}</td>
+                      <th class="ranking-entity" scope="row">{school.name}</th>
+                      <td class="ranking-region" data-label="Регион">{school.region}</td>
+                      <td class="ranking-score ranking-score-current" data-label="Баллы 2026">
+                        {formatScore(school.score2026)}
+                      </td>
+                      <td class="ranking-score ranking-score-previous" data-label="Баллы 2025">
+                        {school.score2025 > 0 ? formatScore(school.score2025) : 'нет'}
+                      </td>
+                      <td
+                        class={`ranking-change ${change.className}`}
+                        data-label="Изменение"
+                        title={change.title}
+                      >
+                        {change.label}
+                      </td>
+                      <td class="ranking-result" data-label="Победители">{school.winners}</td>
+                      <td class="ranking-result" data-label="Призеры">{school.prizewinners}</td>
+                      <td class="ranking-result ranking-participants" data-label="Участники">
+                        {school.participants}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <p class="ranking-empty" data-ranking-empty hidden>По вашему запросу ничего не найдено.</p>
+        </div>
+
+        <div
+          id="ranking-panel-regions"
+          class="ranking-panel"
+          role="tabpanel"
+          aria-labelledby="ranking-tab-regions"
+          data-ranking-panel="regions"
+          hidden
+        >
+          <div class="ranking-table-frame">
+            <table class="ranking-table ranking-table-regions">
+              <caption class="visually-hidden">Рейтинг регионов по итогам ВсОШ по информатике 2026 года</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Место</th>
+                  <th scope="col">Регион</th>
+                  <th scope="col">2026</th>
+                  <th scope="col">2025</th>
+                  <th scope="col">Изменение</th>
+                  <th scope="col">Победители</th>
+                  <th scope="col">Призеры</th>
+                  <th scope="col">Участники</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rating.regions.map((region) => {
+                  const change = changeDetails(region);
+                  return (
+                    <tr data-ranking-row data-query={region.name}>
+                      <td class="ranking-rank" data-label="Место">{region.rank}</td>
+                      <th class="ranking-entity" scope="row">{region.name}</th>
+                      <td class="ranking-score ranking-score-current" data-label="Баллы 2026">
+                        {formatScore(region.score2026)}
+                      </td>
+                      <td class="ranking-score ranking-score-previous" data-label="Баллы 2025">
+                        {region.score2025 > 0 ? formatScore(region.score2025) : 'нет'}
+                      </td>
+                      <td
+                        class={`ranking-change ${change.className}`}
+                        data-label="Изменение"
+                        title={change.title}
+                      >
+                        {change.label}
+                      </td>
+                      <td class="ranking-result" data-label="Победители">{region.winners}</td>
+                      <td class="ranking-result" data-label="Призеры">{region.prizewinners}</td>
+                      <td class="ranking-result ranking-participants" data-label="Участники">
+                        {region.participants}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <p class="ranking-empty" data-ranking-empty hidden>По вашему запросу ничего не найдено.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="rating-method" aria-labelledby="rating-method-title">
+      <div class="container rating-method-layout">
+        <div>
+          <p class="pretitle">Как считали</p>
+          <h2 id="rating-method-title">Методика</h2>
+        </div>
+
+        <div class="rating-method-content">
+          <ol>
+            <li>
+              За первое место начисляется 100 баллов. Дальше балл равномерно уменьшается
+              до 0 у последнего участника.
+            </li>
+            <li>
+              Балл умножается на коэффициент класса: 7 класс × 1,6; 8 класс × 1,4;
+              9 класс × 1,2; 10 класс × 1; 11 класс × 0,8.
+            </li>
+            <li>Баллы участников складываются отдельно по школам и регионам.</li>
+          </ol>
+          <p>
+            В протоколе {rating.participantCount} участников. У одного участника не указана
+            школа, поэтому рейтинг школ учитывает {rating.schoolResultCount} записей,
+            а рейтинг регионов учитывает все {rating.participantCount}.
+          </p>
+          <nav class="rating-sources" aria-label="Источники рейтинга">
+            <a href={rating.sources.protocol} target="_blank" rel="noopener noreferrer">
+              Официальный протокол
+            </a>
+            <a href={rating.sources.spreadsheet} target="_blank" rel="noopener noreferrer">
+              Таблица расчета
+            </a>
+            <a href={rating.sources.rating2025} target="_blank" rel="noopener noreferrer">
+              Рейтинг 2025
+            </a>
+            <a href={rating.sources.rating2024} target="_blank" rel="noopener noreferrer">
+              Рейтинг 2024
+            </a>
+            <a href={rating.sources.channel} target="_blank" rel="noopener noreferrer">
+              Канал «Как вырастить айтишника»
+            </a>
+          </nav>
+        </div>
+      </div>
+    </section>
+  </article>
+
+  <script is:inline src="../assets/rating.js?v=20260730"></script>
+</BaseLayout>

@@ -249,6 +249,21 @@ Default:
 - no nested cards, decorative media, or conversion panel by default;
 - on mobile the layout remains one readable column with normal page gutters.
 
+### `data-ranking`
+
+Use for public rankings where the primary job is to search, filter, and compare a static dataset.
+
+Default:
+
+- compact factual heading and an unframed summary strip;
+- one restrained data visualization may precede the table when it helps compare the leading results;
+- segmented controls switch between related datasets;
+- search and filters stay directly above the results;
+- the desktop view uses one framed table without nested cards or shadows;
+- on mobile each table row becomes a compact labeled grid with no horizontal page overflow;
+- blue is reserved for active controls and links;
+- the complete dataset is built into the page and does not require third-party services at runtime.
+
 ## Variants
 
 No visual variant is implicit. To create one:
