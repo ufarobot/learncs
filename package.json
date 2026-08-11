@@ -16,9 +16,10 @@
     "build:navigator": "node tools/build-navigator-docs.mjs",
     "preview:agent": "node tools/agent-preview.mjs --keep-alive",
     "publish:local": "node tools/publish-astro-dist.mjs",
+    "check:rating": "node tools/check-rating-data.mjs",
     "check:design": "python3 tools/check-design.py",
     "check:preview": "node tools/agent-preview.mjs",
-    "check:prod": "npm run check:design && npm run build"
+    "check:prod": "npm run check:rating && npm run check:design && npm run build"
   },
   "dependencies": {
     "astro": "5.18.1"
