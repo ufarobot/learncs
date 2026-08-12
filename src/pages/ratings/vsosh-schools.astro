@@ -1,23 +1,19 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { site } from '../data/site.js';
-import extraProfiles from '../data/rating-extra-profiles.json';
-import ratingHistory from '../data/rating-history.json';
-import schoolCatalog from '../data/rating-school-catalog.json';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { site } from '../../data/site.js';
+import extraProfiles from '../../data/rating-extra-profiles.json';
+import ratingHistory from '../../data/rating-history.json';
+import schoolCatalog from '../../data/rating-school-catalog.json';
 import {
   applySchoolCatalog,
   buildOverallRegionRating,
   buildOverallSchoolRating
-} from '../lib/rating-school-catalog.js';
+} from '../../lib/rating-school-catalog.js';
 
 const title = 'Рейтинг школ по итогам ВсОШ';
 const description = 'Рейтинг школ и регионов по результатам заключительного этапа ВсОШ 2025/26 по программированию, искусственному интеллекту, информационной безопасности, робототехнике и математике.';
-const canonical = new URL('rating/', site.url).href;
+const canonical = new URL('ratings/vsosh-schools/', site.url).href;
 const currentYear = 2026;
-const ratingHeaderNav = [
-  { label: 'Учебник', href: 'https://book.learncs.ru' },
-  { label: 'Родителям', href: 'https://learncs.ru/' }
-];
 const scoreFormatter = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
 const programmingProfile = {
   id: 'programming',
@@ -162,9 +158,8 @@ const datasetSchema = {
   ogImage={new URL('assets/og-rating-2026.png', site.url).href}
   ogImageAlt="Рейтинг школ по итогам ВсОШ 2026"
   courseSchema={false}
-  basePath="../"
+  basePath="../../"
   showHeaderCta={false}
-  headerNav={ratingHeaderNav}
   pageAudience="parents"
   extraStylesheets={['assets/rating.css?v=20260812-regions']}
   structuredData={[datasetSchema]}
@@ -718,5 +713,5 @@ const datasetSchema = {
     </section>
   </article>
 
-  <script is:inline src="../assets/rating.js?v=20260812-regions2"></script>
+  <script is:inline src="../../assets/rating.js?v=20260812-regions2"></script>
 </BaseLayout>
