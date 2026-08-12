@@ -6,7 +6,15 @@ const homeNav = [
   { label: 'Учебник', href: 'https://book.learncs.ru' },
   { label: 'Рейтинг школ', href: 'rating/' }
 ];
-const navItems = Astro.url.pathname === '/' ? homeNav : nav;
+const ratingNav = [
+  { label: 'Учебник', href: 'https://book.learncs.ru' },
+  { label: 'Родителям', href: 'https://learnsys.ru' }
+];
+const navItems = Astro.url.pathname === '/'
+  ? homeNav
+  : Astro.url.pathname === '/rating/'
+    ? ratingNav
+    : nav;
 const rootHref = basePath || './';
 const localHref = (href) => {
   if (href.startsWith('http') || href.startsWith('#')) {
