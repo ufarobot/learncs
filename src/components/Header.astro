@@ -2,6 +2,11 @@
 import { nav, site } from '../data/site.js';
 
 const { basePath = '', showCta = true } = Astro.props;
+const homeNav = [
+  { label: 'Учебник', href: 'https://book.learncs.ru' },
+  { label: 'Рейтинг школ', href: 'rating/' }
+];
+const navItems = Astro.url.pathname === '/' ? homeNav : nav;
 const rootHref = basePath || './';
 const localHref = (href) => {
   if (href.startsWith('http') || href.startsWith('#')) {
@@ -34,7 +39,7 @@ const localHref = (href) => {
     </button>
 
     <nav class="site-nav" id="site-nav" aria-label="Основная навигация" data-nav>
-      {nav.map((item) => <a href={localHref(item.href)} title={item.title} aria-label={item.ariaLabel}>{item.label}</a>)}
+      {navItems.map((item) => <a href={localHref(item.href)} title={item.title} aria-label={item.ariaLabel}>{item.label}</a>)}
       {showCta && (
         <a
           class="nav-cta"
