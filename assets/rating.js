@@ -40,7 +40,6 @@
     const profileSelect = app.querySelector('select[data-ranking-profile]');
     const yearButtons = [...app.querySelectorAll('[data-ranking-year-button]')];
     const yearControl = app.querySelector('.ranking-years');
-    const viewControl = app.querySelector('.ranking-view-control');
     const panels = [...app.querySelectorAll('[data-ranking-panel]')];
     const search = app.querySelector('[data-ranking-search]');
     const region = app.querySelector('[data-ranking-region]');
@@ -58,6 +57,9 @@
     const overallProfile = 'overall';
     const programmingProfile = 'programming';
     const defaultProfile = overallProfile;
+    const overallPanels = panels.filter((panel) => (
+      panel.dataset.rankingProfile === overallProfile
+    ));
     const states = new Map();
     const allSchoolRegions = [...new Set(
       panels
@@ -98,6 +100,14 @@
           profile: overallProfile,
           year: defaultYearForProfile(overallProfile),
           view: 'schools'
+        };
+      }
+
+      if (hash === `${overallProfile}-regions`) {
+        return {
+          profile: overallProfile,
+          year: defaultYearForProfile(overallProfile),
+          view: 'regions'
         };
       }
 
@@ -312,98 +322,115 @@
 
     const updateOverallRating = () => {
       const selectedProfiles = selectedOverallProfiles();
-      const selectedScoreTotal = overallCheckboxes.reduce((total, checkbox) => (
-        checkbox.checked
-          ? total + Number(checkbox.dataset.rankingOverallTotal)
-          : total
-      ), 0);
-      const panel = panels.find((item) => item.dataset.rankingProfile === overallProfile);
-      const body = panel.querySelector('[data-ranking-overall-body]');
-      const rows = [...body.querySelectorAll('[data-ranking-overall-row]')];
 
       overallCheckboxes.forEach((checkbox) => {
         checkbox.disabled = checkbox.checked && selectedProfiles.length === 1;
       });
-      panel.querySelectorAll('[data-ranking-overall-column]').forEach((column) => {
-        column.hidden = !selectedProfiles.includes(column.dataset.rankingOverallColumn);
-      });
 
-      rows.forEach((row) => {
-        const metrics = JSON.parse(row.dataset.rankingOverall);
-        const values = selectedProfiles.map((profileId) => metrics[profileId] ?? { score: 0 });
-        const score = selectedScoreTotal === 0
-          ? 0
-          : (values.reduce((total, value) => total + value.score, 0) / selectedScoreTotal) * 10000;
-        const roundedScore = Math.round(score);
+      overallPanels.forEach((panel) => {
+        const totalDatasetKey = panel.dataset.rankingPanel === 'regions'
+          ? 'rankingOverallRegionTotal'
+          : 'rankingOverallSchoolTotal';
+        const selectedScoreTotal = overallCheckboxes.reduce((total, checkbox) => (
+          checkbox.checked
+            ? total + Number(checkbox.dataset[totalDatasetKey])
+            : total
+        ), 0);
+        const minimumScore = Number(panel.dataset.rankingOverallMinimumScore ?? 0);
+        const useRoundedThreshold = panel.dataset.rankingOverallRoundThreshold === 'true';
+        const body = panel.querySelector('[data-ranking-overall-body]');
+        const rows = [...body.querySelectorAll('[data-ranking-overall-row]')];
 
-        row.dataset.rankingOverallScore = String(score);
-        row.dataset.rankingIncluded = roundedScore > 10 ? 'true' : 'false';
-        const scoreCell = row.querySelector('[data-ranking-overall-score]');
-        scoreCell.textContent = scoreFormatter.format(roundedScore);
-        scoreCell.title = `${exactScoreFormatter.format(score)} балла`;
-        const contributions = overallCheckboxes.map((checkbox) => {
-          const value = checkbox.checked && selectedScoreTotal !== 0
-            ? ((metrics[checkbox.value]?.score ?? 0) / selectedScoreTotal) * 10000
-            : 0;
-          return {
-            id: checkbox.value,
-            value,
-            displayValue: Math.floor(value)
-          };
+        panel.querySelectorAll('[data-ranking-overall-column]').forEach((column) => {
+          column.hidden = !selectedProfiles.includes(column.dataset.rankingOverallColumn);
         });
-        let remainder = roundedScore - contributions.reduce(
-          (total, contribution) => total + contribution.displayValue,
-          0
-        );
-        contributions
-          .filter((contribution) => selectedProfiles.includes(contribution.id))
-          .sort((left, right) => (
-            (right.value - Math.floor(right.value)) - (left.value - Math.floor(left.value))
-          ))
-          .forEach((contribution) => {
-            if (remainder > 0) {
-              contribution.displayValue += 1;
-              remainder -= 1;
-            }
+
+        rows.forEach((row) => {
+          const metrics = JSON.parse(row.dataset.rankingOverall);
+          const values = selectedProfiles.map((profileId) => metrics[profileId] ?? { score: 0 });
+          const score = selectedScoreTotal === 0
+            ? 0
+            : (values.reduce((total, value) => total + value.score, 0) / selectedScoreTotal) * 10000;
+          const roundedScore = Math.round(score);
+          const thresholdScore = useRoundedThreshold ? roundedScore : score;
+          const hasParticipants = values.some((value) => value.participants > 0);
+
+          row.dataset.rankingOverallScore = String(score);
+          row.dataset.rankingIncluded = (
+            panel.dataset.rankingOverallInclusion === 'participants'
+              ? hasParticipants
+              : thresholdScore > minimumScore
+          ) ? 'true' : 'false';
+          const scoreCell = row.querySelector('[data-ranking-overall-score]');
+          scoreCell.textContent = scoreFormatter.format(roundedScore);
+          scoreCell.title = `${exactScoreFormatter.format(score)} балла`;
+          const contributions = overallCheckboxes.map((checkbox) => {
+            const value = checkbox.checked && selectedScoreTotal !== 0
+              ? ((metrics[checkbox.value]?.score ?? 0) / selectedScoreTotal) * 10000
+              : 0;
+            return {
+              id: checkbox.value,
+              value,
+              displayValue: Math.floor(value)
+            };
           });
-        overallCheckboxes.forEach((checkbox) => {
-          const contributionCell = row.querySelector(
-            `[data-ranking-overall-contribution="${checkbox.value}"]`
+          let remainder = roundedScore - contributions.reduce(
+            (total, contribution) => total + contribution.displayValue,
+            0
           );
-          const contribution = contributions.find((item) => item.id === checkbox.value);
-          contributionCell.textContent = scoreFormatter.format(contribution.displayValue);
-          contributionCell.title = `${exactScoreFormatter.format(contribution.value)} балла`;
+          contributions
+            .filter((contribution) => selectedProfiles.includes(contribution.id))
+            .sort((left, right) => (
+              (right.value - Math.floor(right.value)) - (left.value - Math.floor(left.value))
+            ))
+            .forEach((contribution) => {
+              if (remainder > 0) {
+                contribution.displayValue += 1;
+                remainder -= 1;
+              }
+            });
+          overallCheckboxes.forEach((checkbox) => {
+            const contributionCell = row.querySelector(
+              `[data-ranking-overall-contribution="${checkbox.value}"]`
+            );
+            const contribution = contributions.find((item) => item.id === checkbox.value);
+            contributionCell.textContent = scoreFormatter.format(contribution.displayValue);
+            contributionCell.title = `${exactScoreFormatter.format(contribution.value)} балла`;
+          });
         });
-      });
 
-      rows.sort((left, right) => (
-        Number(right.dataset.rankingOverallScore) - Number(left.dataset.rankingOverallScore)
-        || left.dataset.query.localeCompare(right.dataset.query, 'ru')
-      ));
+        rows.sort((left, right) => (
+          Number(right.dataset.rankingOverallScore) - Number(left.dataset.rankingOverallScore)
+          || left.dataset.query.localeCompare(right.dataset.query, 'ru')
+        ));
 
-      let includedCount = 0;
-      let rank = 0;
-      let previousScore = null;
-      rows.forEach((row) => {
-        body.append(row);
-        if (row.dataset.rankingIncluded === 'true') {
-          includedCount += 1;
-          const score = Number(row.dataset.rankingOverallScore);
-          if (previousScore === null || Math.abs(score - previousScore) > 1e-9) {
-            previousScore = score;
-            rank = includedCount;
+        let includedCount = 0;
+        let rank = 0;
+        let previousScore = null;
+        rows.forEach((row) => {
+          body.append(row);
+          if (row.dataset.rankingIncluded === 'true') {
+            includedCount += 1;
+            const score = Number(row.dataset.rankingOverallScore);
+            if (previousScore === null || Math.abs(score - previousScore) > 1e-9) {
+              previousScore = score;
+              rank = includedCount;
+            }
+            row.querySelector('[data-ranking-overall-rank]').textContent = rank;
           }
-          row.querySelector('[data-ranking-overall-rank]').textContent = rank;
-        }
-      });
-      panel.dataset.rankingSchoolCount = String(includedCount);
+        });
+        const countDatasetKey = panel.dataset.rankingPanel === 'regions'
+          ? 'rankingRegionCount'
+          : 'rankingSchoolCount';
+        panel.dataset[countDatasetKey] = String(includedCount);
 
-      const table = body.closest('.ranking-table');
-      const sortState = tableSortStates.get(table);
-      if (table.rows[0]?.cells[sortState?.columnIndex]?.hidden) {
-        tableSortStates.set(table, { columnIndex: 0, direction: 'ascending' });
-      }
-      applyTableSort(table);
+        const table = body.closest('.ranking-table');
+        const sortState = tableSortStates.get(table);
+        if (table.rows[0]?.cells[sortState?.columnIndex]?.hidden) {
+          tableSortStates.set(table, { columnIndex: 0, direction: 'ascending' });
+        }
+        applyTableSort(table);
+      });
 
       if (activeProfile === overallProfile) {
         updateResults();
@@ -414,7 +441,9 @@
       const profileDefaultYear = defaultYearForProfile(activeProfile);
       let hash = '';
 
-      if (activeProfile === programmingProfile) {
+      if (activeProfile === overallProfile) {
+        hash = activeView === 'regions' ? '#overall-regions' : '';
+      } else if (activeProfile === programmingProfile) {
         if (activeYear === profileDefaultYear) {
           hash = activeView === 'regions' ? '#regions' : '#programming';
         } else {
@@ -450,10 +479,9 @@
       const availableYears = yearsForProfile(profileId);
       activeProfile = profileId;
       activeYear = availableYears.includes(String(year)) ? String(year) : availableYears[0];
-      activeView = activeProfile === overallProfile ? 'schools' : view;
+      activeView = view;
       profileSelect.value = activeProfile;
       yearControl.style.setProperty('--year-count', availableYears.length);
-      viewControl.hidden = activeProfile === overallProfile;
       overallOptions.hidden = activeProfile !== overallProfile;
 
       yearButtons.forEach((button) => {

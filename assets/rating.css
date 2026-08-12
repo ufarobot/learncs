@@ -259,6 +259,23 @@ body:has(.rating-page) {
   text-align: right;
 }
 
+.ranking-table-overall-regions {
+  min-width: 960px;
+}
+
+.ranking-table.ranking-table-overall-regions .ranking-entity,
+.ranking-table.ranking-table-overall-regions thead th:nth-child(2) {
+  width: 32%;
+}
+
+.ranking-table.ranking-table-overall-regions thead th:nth-child(3) {
+  width: 12%;
+}
+
+.ranking-table-overall-regions [data-ranking-overall-column] {
+  width: 10%;
+}
+
 .ranking-table th,
 .ranking-table td {
   padding: 14px 12px;
@@ -435,11 +452,47 @@ body:has(.rating-page) {
   max-width: 760px;
 }
 
+.rating-method-purpose {
+  display: grid;
+  gap: 8px;
+}
+
+.rating-method-purpose h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.rating-method-purpose p {
+  margin: 0;
+}
+
+.rating-method-purpose ul {
+  margin: 0;
+  padding-left: 22px;
+}
+
 .rating-method-content ol {
   display: grid;
-  gap: 14px;
+  gap: 24px;
   padding-left: 24px;
   color: var(--graphite);
+}
+
+.rating-method-content li {
+  padding-left: 4px;
+}
+
+.rating-method-content li strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.rating-method-formula {
+  display: block;
+  margin: 8px 0;
+  color: var(--graphite);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
 }
 
 .rating-method-content > p {
@@ -684,6 +737,10 @@ body:has(.rating-page) {
     grid-template-areas:
       "rank entity entity score"
       "rank region region score";
+  }
+
+  .ranking-table-overall-regions tbody tr {
+    grid-template-areas: "rank entity entity score";
   }
 
   .ranking-table th,

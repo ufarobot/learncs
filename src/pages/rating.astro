@@ -6,6 +6,7 @@ import ratingHistory from '../data/rating-history.json';
 import schoolCatalog from '../data/rating-school-catalog.json';
 import {
   applySchoolCatalog,
+  buildOverallRegionRating,
   buildOverallSchoolRating
 } from '../lib/rating-school-catalog.js';
 
@@ -13,6 +14,10 @@ const title = 'Рейтинг школ по итогам ВсОШ';
 const description = 'Рейтинг школ и регионов по результатам заключительного этапа ВсОШ 2025/26 по программированию, искусственному интеллекту, информационной безопасности, робототехнике и математике.';
 const canonical = new URL('rating/', site.url).href;
 const currentYear = 2026;
+const ratingHeaderNav = [
+  { label: 'Учебник', href: 'https://book.learncs.ru' },
+  { label: 'Родителям', href: 'https://learncs.ru/' }
+];
 const scoreFormatter = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
 const programmingProfile = {
   id: 'programming',
@@ -29,6 +34,10 @@ const profiles = [
   }))
 ];
 const overallRatingData = buildOverallSchoolRating(profiles, currentYear);
+const overallRegionRating = buildOverallRegionRating(profiles, currentYear);
+const overallRegionTotals = new Map(
+  overallRegionRating.profileOptions.map((profile) => [profile.id, profile.scoreTotal])
+);
 const overallCandidateSchools = overallRatingData.schools.filter((school) => (
   overallRatingData.profileOptions.some((profile) => (
     profile.scoreTotal > 0
@@ -155,8 +164,9 @@ const datasetSchema = {
   courseSchema={false}
   basePath="../"
   showHeaderCta={false}
+  headerNav={ratingHeaderNav}
   pageAudience="parents"
-  extraStylesheets={['assets/rating.css?v=20260810-sticky5']}
+  extraStylesheets={['assets/rating.css?v=20260812-regions']}
   structuredData={[datasetSchema]}
 >
   <article class="rating-page" data-ranking-app>
@@ -260,7 +270,8 @@ const datasetSchema = {
                       value={profile.id}
                       checked
                       data-ranking-overall-profile
-                      data-ranking-overall-total={profile.scoreTotal}
+                      data-ranking-overall-school-total={profile.scoreTotal}
+                      data-ranking-overall-region-total={overallRegionTotals.get(profile.id)}
                     />
                     <span>{overallProfileLabels[profile.id] ?? profile.name}</span>
                   </label>
@@ -285,6 +296,8 @@ const datasetSchema = {
           data-ranking-profile-name="Общий рейтинг"
           data-ranking-year={currentYear}
           data-ranking-method-note="В общем рейтинге учитываются школы из выбранных направлений."
+          data-ranking-overall-minimum-score="10"
+          data-ranking-overall-round-threshold="true"
           data-ranking-school-count={overallRating.schoolCount}
           data-ranking-region-count={overallRating.regionCount}
         >
@@ -333,6 +346,83 @@ const datasetSchema = {
                       const contribution = overallRating.scoreTotal === 0
                         ? 0
                         : ((school.profiles[profile.id]?.score ?? 0) / overallRating.scoreTotal) * 10000;
+                      return (
+                        <td
+                          class="ranking-score ranking-overall-contribution"
+                          data-label={overallProfileLabels[profile.id] ?? profile.name}
+                          data-ranking-overall-column={profile.id}
+                          data-ranking-overall-contribution={profile.id}
+                          title={`${formatExactScore(contribution)} балла`}
+                        >
+                          {formatScore(contribution)}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p class="ranking-empty" data-ranking-empty hidden>По вашему запросу ничего не найдено.</p>
+        </div>
+
+        <div
+          id={`ranking-panel-overall-${currentYear}-regions`}
+          class="ranking-panel"
+          role="tabpanel"
+          aria-labelledby="ranking-tab-regions"
+          data-ranking-panel="regions"
+          data-ranking-profile="overall"
+          data-ranking-profile-name="Общий рейтинг"
+          data-ranking-year={currentYear}
+          data-ranking-method-note="В общем рейтинге учитываются регионы из выбранных направлений."
+          data-ranking-overall-minimum-score="0"
+          data-ranking-overall-inclusion="participants"
+          data-ranking-region-count={overallRegionRating.regionCount}
+          hidden
+        >
+          <div class="ranking-table-frame">
+            <table class="ranking-table ranking-table-regions ranking-table-overall ranking-table-overall-regions ranking-table-no-comparison">
+              <caption class="visually-hidden">Общий рейтинг регионов по итогам ВсОШ, {currentYear} год</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Место</th>
+                  <th scope="col">Регион</th>
+                  <th scope="col">Общий балл</th>
+                  {overallRegionRating.profileOptions.map((profile) => (
+                    <th
+                      scope="col"
+                      title={profile.name}
+                      data-ranking-overall-column={profile.id}
+                    >
+                      {overallColumnLabels[profile.id] ?? profile.name}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody data-ranking-overall-body>
+                {overallRegionRating.regions.map((region) => (
+                  <tr
+                    data-ranking-row
+                    data-ranking-overall-row
+                    data-ranking-included="true"
+                    data-ranking-overall={JSON.stringify(region.profiles)}
+                    data-query={region.name}
+                  >
+                    <td class="ranking-rank" data-label="Место" data-ranking-overall-rank>{region.rank}</td>
+                    <th class="ranking-entity" scope="row">{region.name}</th>
+                    <td
+                      class="ranking-score ranking-score-current"
+                      data-label="Общий балл"
+                      data-ranking-overall-score
+                      title={`${formatExactScore(region.score)} балла`}
+                    >
+                      {formatScore(region.score)}
+                    </td>
+                    {overallRegionRating.profileOptions.map((profile) => {
+                      const contribution = overallRegionRating.scoreTotal === 0
+                        ? 0
+                        : ((region.profiles[profile.id]?.score ?? 0) / overallRegionRating.scoreTotal) * 10000;
                       return (
                         <td
                           class="ranking-score ranking-overall-contribution"
@@ -531,30 +621,69 @@ const datasetSchema = {
         </div>
 
         <div class="rating-method-content">
+          <div class="rating-method-purpose">
+            <h3>Цели рейтинга</h3>
+            <ul>
+              <li>Показать сильные школы и регионы по каждому направлению.</li>
+              <li>Сравнить результаты по годам.</li>
+              <li>Собрать общий рейтинг по выбранным направлениям.</li>
+            </ul>
+            <p>
+              Рейтинг учитывает только результаты заключительного этапа ВсОШ и не оценивает
+              школу в целом.
+            </p>
+          </div>
           <ol>
             <li>
-              Позиция участника переводится в шкалу от 100 до 0. При одинаковом результате
-              используется среднее из занятых участниками мест. Дисквалифицированные
-              участники не получают позицию и дают 0 баллов.
+              <strong>Считаем базовый балл участника.</strong>
+              Первое место получает 100 баллов, последнее 0. Для остальных мест действует
+              формула:
+              <span class="rating-method-formula">
+                100 × (число участников в рейтинге − место) /
+                (число участников в рейтинге − 1)
+              </span>
+              При одинаковом результате используем среднее из занятых мест.
+              Дисквалифицированному участнику место не присваивается, его балл равен 0.
             </li>
             <li>
-              Балл умножается на коэффициент класса: 6 класс × 1,8; 7 класс × 1,6;
-              8 класс × 1,4; 9 класс × 1,2; 10 класс × 1; 11 класс × 0,8.
-            </li>
-            <li>Баллы участников складываются отдельно по школам и регионам.</li>
-            <li>
-              Годы сравниваются только при одинаковой методике. Баллы прошлого года
-              нормализуются отдельно по общей сумме баллов школ и регионов выбранного года.
-              Места внутри каждого года не меняются.
+              <strong>Учитываем класс.</strong>
+              Базовый балл умножаем на коэффициент: 6-й класс × 1,8; 7-й × 1,6;
+              8-й × 1,4; 9-й × 1,2; 10-й × 1; 11-й × 0,8. Например, 11-е место
+              среди 101 участника дает 90 базовых баллов. Ученик 8-го класса получает
+              90 × 1,4 = 126 баллов.
             </li>
             <li>
-              Для общего рейтинга баллы школы по выбранным направлениям складываются.
-              Результат делится на сумму баллов всех школ по этим направлениям и умножается
-              на 10 000. До применения порога сумма баллов общего рейтинга за каждый год
-              равна 10 000, а вклад направления зависит от объема результатов в нем.
-              Если школа в направлении не участвовала, ее балл равен нулю.
-              В таблице отображаются школы с баллом больше 10. После изменения набора
-              направлений порог применяется повторно.
+              <strong>Складываем баллы.</strong>
+              Балл школы равен сумме баллов ее участников. Балл региона считается так же
+              по всем участникам региона.
+            </li>
+            <li>
+              <strong>Сравниваем годы.</strong>
+              Сравнение доступно только для лет с одинаковой методикой. Чтобы сравнить годы
+              с разной общей суммой баллов, балл прошлого года пересчитываем по формуле:
+              <span class="rating-method-formula">
+                балл прошлого года × (сумма баллов текущего года / сумма баллов прошлого года)
+              </span>
+              Для школ и регионов пересчет выполняется отдельно. Места внутри каждого года
+              не меняются. Изменение показывает, как изменилась доля школы или региона
+              в общей сумме баллов.
+            </li>
+            <li>
+              <strong>Считаем общий рейтинг.</strong>
+              Сначала складываем баллы школы по выбранным направлениям. Затем переводим
+              результат в общую шкалу:
+              <span class="rating-method-formula">
+                10 000 × баллы школы / баллы всех школ в выбранных направлениях
+              </span>
+              Общий рейтинг регионов считаем так же: складываем баллы региона и делим
+              на сумму баллов всех регионов в выбранных направлениях.
+              Например, школа набрала 250 баллов, а все школы по выбранным направлениям
+              набрали 25 000. Общий балл школы равен 100. До отсечения школ сумма общего
+              рейтинга равна 10 000. Вклад направления определяется суммой баллов его
+              участников: чем она больше, тем больше вклад. Если школа не участвовала
+              в направлении, ее балл по нему равен нулю. После округления в таблице остаются
+              школы с общим баллом больше 10. При изменении набора направлений рейтинг
+              и порог пересчитываются.
             </li>
           </ol>
           <p data-ranking-method-note-target>
@@ -589,5 +718,5 @@ const datasetSchema = {
     </section>
   </article>
 
-  <script is:inline src="../assets/rating.js?v=20260810-protocols3"></script>
+  <script is:inline src="../assets/rating.js?v=20260812-regions2"></script>
 </BaseLayout>

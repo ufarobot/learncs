@@ -229,3 +229,77 @@ export const buildOverallSchoolRating = (profiles, year, { minimumScore = 0 } = 
     schools,
   };
 };
+
+export const buildOverallRegionRating = (profiles, year, { minimumScore = null } = {}) => {
+  const profileRatings = profiles.map((profile) => {
+    const yearRating = profile.years.find((item) => item.year === year);
+    if (!yearRating) {
+      throw new Error(`Profile ${profile.id} has no rating for ${year}`);
+    }
+
+    return {
+      id: profile.id,
+      name: profile.name,
+      yearRating,
+      regionScoreTotal: yearRating.regions.reduce((total, region) => total + region.score, 0),
+    };
+  });
+  const scoreTotal = profileRatings.reduce(
+    (total, profile) => total + profile.regionScoreTotal,
+    0
+  );
+  const regionsByName = new Map();
+
+  for (const profile of profileRatings) {
+    for (const profileRegion of profile.yearRating.regions) {
+      const region = regionsByName.get(profileRegion.name) ?? {
+        id: profileRegion.id,
+        name: profileRegion.name,
+        profiles: {},
+      };
+
+      region.profiles[profile.id] = {
+        score: profileRegion.score,
+        winners: profileRegion.winners,
+        prizewinners: profileRegion.prizewinners,
+        participants: profileRegion.participants,
+      };
+      regionsByName.set(region.name, region);
+    }
+  }
+
+  const regions = assignCompetitionRanks([...regionsByName.values()].map((region) => {
+    const values = profileRatings.map((profile) => region.profiles[profile.id] ?? {
+      score: 0,
+      winners: 0,
+      prizewinners: 0,
+      participants: 0,
+    });
+
+    return {
+      ...region,
+      score: scoreTotal === 0
+        ? 0
+        : (values.reduce((total, value) => total + value.score, 0) / scoreTotal) * 10000,
+      previousScore: null,
+      changePercent: null,
+      winners: values.reduce((total, value) => total + value.winners, 0),
+      prizewinners: values.reduce((total, value) => total + value.prizewinners, 0),
+      participants: values.reduce((total, value) => total + value.participants, 0),
+    };
+  }).filter((region) => minimumScore === null || region.score > minimumScore).sort((left, right) => (
+    right.score - left.score || left.name.localeCompare(right.name, 'ru')
+  )));
+
+  return {
+    year,
+    scoreTotal,
+    profileOptions: profileRatings.map(({ id, name, regionScoreTotal }) => ({
+      id,
+      name,
+      scoreTotal: regionScoreTotal,
+    })),
+    regionCount: regions.length,
+    regions,
+  };
+};

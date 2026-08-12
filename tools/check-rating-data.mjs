@@ -2,6 +2,7 @@ import fs from 'node:fs';
 
 import {
   applySchoolCatalog,
+  buildOverallRegionRating,
   buildOverallSchoolRating,
 } from '../src/lib/rating-school-catalog.js';
 
@@ -154,6 +155,17 @@ check(candidateSchools.every((school) => overall.profileOptions.some((profile) =
 ))), 'Overall candidate filtering is inconsistent');
 check(buildOverallSchoolRating(canonicalProfiles, currentYear, { minimumScore: 10 })
   .schools.every((school) => school.score > 10), 'Overall minimum score is not enforced');
+
+const overallRegions = buildOverallRegionRating(canonicalProfiles, currentYear);
+closeTo(sum(overallRegions.regions, 'score'), 10000,
+  'Overall region rating must total 10,000', 1e-7);
+check(overallRegions.regionCount === new Set(
+  canonicalProfiles.flatMap((profile) => (
+    profile.years.find((year) => year.year === currentYear).regions.map((region) => region.name)
+  ))
+).size, 'Overall region count mismatch');
+check(buildOverallRegionRating(canonicalProfiles, currentYear, { minimumScore: 10 })
+  .regions.every((region) => region.score > 10), 'Overall region minimum score is not enforced');
 
 const informaticsParticipants = sourceProfiles
   .filter((profile) => ['programming', 'ai', 'security', 'robotics'].includes(profile.id))
