@@ -21,8 +21,8 @@
     return link.origin === window.location.origin && link.pathname === window.location.pathname;
   };
 
-  const scrollToOrder = () => {
-    const target = document.querySelector("#order");
+  const scrollToTarget = (selector, initialBehavior = "smooth") => {
+    const target = document.querySelector(selector);
     if (!target) return;
 
     const header = document.querySelector("[data-header]");
@@ -36,7 +36,7 @@
       return image.getBoundingClientRect().top + window.scrollY < targetTop;
     });
 
-    scroll();
+    scroll(initialBehavior);
     imagesBeforeTarget.forEach((image) => {
       if (!image.complete) {
         image.addEventListener("load", () => scroll("auto"), { once: true });
@@ -46,6 +46,12 @@
       window.setTimeout(() => scroll("auto"), delay);
     });
   };
+
+  const scrollToOrder = () => scrollToTarget("#order");
+
+  if (window.location.hash === "#faq") {
+    scrollToTarget("#faq", "auto");
+  }
 
   document.addEventListener("click", (event) => {
     if (!(event.target instanceof Element)) return;

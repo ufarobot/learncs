@@ -6,7 +6,7 @@ export const site = {
   ogImageAlt: 'Онлайн-курс learncs.ru по олимпиадной информатике для школьников',
   logo: 'assets/logo-icon-white-on-black.png',
   stylesheetVersion: '20260618-students-links',
-  scriptVersion: '20260602-order-click-sources'
+  scriptVersion: '20260814-faq-anchor'
 };
 
 export const nav = [
