@@ -259,22 +259,42 @@ export const buildCompositeSchoolRating = (
   };
 };
 
-export const buildOverallRegionRating = (profiles, year, { minimumScore = null } = {}) => {
+export const buildCompositeRegionRating = (
+  profiles,
+  year,
+  { minimumScore = null, weightBy = 'region-score' } = {}
+) => {
+  if (!['region-score', 'participants'].includes(weightBy)) {
+    throw new Error(`Unsupported composite rating weight: ${weightBy}`);
+  }
+
   const profileRatings = profiles.map((profile) => {
     const yearRating = profile.years.find((item) => item.year === year);
     if (!yearRating) {
       throw new Error(`Profile ${profile.id} has no rating for ${year}`);
     }
 
+    const regionScoreTotal = yearRating.regions.reduce(
+      (total, region) => total + region.score,
+      0
+    );
+
     return {
       id: profile.id,
       name: profile.name,
       yearRating,
-      regionScoreTotal: yearRating.regions.reduce((total, region) => total + region.score, 0),
+      regionScoreTotal,
+      weight: weightBy === 'participants'
+        ? yearRating.participantCount
+        : regionScoreTotal,
     };
   });
   const scoreTotal = profileRatings.reduce(
     (total, profile) => total + profile.regionScoreTotal,
+    0
+  );
+  const weightTotal = profileRatings.reduce(
+    (total, profile) => total + profile.weight,
     0
   );
   const regionsByName = new Map();
@@ -307,9 +327,15 @@ export const buildOverallRegionRating = (profiles, year, { minimumScore = null }
 
     return {
       ...region,
-      score: scoreTotal === 0
+      score: weightTotal === 0
         ? 0
-        : (values.reduce((total, value) => total + value.score, 0) / scoreTotal) * 10000,
+        : profileRatings.reduce((total, profile, index) => (
+          total + (
+            profile.regionScoreTotal === 0
+              ? 0
+              : (values[index].score / profile.regionScoreTotal) * profile.weight
+          )
+        ), 0) / weightTotal * 10000,
       previousScore: null,
       changePercent: null,
       winners: values.reduce((total, value) => total + value.winners, 0),
@@ -323,15 +349,25 @@ export const buildOverallRegionRating = (profiles, year, { minimumScore = null }
   return {
     year,
     scoreTotal,
-    profileOptions: profileRatings.map(({ id, name, regionScoreTotal }) => ({
+    weightTotal,
+    weightBy,
+    profileOptions: profileRatings.map(({ id, name, regionScoreTotal, weight }) => ({
       id,
       name,
       scoreTotal: regionScoreTotal,
+      weight,
     })),
     regionCount: regions.length,
     regions,
   };
 };
+
+export const buildOverallRegionRating = (profiles, year, options = {}) => (
+  buildCompositeRegionRating(profiles, year, {
+    ...options,
+    weightBy: 'region-score',
+  })
+);
 
 export const buildOverallSchoolRating = (profiles, year, options = {}) => (
   buildCompositeSchoolRating(profiles, year, {

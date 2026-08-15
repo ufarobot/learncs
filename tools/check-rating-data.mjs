@@ -2,6 +2,7 @@ import fs from 'node:fs';
 
 import {
   applySchoolCatalog,
+  buildCompositeRegionRating,
   buildCompositeSchoolRating,
   buildOverallRegionRating,
 } from '../src/lib/rating-school-catalog.js';
@@ -239,6 +240,10 @@ check(buildCompositeSchoolRating(informaticsProfiles, currentYear, {
 }).schools.every((school) => school.score > 10), 'Informatics minimum score is not enforced');
 
 const overallRegions = buildOverallRegionRating(informaticsProfiles, currentYear);
+check(overallRegions.weightBy === 'region-score',
+  'Informatics region composite weight mode changed');
+closeTo(overallRegions.weightTotal, overallRegions.scoreTotal,
+  'Informatics region weight total must equal its source score total');
 closeTo(sum(overallRegions.regions, 'score'), 10000,
   'Overall region rating must total 10,000', 1e-7);
 check(overallRegions.regionCount === new Set(
@@ -246,6 +251,25 @@ check(overallRegions.regionCount === new Set(
     profile.years.find((year) => year.year === currentYear).regions.map((region) => region.name)
   ))
 ).size, 'Overall region count mismatch');
+check(overallRegions.regionCount === 81, 'Informatics region count must be 81');
+const informaticsRawRegionScores = new Map();
+for (const profile of informaticsProfiles) {
+  const yearRating = profile.years.find((year) => year.year === currentYear);
+  for (const region of yearRating.regions) {
+    informaticsRawRegionScores.set(
+      region.name,
+      (informaticsRawRegionScores.get(region.name) ?? 0) + region.score
+    );
+  }
+}
+for (const region of overallRegions.regions) {
+  closeTo(
+    region.score,
+    (informaticsRawRegionScores.get(region.name) / overallRegions.scoreTotal) * 10000,
+    `Informatics region normalization changed: ${region.name}`,
+    1e-7
+  );
+}
 check(buildOverallRegionRating(informaticsProfiles, currentYear, { minimumScore: 10 })
   .regions.every((region) => region.score > 10), 'Overall region minimum score is not enforced');
 
@@ -263,6 +287,7 @@ const informaticsSubject = {
     year: currentYear,
     participantCount: informaticsParticipants,
     schools: informaticsRating.schools,
+    regions: overallRegions.regions,
   }],
 };
 const subjectProfileIds = ['informatics', 'math', 'physics', 'chemistry'];
@@ -272,6 +297,9 @@ const subjectProfiles = [
 ];
 check(subjectProfiles.every(Boolean), 'Four-subject composite profiles are incomplete');
 const subjectRating = buildCompositeSchoolRating(subjectProfiles, currentYear, {
+  weightBy: 'participants',
+});
+const subjectRegionRating = buildCompositeRegionRating(subjectProfiles, currentYear, {
   weightBy: 'participants',
 });
 const expectedSubjectWeights = new Map([
@@ -293,6 +321,32 @@ closeTo(subjectRating.profileOptions.find((profile) => profile.id === 'informati
 closeTo(sum(subjectRating.schools, 'score'), 10000,
   'Four-subject rating must total 10,000', 1e-7);
 const subjectVisibleSchools = subjectRating.schools.filter((school) => Math.round(school.score) > 10);
+check(subjectRegionRating.weightBy === 'participants',
+  'Four-subject region composite weight mode changed');
+check(subjectRegionRating.weightTotal === 2716,
+  'Four-subject region participant weight total must be 2,716');
+check(subjectRegionRating.profileOptions.map((profile) => profile.id).join(',')
+  === subjectProfileIds.join(','), 'Four-subject region profile order changed');
+for (const profile of subjectRegionRating.profileOptions) {
+  check(profile.weight === expectedSubjectWeights.get(profile.id),
+    `Four-subject region weight mismatch: ${profile.id}`);
+}
+closeTo(subjectRegionRating.profileOptions.find((profile) => profile.id === 'informatics').scoreTotal,
+  10000, 'STEM regions must use the normalized informatics rating', 1e-7);
+check(subjectRegionRating.regionCount === 87, 'Four-subject region count must be 87');
+closeTo(sum(subjectRegionRating.regions, 'score'), 10000,
+  'Four-subject region rating must total 10,000', 1e-7);
+checkCompetitionRanks(subjectRegionRating.regions, 'four-subject:2026:regions');
+for (const region of subjectRegionRating.regions) {
+  const expectedScore = subjectRegionRating.profileOptions.reduce((total, profile) => (
+    total + (
+      profile.scoreTotal === 0
+        ? 0
+        : ((region.profiles[profile.id]?.score ?? 0) / profile.scoreTotal) * profile.weight
+    )
+  ), 0) / subjectRegionRating.weightTotal * 10000;
+  closeTo(region.score, expectedScore, `Four-subject region formula changed: ${region.name}`, 1e-7);
+}
 
 const statusNeutralProfiles = structuredClone(subjectProfiles);
 for (const profile of statusNeutralProfiles) {
@@ -300,6 +354,10 @@ for (const profile of statusNeutralProfiles) {
     for (const school of year.schools) {
       school.winners = 0;
       school.prizewinners = 0;
+    }
+    for (const region of year.regions) {
+      region.winners = 0;
+      region.prizewinners = 0;
     }
   }
 }
@@ -310,6 +368,16 @@ const statusNeutralScores = new Map(statusNeutralRating.schools.map((school) => 
 for (const school of subjectRating.schools) {
   closeTo(statusNeutralScores.get(school.id), school.score,
     `Diploma status changed composite score: ${school.name}`);
+}
+const statusNeutralRegionRating = buildCompositeRegionRating(statusNeutralProfiles, currentYear, {
+  weightBy: 'participants',
+});
+const statusNeutralRegionScores = new Map(
+  statusNeutralRegionRating.regions.map((region) => [region.name, region.score])
+);
+for (const region of subjectRegionRating.regions) {
+  closeTo(statusNeutralRegionScores.get(region.name), region.score,
+    `Diploma status changed composite region score: ${region.name}`);
 }
 
 check(extraProfiles.profiles.find((profile) => profile.id === 'math').source
