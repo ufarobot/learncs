@@ -229,22 +229,26 @@ const datasetSchema = {
           <label class="ranking-field ranking-profile">
             <span>Направление</span>
             <select data-ranking-profile>
-              <option value="programming">Программирование</option>
-              <optgroup label="Сводные рейтинги">
-                {compositeRatings.map((composite) => (
-                  <option value={composite.id}>{composite.name}</option>
-                ))}
-              </optgroup>
-              <optgroup label="Направления информатики">
+              <optgroup label="Информатика">
+                <option value="overall">Общий рейтинг</option>
+                <option value="programming" selected>Программирование</option>
                 {profiles
                   .filter((profile) => ['ai', 'security', 'robotics'].includes(profile.id))
                   .map((profile) => (
                     <option value={profile.id}>{profile.name}</option>
                   ))}
               </optgroup>
-              <optgroup label="Другие предметы">
+              <optgroup label="STEM">
+                <option value="stem">Общий рейтинг</option>
+                <option value="math">Математика</option>
+                <option
+                  value="stem-informatics"
+                  data-ranking-profile-alias="programming"
+                >
+                  Информатика
+                </option>
                 {profiles
-                  .filter((profile) => ['math', 'physics', 'chemistry'].includes(profile.id))
+                  .filter((profile) => ['physics', 'chemistry'].includes(profile.id))
                   .map((profile) => (
                     <option value={profile.id}>{profile.name}</option>
                   ))}
@@ -799,5 +803,5 @@ const datasetSchema = {
     </section>
   </article>
 
-  <script is:inline src="../../assets/rating.js?v=20260815-subjects-regions1"></script>
+  <script is:inline src="../../assets/rating.js?v=20260815-subject-groups1"></script>
 </BaseLayout>

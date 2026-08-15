@@ -59,7 +59,15 @@
     const allCompositeCheckboxes = [
       ...app.querySelectorAll('[data-ranking-overall-profile]')
     ];
-    const profileIds = [...profileSelect.options].map((option) => option.value);
+    const profileAliases = new Map(
+      [...profileSelect.options]
+        .filter((option) => option.dataset.rankingProfileAlias)
+        .map((option) => [option.value, option.dataset.rankingProfileAlias])
+    );
+    const canonicalProfileId = (profileId) => profileAliases.get(profileId) ?? profileId;
+    const profileIds = [...new Set(
+      [...profileSelect.options].map((option) => canonicalProfileId(option.value))
+    )];
     const programmingProfile = 'programming';
     const defaultProfile = programmingProfile;
     const states = new Map();
@@ -151,6 +159,7 @@
 
     const initial = parseHash();
     let activeProfile = initial.profile;
+    let activeProfileSelection = initial.profile;
     let activeYear = initial.year;
     let activeView = initial.view;
     let selectedRegion = '';
@@ -495,7 +504,13 @@
       historyNote.hidden = activeProfile !== programmingProfile;
     };
 
-    const switchSelection = (profileId, year, view, updateHash = true) => {
+    const switchSelection = (
+      profileId,
+      year,
+      view,
+      updateHash = true,
+      profileSelection = null
+    ) => {
       if (!profileIds.includes(profileId) || !['schools', 'regions'].includes(view)) {
         return;
       }
@@ -512,7 +527,11 @@
           .map((panel) => panel.dataset.rankingPanel)
       );
       activeView = availableViews.has(view) ? view : 'schools';
-      profileSelect.value = activeProfile;
+      const preservedSelection = canonicalProfileId(activeProfileSelection) === activeProfile
+        ? activeProfileSelection
+        : activeProfile;
+      activeProfileSelection = profileSelection ?? preservedSelection;
+      profileSelect.value = activeProfileSelection;
       yearControl.style.setProperty('--year-count', availableYears.length);
       viewControl.hidden = availableViews.size < 2;
       compositeOptionGroups.forEach((group) => {
@@ -566,10 +585,14 @@
     };
 
     profileSelect.addEventListener('change', () => {
+      const profileSelection = profileSelect.value;
+      const profileId = canonicalProfileId(profileSelection);
       switchSelection(
-        profileSelect.value,
-        defaultYearForProfile(profileSelect.value),
-        activeView
+        profileId,
+        defaultYearForProfile(profileId),
+        activeView,
+        true,
+        profileSelection
       );
     });
 
@@ -642,7 +665,13 @@
 
     window.addEventListener('hashchange', () => {
       const selection = parseHash();
-      switchSelection(selection.profile, selection.year, selection.view, false);
+      switchSelection(
+        selection.profile,
+        selection.year,
+        selection.view,
+        false,
+        selection.profile
+      );
     });
 
     initializeTableSorting();
