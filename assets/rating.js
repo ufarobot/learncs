@@ -40,6 +40,7 @@
     const profileSelect = app.querySelector('select[data-ranking-profile]');
     const yearButtons = [...app.querySelectorAll('[data-ranking-year-button]')];
     const yearControl = app.querySelector('.ranking-years');
+    const viewControl = app.querySelector('.ranking-view-control');
     const panels = [...app.querySelectorAll('[data-ranking-panel]')];
     const search = app.querySelector('[data-ranking-search]');
     const region = app.querySelector('[data-ranking-region]');
@@ -51,15 +52,16 @@
     const methodLink = document.querySelector('a[href="#rating-method"]');
     const siteHeader = document.querySelector('.site-header');
     const stickyHeader = app.querySelector('.ranking-sticky-header');
-    const overallOptions = app.querySelector('[data-ranking-overall-options]');
-    const overallCheckboxes = [...app.querySelectorAll('[data-ranking-overall-profile]')];
+    const compositeOptionGroups = [...app.querySelectorAll('[data-ranking-overall-options]')];
+    const compositeProfiles = new Set(
+      compositeOptionGroups.map((group) => group.dataset.rankingOverallOptions)
+    );
+    const allCompositeCheckboxes = [
+      ...app.querySelectorAll('[data-ranking-overall-profile]')
+    ];
     const profileIds = [...profileSelect.options].map((option) => option.value);
-    const overallProfile = 'overall';
     const programmingProfile = 'programming';
-    const defaultProfile = overallProfile;
-    const overallPanels = panels.filter((panel) => (
-      panel.dataset.rankingProfile === overallProfile
-    ));
+    const defaultProfile = programmingProfile;
     const states = new Map();
     const allSchoolRegions = [...new Set(
       panels
@@ -95,19 +97,11 @@
     const parseHash = () => {
       const hash = window.location.hash.slice(1);
 
-      if (!hash || hash === overallProfile) {
+      if (!hash) {
         return {
-          profile: overallProfile,
-          year: defaultYearForProfile(overallProfile),
+          profile: defaultProfile,
+          year: defaultYearForProfile(defaultProfile),
           view: 'schools'
-        };
-      }
-
-      if (hash === `${overallProfile}-regions`) {
-        return {
-          profile: overallProfile,
-          year: defaultYearForProfile(overallProfile),
-          view: 'regions'
         };
       }
 
@@ -128,7 +122,7 @@
         };
       }
 
-      for (const profileId of profileIds.filter((id) => id !== overallProfile)) {
+      for (const profileId of profileIds) {
         const profileYears = yearsForProfile(profileId);
         if (hash === profileId || hash === `${profileId}-regions`) {
           return {
@@ -173,7 +167,13 @@
       && panel.dataset.rankingYear === activeYear
       && panel.dataset.rankingPanel === activeView
     ));
-    const selectedOverallProfiles = () => overallCheckboxes
+    const compositeOptions = (profileId) => compositeOptionGroups.find(
+      (group) => group.dataset.rankingOverallOptions === profileId
+    );
+    const compositeCheckboxes = (profileId) => [
+      ...(compositeOptions(profileId)?.querySelectorAll('[data-ranking-overall-profile]') ?? [])
+    ];
+    const selectedCompositeProfiles = (profileId) => compositeCheckboxes(profileId)
       .filter((checkbox) => checkbox.checked)
       .map((checkbox) => checkbox.value);
 
@@ -320,20 +320,24 @@
       states.set(stateKey(), { query: search.value });
     };
 
-    const updateOverallRating = () => {
-      const selectedProfiles = selectedOverallProfiles();
+    const updateCompositeRating = (compositeId) => {
+      const checkboxes = compositeCheckboxes(compositeId);
+      const selectedProfiles = selectedCompositeProfiles(compositeId);
+      const compositePanels = panels.filter((panel) => (
+        panel.dataset.rankingProfile === compositeId
+      ));
 
-      overallCheckboxes.forEach((checkbox) => {
+      checkboxes.forEach((checkbox) => {
         checkbox.disabled = checkbox.checked && selectedProfiles.length === 1;
       });
 
-      overallPanels.forEach((panel) => {
-        const totalDatasetKey = panel.dataset.rankingPanel === 'regions'
-          ? 'rankingOverallRegionTotal'
-          : 'rankingOverallSchoolTotal';
-        const selectedScoreTotal = overallCheckboxes.reduce((total, checkbox) => (
+      compositePanels.forEach((panel) => {
+        const viewLabel = panel.dataset.rankingPanel === 'regions' ? 'Region' : 'School';
+        const totalDatasetKey = `rankingOverall${viewLabel}Total`;
+        const weightDatasetKey = `rankingOverall${viewLabel}Weight`;
+        const selectedWeightTotal = checkboxes.reduce((total, checkbox) => (
           checkbox.checked
-            ? total + Number(checkbox.dataset[totalDatasetKey])
+            ? total + Number(checkbox.dataset[weightDatasetKey])
             : total
         ), 0);
         const minimumScore = Number(panel.dataset.rankingOverallMinimumScore ?? 0);
@@ -347,10 +351,23 @@
 
         rows.forEach((row) => {
           const metrics = JSON.parse(row.dataset.rankingOverall);
-          const values = selectedProfiles.map((profileId) => metrics[profileId] ?? { score: 0 });
-          const score = selectedScoreTotal === 0
+          const values = selectedProfiles.map((profileId) => metrics[profileId] ?? {
+            score: 0,
+            participants: 0
+          });
+          const score = selectedWeightTotal === 0
             ? 0
-            : (values.reduce((total, value) => total + value.score, 0) / selectedScoreTotal) * 10000;
+            : selectedProfiles.reduce((total, profileId) => {
+              const checkbox = checkboxes.find((item) => item.value === profileId);
+              const profileScoreTotal = Number(checkbox.dataset[totalDatasetKey]);
+              const profileWeight = Number(checkbox.dataset[weightDatasetKey]);
+              const profileScore = metrics[profileId]?.score ?? 0;
+              return total + (
+                profileScoreTotal === 0
+                  ? 0
+                  : (profileScore / profileScoreTotal) * profileWeight
+              );
+            }, 0) / selectedWeightTotal * 10000;
           const roundedScore = Math.round(score);
           const thresholdScore = useRoundedThreshold ? roundedScore : score;
           const hasParticipants = values.some((value) => value.participants > 0);
@@ -364,9 +381,14 @@
           const scoreCell = row.querySelector('[data-ranking-overall-score]');
           scoreCell.textContent = scoreFormatter.format(roundedScore);
           scoreCell.title = `${exactScoreFormatter.format(score)} балла`;
-          const contributions = overallCheckboxes.map((checkbox) => {
-            const value = checkbox.checked && selectedScoreTotal !== 0
-              ? ((metrics[checkbox.value]?.score ?? 0) / selectedScoreTotal) * 10000
+          const contributions = checkboxes.map((checkbox) => {
+            const profileScoreTotal = Number(checkbox.dataset[totalDatasetKey]);
+            const profileWeight = Number(checkbox.dataset[weightDatasetKey]);
+            const value = checkbox.checked
+              && selectedWeightTotal !== 0
+              && profileScoreTotal !== 0
+              ? ((metrics[checkbox.value]?.score ?? 0) / profileScoreTotal)
+                * (profileWeight / selectedWeightTotal) * 10000
               : 0;
             return {
               id: checkbox.value,
@@ -389,7 +411,7 @@
                 remainder -= 1;
               }
             });
-          overallCheckboxes.forEach((checkbox) => {
+          checkboxes.forEach((checkbox) => {
             const contributionCell = row.querySelector(
               `[data-ranking-overall-contribution="${checkbox.value}"]`
             );
@@ -432,24 +454,26 @@
         applyTableSort(table);
       });
 
-      if (activeProfile === overallProfile) {
+      if (activeProfile === compositeId) {
         updateResults();
       }
+    };
+
+    const updateCompositeRatings = () => {
+      compositeProfiles.forEach(updateCompositeRating);
     };
 
     const updateUrl = () => {
       const profileDefaultYear = defaultYearForProfile(activeProfile);
       let hash = '';
 
-      if (activeProfile === overallProfile) {
-        hash = activeView === 'regions' ? '#overall-regions' : '';
-      } else if (activeProfile === programmingProfile) {
+      if (activeProfile === programmingProfile) {
         if (activeYear === profileDefaultYear) {
           hash = activeView === 'regions' ? '#regions' : '#programming';
         } else {
           hash = `#${activeYear}${activeView === 'regions' ? '-regions' : ''}`;
         }
-      } else if (activeProfile !== overallProfile) {
+      } else {
         hash = `#${activeProfile}`;
         if (activeYear !== profileDefaultYear) {
           hash += `-${activeYear}`;
@@ -479,10 +503,21 @@
       const availableYears = yearsForProfile(profileId);
       activeProfile = profileId;
       activeYear = availableYears.includes(String(year)) ? String(year) : availableYears[0];
-      activeView = view;
+      const availableViews = new Set(
+        panels
+          .filter((panel) => (
+            panel.dataset.rankingProfile === activeProfile
+            && panel.dataset.rankingYear === activeYear
+          ))
+          .map((panel) => panel.dataset.rankingPanel)
+      );
+      activeView = availableViews.has(view) ? view : 'schools';
       profileSelect.value = activeProfile;
       yearControl.style.setProperty('--year-count', availableYears.length);
-      overallOptions.hidden = activeProfile !== overallProfile;
+      viewControl.hidden = availableViews.size < 2;
+      compositeOptionGroups.forEach((group) => {
+        group.hidden = group.dataset.rankingOverallOptions !== activeProfile;
+      });
 
       yearButtons.forEach((button) => {
         const available = availableYears.includes(button.dataset.rankingYearButton);
@@ -576,8 +611,11 @@
       });
     });
 
-    overallCheckboxes.forEach((checkbox) => {
-      checkbox.addEventListener('change', updateOverallRating);
+    allCompositeCheckboxes.forEach((checkbox) => {
+      checkbox.addEventListener('change', () => {
+        const group = checkbox.closest('[data-ranking-overall-options]');
+        updateCompositeRating(group.dataset.rankingOverallOptions);
+      });
     });
     methodLink?.addEventListener('click', (event) => {
       event.preventDefault();
@@ -593,10 +631,10 @@
       search.value = '';
       selectedRegion = '';
       region.value = '';
-      overallCheckboxes.forEach((checkbox) => {
+      allCompositeCheckboxes.forEach((checkbox) => {
         checkbox.checked = true;
       });
-      updateOverallRating();
+      updateCompositeRatings();
       sortTable(activePanel().querySelector('.ranking-table'), 0, 'ascending');
       updateResults();
       search.focus();
@@ -608,7 +646,7 @@
     });
 
     initializeTableSorting();
-    updateOverallRating();
+    updateCompositeRatings();
     switchSelection(activeProfile, activeYear, activeView, false);
     updateStickyOffset();
   });

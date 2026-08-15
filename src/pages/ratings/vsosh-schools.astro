@@ -6,12 +6,12 @@ import ratingHistory from '../../data/rating-history.json';
 import schoolCatalog from '../../data/rating-school-catalog.json';
 import {
   applySchoolCatalog,
-  buildOverallRegionRating,
-  buildOverallSchoolRating
+  buildCompositeSchoolRating,
+  buildOverallRegionRating
 } from '../../lib/rating-school-catalog.js';
 
 const title = 'Рейтинг школ по итогам ВсОШ';
-const description = 'Рейтинг школ и регионов по результатам заключительного этапа ВсОШ 2025/26 по программированию, искусственному интеллекту, информационной безопасности, робототехнике и математике.';
+const description = 'Рейтинг школ и регионов по результатам заключительного этапа ВсОШ по информатике, математике, физике и химии. Программирование представлено с 2024 по 2026 год.';
 const canonical = new URL('ratings/vsosh-schools/', site.url).href;
 const currentYear = 2026;
 const scoreFormatter = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
@@ -29,38 +29,82 @@ const profiles = [
     years: applySchoolCatalog(profile.years, schoolCatalog)
   }))
 ];
-const overallRatingData = buildOverallSchoolRating(profiles, currentYear);
-const overallRegionRating = buildOverallRegionRating(profiles, currentYear);
+const profilesById = new Map(profiles.map((profile) => [profile.id, profile]));
+const compositeDefinitions = [
+  {
+    id: 'overall',
+    name: 'Информатика: 4 направления',
+    tableName: 'Рейтинг по информатике',
+    profileIds: ['programming', 'ai', 'security', 'robotics'],
+    weightBy: 'school-score',
+    methodNote: 'В рейтинге по информатике сохраняется прежняя формула. Вклад направления зависит от общей суммы баллов его участников.'
+  },
+  {
+    id: 'stem',
+    name: 'Четыре предмета',
+    tableName: 'Рейтинг четырёх предметов',
+    profileIds: ['programming', 'math', 'physics', 'chemistry'],
+    weightBy: 'participants',
+    methodNote: 'В рейтинге четырёх предметов вес предмета пропорционален числу участников его финала.'
+  }
+];
+const compositeRatings = compositeDefinitions.map((definition) => {
+  const compositeProfiles = definition.profileIds.map((profileId) => {
+    const profile = profilesById.get(profileId);
+    if (!profile) {
+      throw new Error(`Composite rating ${definition.id} references unknown profile ${profileId}`);
+    }
+    return profile;
+  });
+  const ratingData = buildCompositeSchoolRating(compositeProfiles, currentYear, {
+    weightBy: definition.weightBy
+  });
+  const visibleSchools = ratingData.schools.filter((school) => Math.round(school.score) > 10);
+
+  return {
+    ...definition,
+    profiles: compositeProfiles,
+    rating: {
+      ...ratingData,
+      schoolCount: visibleSchools.length,
+      regionCount: new Set(visibleSchools.map((school) => school.region)).size
+    }
+  };
+});
+const informaticsComposite = compositeRatings.find((composite) => composite.id === 'overall');
+const overallRegionRating = buildOverallRegionRating(informaticsComposite.profiles, currentYear);
 const overallRegionTotals = new Map(
   overallRegionRating.profileOptions.map((profile) => [profile.id, profile.scoreTotal])
 );
-const overallCandidateSchools = overallRatingData.schools.filter((school) => (
-  overallRatingData.profileOptions.some((profile) => (
-    profile.scoreTotal > 0
-    && Math.round(((school.profiles[profile.id]?.score ?? 0) / profile.scoreTotal) * 10000) > 10
-  ))
-));
-const overallVisibleSchools = overallCandidateSchools.filter((school) => Math.round(school.score) > 10);
-const overallRating = {
-  ...overallRatingData,
-  schools: overallCandidateSchools,
-  schoolCount: overallVisibleSchools.length,
-  regionCount: new Set(overallVisibleSchools.map((school) => school.region)).size
-};
 const overallProfileLabels = {
   programming: 'Программирование',
   ai: 'ИИ',
   security: 'Инфобез',
   robotics: 'Робототехника',
-  math: 'Математика'
+  math: 'Математика',
+  physics: 'Физика',
+  chemistry: 'Химия'
 };
 const overallColumnLabels = {
   programming: 'Прог.',
   ai: 'ИИ',
   security: 'ИБ',
   robotics: 'Роботы',
-  math: 'Матем.'
+  math: 'Матем.',
+  physics: 'Физика',
+  chemistry: 'Химия'
 };
+const compositeProfileLabel = (composite, profile) => (
+  composite.id === 'stem' && profile.id === 'programming'
+    ? 'Информатика'
+    : overallProfileLabels[profile.id] ?? profile.name
+);
+const compositeColumnLabel = (composite, profile) => (
+  composite.id === 'stem' && profile.id === 'programming'
+    ? 'Информ.'
+    : overallColumnLabels[profile.id] ?? profile.name
+);
+const initialRating = programmingProfile.years.find((year) => year.year === currentYear);
 const years = [...new Set(profiles.flatMap((profile) => profile.years.map((year) => year.year)))]
   .sort((left, right) => right - left);
 
@@ -170,7 +214,7 @@ const datasetSchema = {
         <div class="rating-hero-copy">
           <h1>Рейтинг школ по итогам ВсОШ</h1>
           <p class="lead">
-            Результаты заключительного этапа по пяти направлениям.
+            В центре рейтинга олимпиадное программирование. Также доступны направления информатики, математика, физика и химия.
           </p>
         </div>
       </div>
@@ -185,10 +229,26 @@ const datasetSchema = {
           <label class="ranking-field ranking-profile">
             <span>Направление</span>
             <select data-ranking-profile>
-              <option value="overall">Общий рейтинг</option>
-              {profiles.map((profile) => (
-                <option value={profile.id}>{profile.name}</option>
-              ))}
+              <option value="programming">Программирование</option>
+              <optgroup label="Сводные рейтинги">
+                {compositeRatings.map((composite) => (
+                  <option value={composite.id}>{composite.name}</option>
+                ))}
+              </optgroup>
+              <optgroup label="Направления информатики">
+                {profiles
+                  .filter((profile) => ['ai', 'security', 'robotics'].includes(profile.id))
+                  .map((profile) => (
+                    <option value={profile.id}>{profile.name}</option>
+                  ))}
+              </optgroup>
+              <optgroup label="Другие предметы">
+                {profiles
+                  .filter((profile) => ['math', 'physics', 'chemistry'].includes(profile.id))
+                  .map((profile) => (
+                    <option value={profile.id}>{profile.name}</option>
+                  ))}
+              </optgroup>
             </select>
           </label>
 
@@ -215,7 +275,7 @@ const datasetSchema = {
                 type="button"
                 role="tab"
                 aria-selected="true"
-                aria-controls={`ranking-panel-overall-${currentYear}-schools`}
+                aria-controls={`ranking-panel-programming-${currentYear}-schools`}
                 data-ranking-tab="schools"
               >
                 Школы
@@ -255,111 +315,123 @@ const datasetSchema = {
             Сбросить
           </button>
 
-            <div class="ranking-profile-options" data-ranking-overall-options>
-              <span>Направления</span>
-              <div>
-                {overallRating.profileOptions.map((profile) => (
-                  <label>
-                    <input
-                      type="checkbox"
-                      value={profile.id}
-                      checked
-                      data-ranking-overall-profile
-                      data-ranking-overall-school-total={profile.scoreTotal}
-                      data-ranking-overall-region-total={overallRegionTotals.get(profile.id)}
-                    />
-                    <span>{overallProfileLabels[profile.id] ?? profile.name}</span>
-                  </label>
-                ))}
+            {compositeRatings.map((composite) => (
+              <div
+                class="ranking-profile-options"
+                data-ranking-overall-options={composite.id}
+                hidden
+              >
+                <span>{composite.id === 'stem' ? 'Предметы' : 'Направления'}</span>
+                <div>
+                  {composite.rating.profileOptions.map((profile) => (
+                    <label>
+                      <input
+                        type="checkbox"
+                        value={profile.id}
+                        checked
+                        data-ranking-overall-profile
+                        data-ranking-overall-school-total={profile.scoreTotal}
+                        data-ranking-overall-school-weight={profile.weight}
+                        data-ranking-overall-region-total={composite.id === 'overall' ? overallRegionTotals.get(profile.id) : undefined}
+                        data-ranking-overall-region-weight={composite.id === 'overall' ? overallRegionTotals.get(profile.id) : undefined}
+                      />
+                      <span>{compositeProfileLabel(composite, profile)}</span>
+                    </label>
+                  ))}
+                </div>
               </div>
-            </div>
+            ))}
           </div>
 
           <div class="ranking-status">
-            <span data-ranking-count aria-live="polite">{overallRating.schoolCount} школ</span>
+            <span data-ranking-count aria-live="polite">{initialRating.schoolCount} школ</span>
             <a class="ranking-method-link" href="#rating-method">Методика</a>
           </div>
         </div>
 
-        <div
-          id={`ranking-panel-overall-${currentYear}-schools`}
-          class="ranking-panel"
-          role="tabpanel"
-          aria-labelledby="ranking-tab-schools"
-          data-ranking-panel="schools"
-          data-ranking-profile="overall"
-          data-ranking-profile-name="Общий рейтинг"
-          data-ranking-year={currentYear}
-          data-ranking-method-note="В общем рейтинге учитываются школы из выбранных направлений."
-          data-ranking-overall-minimum-score="10"
-          data-ranking-overall-round-threshold="true"
-          data-ranking-school-count={overallRating.schoolCount}
-          data-ranking-region-count={overallRating.regionCount}
-        >
-          <div class="ranking-table-frame">
-            <table class="ranking-table ranking-table-schools ranking-table-overall ranking-table-no-comparison">
-              <caption class="visually-hidden">Общий рейтинг школ по итогам ВсОШ, {currentYear} год</caption>
-              <thead>
-                <tr>
-                  <th scope="col">Место</th>
-                  <th scope="col">Школа</th>
-                  <th scope="col">Регион</th>
-                  <th scope="col">Общий балл</th>
-                  {overallRating.profileOptions.map((profile) => (
-                    <th
-                      scope="col"
-                      title={profile.name}
-                      data-ranking-overall-column={profile.id}
-                    >
-                      {overallColumnLabels[profile.id] ?? profile.name}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody data-ranking-overall-body>
-                {overallRating.schools.map((school) => (
-                  <tr
-                    data-ranking-row
-                    data-ranking-overall-row
-                    data-ranking-included={Math.round(school.score) > 10 ? 'true' : 'false'}
-                    data-ranking-overall={JSON.stringify(school.profiles)}
-                    data-query={`${school.name} ${school.city ?? ''} ${school.region} ${school.aliases.join(' ')}`}
-                    data-region={school.region}
-                  >
-                    <td class="ranking-rank" data-label="Место" data-ranking-overall-rank>{school.rank}</td>
-                    <th class="ranking-entity" scope="row" title={school.officialName}>{school.name}</th>
-                    <td class="ranking-region" data-label="Регион">{school.region}</td>
-                    <td
-                      class="ranking-score ranking-score-current"
-                      data-label="Общий балл"
-                      data-ranking-overall-score
-                      title={`${formatExactScore(school.score)} балла`}
-                    >
-                      {formatScore(school.score)}
-                    </td>
-                    {overallRating.profileOptions.map((profile) => {
-                      const contribution = overallRating.scoreTotal === 0
-                        ? 0
-                        : ((school.profiles[profile.id]?.score ?? 0) / overallRating.scoreTotal) * 10000;
-                      return (
-                        <td
-                          class="ranking-score ranking-overall-contribution"
-                          data-label={overallProfileLabels[profile.id] ?? profile.name}
-                          data-ranking-overall-column={profile.id}
-                          data-ranking-overall-contribution={profile.id}
-                          title={`${formatExactScore(contribution)} балла`}
-                        >
-                          {formatScore(contribution)}
-                        </td>
-                      );
-                    })}
+        {compositeRatings.map((composite) => (
+          <div
+            id={`ranking-panel-${composite.id}-${currentYear}-schools`}
+            class="ranking-panel"
+            role="tabpanel"
+            aria-labelledby="ranking-tab-schools"
+            data-ranking-panel="schools"
+            data-ranking-profile={composite.id}
+            data-ranking-profile-name={composite.tableName}
+            data-ranking-year={currentYear}
+            data-ranking-method-note={composite.methodNote}
+            data-ranking-overall-minimum-score="10"
+            data-ranking-overall-round-threshold="true"
+            data-ranking-school-count={composite.rating.schoolCount}
+            data-ranking-region-count={composite.rating.regionCount}
+            hidden
+          >
+            <div class="ranking-table-frame">
+              <table class="ranking-table ranking-table-schools ranking-table-overall ranking-table-no-comparison">
+                <caption class="visually-hidden">{composite.tableName} по итогам ВсОШ, {currentYear} год</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Место</th>
+                    <th scope="col">Школа</th>
+                    <th scope="col">Регион</th>
+                    <th scope="col">Общий балл</th>
+                    {composite.rating.profileOptions.map((profile) => (
+                      <th
+                        scope="col"
+                        title={profile.name}
+                        data-ranking-overall-column={profile.id}
+                      >
+                        {compositeColumnLabel(composite, profile)}
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody data-ranking-overall-body>
+                  {composite.rating.schools.map((school) => (
+                    <tr
+                      data-ranking-row
+                      data-ranking-overall-row
+                      data-ranking-included={Math.round(school.score) > 10 ? 'true' : 'false'}
+                      data-ranking-overall={JSON.stringify(school.profiles)}
+                      data-query={`${school.name} ${school.city ?? ''} ${school.region} ${school.aliases.join(' ')}`}
+                      data-region={school.region}
+                    >
+                      <td class="ranking-rank" data-label="Место" data-ranking-overall-rank>{school.rank}</td>
+                      <th class="ranking-entity" scope="row" title={school.officialName}>{school.name}</th>
+                      <td class="ranking-region" data-label="Регион">{school.region}</td>
+                      <td
+                        class="ranking-score ranking-score-current"
+                        data-label="Общий балл"
+                        data-ranking-overall-score
+                        title={`${formatExactScore(school.score)} балла`}
+                      >
+                        {formatScore(school.score)}
+                      </td>
+                      {composite.rating.profileOptions.map((profile) => {
+                        const contribution = composite.rating.weightTotal === 0 || profile.scoreTotal === 0
+                          ? 0
+                          : ((school.profiles[profile.id]?.score ?? 0) / profile.scoreTotal)
+                            * (profile.weight / composite.rating.weightTotal) * 10000;
+                        return (
+                          <td
+                            class="ranking-score ranking-overall-contribution"
+                            data-label={compositeProfileLabel(composite, profile)}
+                            data-ranking-overall-column={profile.id}
+                            data-ranking-overall-contribution={profile.id}
+                            title={`${formatExactScore(contribution)} балла`}
+                          >
+                            {formatScore(contribution)}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p class="ranking-empty" data-ranking-empty hidden>По вашему запросу ничего не найдено.</p>
           </div>
-          <p class="ranking-empty" data-ranking-empty hidden>По вашему запросу ничего не найдено.</p>
-        </div>
+        ))}
 
         <div
           id={`ranking-panel-overall-${currentYear}-regions`}
@@ -368,9 +440,9 @@ const datasetSchema = {
           aria-labelledby="ranking-tab-regions"
           data-ranking-panel="regions"
           data-ranking-profile="overall"
-          data-ranking-profile-name="Общий рейтинг"
+          data-ranking-profile-name="Рейтинг по информатике"
           data-ranking-year={currentYear}
-          data-ranking-method-note="В общем рейтинге учитываются регионы из выбранных направлений."
+          data-ranking-method-note="В рейтинге по информатике учитываются регионы из выбранных направлений."
           data-ranking-overall-minimum-score="0"
           data-ranking-overall-inclusion="participants"
           data-ranking-region-count={overallRegionRating.regionCount}
@@ -458,7 +530,7 @@ const datasetSchema = {
                 data-ranking-participant-count={yearRating.participantCount}
                 data-ranking-school-count={yearRating.schoolCount}
                 data-ranking-region-count={yearRating.regionCount}
-                hidden
+                hidden={!(profile.id === 'programming' && yearRating.year === currentYear)}
               >
                 <div class="ranking-table-frame">
                   <table class={`ranking-table ranking-table-schools ${comparison ? '' : 'ranking-table-no-comparison'}`}>
@@ -621,7 +693,7 @@ const datasetSchema = {
             <ul>
               <li>Показать сильные школы и регионы по каждому направлению.</li>
               <li>Сравнить результаты по годам.</li>
-              <li>Собрать общий рейтинг по выбранным направлениям.</li>
+              <li>Собрать сводные рейтинги по выбранным направлениям и предметам.</li>
             </ul>
             <p>
               Рейтинг учитывает только результаты заключительного этапа ВсОШ и не оценивает
@@ -650,7 +722,8 @@ const datasetSchema = {
             <li>
               <strong>Складываем баллы.</strong>
               Балл школы равен сумме баллов ее участников. Балл региона считается так же
-              по всем участникам региона.
+              по всем участникам региона. Статус победителя или призёра показывается
+              в таблице, но отдельного бонуса не даёт.
             </li>
             <li>
               <strong>Сравниваем годы.</strong>
@@ -664,25 +737,38 @@ const datasetSchema = {
               в общей сумме баллов.
             </li>
             <li>
-              <strong>Считаем общий рейтинг.</strong>
-              Сначала складываем баллы школы по выбранным направлениям. Затем переводим
-              результат в общую шкалу:
+              <strong>Считаем рейтинг по информатике.</strong>
+              Складываем баллы школы по программированию, искусственному интеллекту,
+              информационной безопасности и робототехнике. Затем переводим результат
+              в общую шкалу:
               <span class="rating-method-formula">
                 10 000 × баллы школы / баллы всех школ в выбранных направлениях
               </span>
-              Общий рейтинг регионов считаем так же: складываем баллы региона и делим
+              Рейтинг регионов считаем так же: складываем баллы региона и делим
               на сумму баллов всех регионов в выбранных направлениях.
               Например, школа набрала 250 баллов, а все школы по выбранным направлениям
               набрали 25 000. Общий балл школы равен 100. До отсечения школ сумма общего
               рейтинга равна 10 000. Вклад направления определяется суммой баллов его
-              участников: чем она больше, тем больше вклад. Если школа не участвовала
-              в направлении, ее балл по нему равен нулю. После округления в таблице остаются
-              школы с общим баллом больше 10. При изменении набора направлений рейтинг
+              участников: чем она больше, тем больше вклад.
+            </li>
+            <li>
+              <strong>Считаем рейтинг четырёх предметов.</strong>
+              Сначала определяем долю школы в общей сумме баллов по каждому предмету.
+              Затем доли взвешиваем по числу участников финала: информатика 488,
+              математика 499, физика 501, химия 490. Их веса составляют 24,7%, 25,2%,
+              25,3% и 24,8%. Под информатикой здесь понимается профиль «Программирование».
+              Если предмет отключён, веса остальных пересчитываются в той же пропорции.
+              Для следующего года веса будут пересчитаны по новому числу участников.
+            </li>
+            <li>
+              Если школа в выбранном направлении или предмете не участвовала, её балл
+              равен нулю. В сводных таблицах после округления остаются школы с общим
+              баллом больше 10. При изменении набора направлений или предметов рейтинг
               и порог пересчитываются.
             </li>
           </ol>
           <p data-ranking-method-note-target>
-            В общем рейтинге учитываются школы из выбранных направлений.
+            {methodNote(initialRating)}
           </p>
           <p data-ranking-history-note hidden>
             В 2024 году использовалась первая версия методики с фиксированными баллами
@@ -713,5 +799,5 @@ const datasetSchema = {
     </section>
   </article>
 
-  <script is:inline src="../../assets/rating.js?v=20260812-regions2"></script>
+  <script is:inline src="../../assets/rating.js?v=20260815-subjects-regions1"></script>
 </BaseLayout>
