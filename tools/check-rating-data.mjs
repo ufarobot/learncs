@@ -198,10 +198,32 @@ check(informaticsProfiles.every(Boolean), 'Informatics composite profiles are in
 const informaticsRating = buildCompositeSchoolRating(informaticsProfiles, currentYear, {
   weightBy: 'school-score',
 });
+check(informaticsRating.weightBy === 'school-score',
+  'Informatics composite weight mode changed');
+closeTo(informaticsRating.weightTotal, informaticsRating.scoreTotal,
+  'Informatics weight total must equal its source score total');
 check(informaticsRating.profileOptions.map((profile) => profile.id).join(',')
   === informaticsProfileIds.join(','), 'Informatics composite profile order changed');
 closeTo(sum(informaticsRating.schools, 'score'), 10000,
   'Informatics rating must total 10,000', 1e-7);
+const informaticsRawScores = new Map();
+for (const profile of informaticsProfiles) {
+  const yearRating = profile.years.find((year) => year.year === currentYear);
+  for (const school of yearRating.schools) {
+    informaticsRawScores.set(
+      school.id,
+      (informaticsRawScores.get(school.id) ?? 0) + school.score
+    );
+  }
+}
+for (const school of informaticsRating.schools) {
+  closeTo(
+    school.score,
+    (informaticsRawScores.get(school.id) / informaticsRating.scoreTotal) * 10000,
+    `Informatics normalization changed: ${school.name}`,
+    1e-7
+  );
+}
 const informaticsCandidateSchools = informaticsRating.schools.filter((school) => (
   informaticsRating.profileOptions.some((profile) => (
   profile.scoreTotal > 0
@@ -234,26 +256,40 @@ const informaticsParticipants = sourceProfiles
   ), 0);
 check(informaticsParticipants === 1226, 'Informatics profile participant total must be 1,226');
 
-const subjectProfileIds = ['programming', 'math', 'physics', 'chemistry'];
-const subjectProfiles = subjectProfileIds.map((profileId) => canonicalProfilesById.get(profileId));
+const informaticsSubject = {
+  id: 'informatics',
+  name: 'Информатика',
+  years: [{
+    year: currentYear,
+    participantCount: informaticsParticipants,
+    schools: informaticsRating.schools,
+  }],
+};
+const subjectProfileIds = ['informatics', 'math', 'physics', 'chemistry'];
+const subjectProfiles = [
+  informaticsSubject,
+  ...subjectProfileIds.slice(1).map((profileId) => canonicalProfilesById.get(profileId)),
+];
 check(subjectProfiles.every(Boolean), 'Four-subject composite profiles are incomplete');
 const subjectRating = buildCompositeSchoolRating(subjectProfiles, currentYear, {
   weightBy: 'participants',
 });
 const expectedSubjectWeights = new Map([
-  ['programming', 488],
+  ['informatics', 1226],
   ['math', 499],
   ['physics', 501],
   ['chemistry', 490],
 ]);
 check(subjectRating.weightBy === 'participants', 'Four-subject composite weight mode changed');
-check(subjectRating.weightTotal === 1978, 'Four-subject participant weight total must be 1,978');
+check(subjectRating.weightTotal === 2716, 'Four-subject participant weight total must be 2,716');
 check(subjectRating.profileOptions.map((profile) => profile.id).join(',')
   === subjectProfileIds.join(','), 'Four-subject composite profile order changed');
 for (const profile of subjectRating.profileOptions) {
   check(profile.weight === expectedSubjectWeights.get(profile.id),
     `Four-subject weight mismatch: ${profile.id}`);
 }
+closeTo(subjectRating.profileOptions.find((profile) => profile.id === 'informatics').scoreTotal,
+  10000, 'STEM must use the normalized informatics rating', 1e-7);
 closeTo(sum(subjectRating.schools, 'score'), 10000,
   'Four-subject rating must total 10,000', 1e-7);
 const subjectVisibleSchools = subjectRating.schools.filter((school) => Math.round(school.score) > 10);

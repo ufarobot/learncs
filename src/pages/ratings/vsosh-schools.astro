@@ -11,7 +11,7 @@ import {
 } from '../../lib/rating-school-catalog.js';
 
 const title = 'Рейтинг школ по итогам ВсОШ';
-const description = 'Рейтинг школ и регионов по результатам заключительного этапа ВсОШ по информатике, математике, физике и химии. Программирование представлено с 2024 по 2026 год.';
+const description = 'Рейтинг школ и регионов по результатам заключительного этапа ВсОШ по четырём направлениям информационных технологий, математике, физике и химии. Программирование представлено с 2024 по 2026 год.';
 const canonical = new URL('ratings/vsosh-schools/', site.url).href;
 const currentYear = 2026;
 const scoreFormatter = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
@@ -30,25 +30,54 @@ const profiles = [
   }))
 ];
 const profilesById = new Map(profiles.map((profile) => [profile.id, profile]));
+const informaticsProfileIds = ['programming', 'ai', 'security', 'robotics'];
+const informaticsProfiles = informaticsProfileIds.map((profileId) => {
+  const profile = profilesById.get(profileId);
+  if (!profile) {
+    throw new Error(`Informatics rating references unknown profile ${profileId}`);
+  }
+  return profile;
+});
+const itRatingData = buildCompositeSchoolRating(informaticsProfiles, currentYear, {
+  weightBy: 'school-score'
+});
+const informaticsParticipantCount = informaticsProfiles.reduce((total, profile) => {
+  const yearRating = profile.years.find((year) => year.year === currentYear);
+  if (!yearRating) {
+    throw new Error(`Profile ${profile.id} has no rating for ${currentYear}`);
+  }
+  return total + yearRating.participantCount;
+}, 0);
+profilesById.set('informatics', {
+  id: 'informatics',
+  name: 'Информатика',
+  years: [{
+    year: currentYear,
+    participantCount: informaticsParticipantCount,
+    schools: itRatingData.schools
+  }]
+});
 const compositeDefinitions = [
   {
     id: 'overall',
-    name: 'Информатика: 4 направления',
-    tableName: 'Рейтинг по информатике',
-    profileIds: ['programming', 'ai', 'security', 'robotics'],
+    name: 'ИТ: 4 направления',
+    tableName: 'Общий рейтинг ИТ',
+    profileIds: informaticsProfileIds,
     weightBy: 'school-score',
-    methodNote: 'В рейтинге по информатике сохраняется прежняя формула. Вклад направления зависит от общей суммы баллов его участников.'
+    precomputedRating: itRatingData,
+    methodNote: 'Внутри общего рейтинга ИТ сохраняется прежняя формула. Вклад направления зависит от общей суммы баллов его участников.'
   },
   {
     id: 'stem',
-    name: 'Четыре предмета',
-    tableName: 'Рейтинг четырёх предметов',
-    profileIds: ['programming', 'math', 'physics', 'chemistry'],
+    name: 'STEM: 4 предмета',
+    tableName: 'Общий рейтинг STEM',
+    profileIds: ['informatics', 'math', 'physics', 'chemistry'],
     weightBy: 'participants',
-    methodNote: 'В рейтинге четырёх предметов вес предмета пропорционален числу участников его финала.'
+    methodNote: 'В общем рейтинге STEM информатика объединяет четыре направления ИТ. Вес каждого предмета пропорционален числу участий в соответствующих протоколах финала.'
   }
 ];
 const compositeRatings = compositeDefinitions.map((definition) => {
+  const { precomputedRating, ...definitionData } = definition;
   const compositeProfiles = definition.profileIds.map((profileId) => {
     const profile = profilesById.get(profileId);
     if (!profile) {
@@ -56,13 +85,15 @@ const compositeRatings = compositeDefinitions.map((definition) => {
     }
     return profile;
   });
-  const ratingData = buildCompositeSchoolRating(compositeProfiles, currentYear, {
-    weightBy: definition.weightBy
-  });
+  const ratingData = precomputedRating ?? buildCompositeSchoolRating(
+    compositeProfiles,
+    currentYear,
+    { weightBy: definition.weightBy }
+  );
   const visibleSchools = ratingData.schools.filter((school) => Math.round(school.score) > 10);
 
   return {
-    ...definition,
+    ...definitionData,
     profiles: compositeProfiles,
     rating: {
       ...ratingData,
@@ -77,6 +108,7 @@ const overallRegionTotals = new Map(
   overallRegionRating.profileOptions.map((profile) => [profile.id, profile.scoreTotal])
 );
 const overallProfileLabels = {
+  informatics: 'Информатика',
   programming: 'Программирование',
   ai: 'ИИ',
   security: 'Инфобез',
@@ -86,6 +118,7 @@ const overallProfileLabels = {
   chemistry: 'Химия'
 };
 const overallColumnLabels = {
+  informatics: 'Информ.',
   programming: 'Прог.',
   ai: 'ИИ',
   security: 'ИБ',
@@ -95,12 +128,12 @@ const overallColumnLabels = {
   chemistry: 'Химия'
 };
 const compositeProfileLabel = (composite, profile) => (
-  composite.id === 'stem' && profile.id === 'programming'
+  composite.id === 'stem' && profile.id === 'informatics'
     ? 'Информатика'
     : overallProfileLabels[profile.id] ?? profile.name
 );
 const compositeColumnLabel = (composite, profile) => (
-  composite.id === 'stem' && profile.id === 'programming'
+  composite.id === 'stem' && profile.id === 'informatics'
     ? 'Информ.'
     : overallColumnLabels[profile.id] ?? profile.name
 );
@@ -214,7 +247,7 @@ const datasetSchema = {
         <div class="rating-hero-copy">
           <h1>Рейтинг школ по итогам ВсОШ</h1>
           <p class="lead">
-            В центре рейтинга олимпиадное программирование. Также доступны направления информатики, математика, физика и химия.
+            В центре рейтинга олимпиадное программирование. Также доступны четыре направления информационных технологий (ИТ) и рейтинг STEM по информатике, математике, физике и химии.
           </p>
         </div>
       </div>
@@ -229,7 +262,7 @@ const datasetSchema = {
           <label class="ranking-field ranking-profile">
             <span>Направление</span>
             <select data-ranking-profile>
-              <optgroup label="Информатика">
+              <optgroup label="ИТ">
                 <option value="overall">Общий рейтинг</option>
                 <option value="programming" selected>Программирование</option>
                 {profiles
@@ -243,7 +276,7 @@ const datasetSchema = {
                 <option value="math">Математика</option>
                 <option
                   value="stem-informatics"
-                  data-ranking-profile-alias="programming"
+                  data-ranking-profile-alias="overall"
                 >
                   Информатика
                 </option>
@@ -444,9 +477,9 @@ const datasetSchema = {
           aria-labelledby="ranking-tab-regions"
           data-ranking-panel="regions"
           data-ranking-profile="overall"
-          data-ranking-profile-name="Рейтинг по информатике"
+          data-ranking-profile-name="Общий рейтинг ИТ"
           data-ranking-year={currentYear}
-          data-ranking-method-note="В рейтинге по информатике учитываются регионы из выбранных направлений."
+          data-ranking-method-note="В общем рейтинге ИТ учитываются регионы из выбранных направлений."
           data-ranking-overall-minimum-score="0"
           data-ranking-overall-inclusion="participants"
           data-ranking-region-count={overallRegionRating.regionCount}
@@ -454,7 +487,7 @@ const datasetSchema = {
         >
           <div class="ranking-table-frame">
             <table class="ranking-table ranking-table-regions ranking-table-overall ranking-table-overall-regions ranking-table-no-comparison">
-              <caption class="visually-hidden">Общий рейтинг регионов по итогам ВсОШ, {currentYear} год</caption>
+              <caption class="visually-hidden">Общий рейтинг ИТ по регионам по итогам ВсОШ, {currentYear} год</caption>
               <thead>
                 <tr>
                   <th scope="col">Место</th>
@@ -741,10 +774,10 @@ const datasetSchema = {
               в общей сумме баллов.
             </li>
             <li>
-              <strong>Считаем рейтинг по информатике.</strong>
-              Складываем баллы школы по программированию, искусственному интеллекту,
-              информационной безопасности и робототехнике. Затем переводим результат
-              в общую шкалу:
+              <strong>Считаем общий рейтинг ИТ.</strong>
+              Внутри общего рейтинга ИТ сохраняется прежняя формула. Складываем баллы
+              школы по программированию, искусственному интеллекту, информационной
+              безопасности и робототехнике. Затем переводим результат в общую шкалу:
               <span class="rating-method-formula">
                 10 000 × баллы школы / баллы всех школ в выбранных направлениях
               </span>
@@ -756,13 +789,24 @@ const datasetSchema = {
               участников: чем она больше, тем больше вклад.
             </li>
             <li>
-              <strong>Считаем рейтинг четырёх предметов.</strong>
+              <strong>Считаем общий рейтинг STEM.</strong>
               Сначала определяем долю школы в общей сумме баллов по каждому предмету.
-              Затем доли взвешиваем по числу участников финала: информатика 488,
-              математика 499, физика 501, химия 490. Их веса составляют 24,7%, 25,2%,
-              25,3% и 24,8%. Под информатикой здесь понимается профиль «Программирование».
+              Информатика как предмет объединяет четыре направления ИТ и рассчитывается
+              по формуле общего рейтинга ИТ из предыдущего шага. Для веса информатики
+              складываем число участий в четырёх протоколах финала: программирование 488,
+              искусственный интеллект 248, информационная безопасность 244,
+              робототехника 246. Всего для информатики учитывается 1226 записей
+              об участии. Один ученик может быть указан в нескольких протоколах.
+              Затем доли предметов взвешиваем по числу записей об участии в протоколах
+              финала: информатика 1226, математика 499, физика 501, химия 490. Всего
+              для расчёта весов учитывается 2716 участий. Веса составляют: информатика
+              45,14%, математика 18,37%, физика 18,45%, химия 18,04%.
+              <span class="rating-method-formula">
+                10 000 × (доля школы по информатике × 1226 + доля школы по математике × 499 +
+                доля школы по физике × 501 + доля школы по химии × 490) / 2716
+              </span>
               Если предмет отключён, веса остальных пересчитываются в той же пропорции.
-              Для следующего года веса будут пересчитаны по новому числу участников.
+              Для следующего года веса будут пересчитаны по числу участий в новых протоколах.
             </li>
             <li>
               Если школа в выбранном направлении или предмете не участвовала, её балл
