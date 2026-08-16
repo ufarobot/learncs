@@ -103,6 +103,7 @@ body:has(.rating-page) {
 .ranking-field input:focus-visible,
 .ranking-field select:focus-visible,
 .ranking-profile-options input:focus-visible,
+.ranking-region-link:focus-visible,
 .ranking-reset:focus-visible {
   outline: 3px solid rgba(21, 93, 150, 0.22);
   outline-offset: 2px;
@@ -375,6 +376,24 @@ body:has(.rating-page) {
   color: var(--ink);
   font-weight: 650;
   line-height: 1.35;
+}
+
+.ranking-region-link {
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  font: inherit;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 3px;
+}
+
+.ranking-region-link:hover {
+  color: var(--blue);
+  text-decoration-color: currentColor;
 }
 
 .ranking-table .ranking-region,

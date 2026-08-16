@@ -47,6 +47,7 @@
     const regionField = app.querySelector('[data-ranking-region-field]');
     const reset = app.querySelector('[data-ranking-reset]');
     const count = app.querySelector('[data-ranking-count]');
+    const regionLinks = [...app.querySelectorAll('[data-ranking-region-link]')];
     const methodNote = app.querySelector('[data-ranking-method-note-target]');
     const historyNote = app.querySelector('[data-ranking-history-note]');
     const methodLink = document.querySelector('a[href="#rating-method"]');
@@ -648,6 +649,23 @@
     region.addEventListener('change', () => {
       selectedRegion = region.value;
       updateResults();
+    });
+    regionLinks.forEach((link) => {
+      link.addEventListener('click', () => {
+        const panel = link.closest('[data-ranking-panel="regions"]');
+        const profileId = panel?.dataset.rankingProfile;
+        const year = panel?.dataset.rankingYear;
+        const regionName = link.dataset.rankingRegionLink;
+        if (!profileId || !year || !regionName) {
+          return;
+        }
+
+        states.set(`${profileId}:${year}:schools`, { query: '' });
+        selectedRegion = regionName;
+        switchSelection(profileId, year, 'schools');
+        stickyHeader?.scrollIntoView({ block: 'start' });
+        region.focus({ preventScroll: true });
+      });
     });
     reset.addEventListener('click', () => {
       states.set(stateKey(), { query: '' });
