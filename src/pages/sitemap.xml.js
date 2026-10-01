@@ -7,6 +7,8 @@ const routes = [
   { path: '/navigator/', priority: '0.8' },
   { path: '/ratings/vsosh-schools/', priority: '0.8' },
   { path: '/students/', priority: '0.8' },
+  { path: '/software/', priority: '0.8' },
+  { path: '/software/olympiads/', priority: '0.7' },
 ];
 
 const escapeXml = (value) => value

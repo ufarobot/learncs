@@ -444,4 +444,12 @@
     <loc>https://learncs.ru/materials/series-vremya-na-skuku-i-shakhmaty/</loc>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://learncs.ru/software/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://learncs.ru/software/olympiads/</loc>
+    <priority>0.7</priority>
+  </url>
 </urlset>

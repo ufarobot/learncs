@@ -1,0 +1,78 @@
+/* Shared technical prose: steps, source tables and code examples. */
+.article-description {
+  max-width: 68ch;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.article-prose {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.article-prose ol {
+  display: grid;
+  gap: 16px;
+  padding-left: 26px;
+}
+
+.article-prose li > p + p,
+.article-prose li > pre,
+.article-prose li > figure {
+  margin-top: 12px;
+}
+
+.article-prose code {
+  font-size: 0.88em;
+}
+
+.article-prose :not(pre) > code {
+  background: var(--card-bg);
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+
+.article-prose pre {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 20px;
+  border-radius: 8px;
+  line-height: 1.6;
+  overflow-wrap: normal;
+}
+
+.article-prose pre code {
+  display: block;
+  padding: 0;
+  color: inherit;
+  background: none;
+  font-size: 15px;
+}
+
+.article-prose table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.article-prose th,
+.article-prose td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line-soft);
+  text-align: left;
+  vertical-align: top;
+}
+
+.article-prose th {
+  color: var(--ink);
+  background: var(--card-bg);
+}
+
+.article-prose h2,
+.article-prose h3 {
+  scroll-margin-top: 110px;
+}

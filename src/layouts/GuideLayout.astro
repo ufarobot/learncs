@@ -1,0 +1,30 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { site } from '../data/site.js';
+
+const { frontmatter } = Astro.props;
+const { title, description, path, basePath, backHref = '/', backLabel = 'Главная' } = frontmatter;
+---
+<BaseLayout
+  title={`${title} — learncs.ru`}
+  description={description}
+  canonical={new URL(path, site.url).href}
+  basePath={basePath}
+  courseSchema={false}
+  showHeaderCta={false}
+  showFooterCta={false}
+  extraStylesheets={['assets/article.css?v=20261001b']}
+>
+  <article class="article-page">
+    <header class="container article-hero">
+      <a class="article-back-link" href={backHref}>{backLabel}</a>
+      <h1>{title}</h1>
+      <p class="article-description">{description}</p>
+    </header>
+    <div class="container article-layout article-layout-single">
+      <div class="article-prose">
+        <slot />
+      </div>
+    </div>
+  </article>
+</BaseLayout>

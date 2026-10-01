@@ -225,7 +225,7 @@ Do not use:
 
 ### `article-page`
 
-Use only for local editorial pages under `/materials/`.
+Use for local editorial pages under `/materials/` and practical guides under `/software/`.
 
 Default:
 
@@ -235,6 +235,12 @@ Default:
 - material cover images should come from the corresponding source material or be a useful diagram, screenshot, map, or technical visual; omit the cover when no relevant source image exists;
 - do not use generated realistic people for material covers;
 - prose uses the shared typography scale and collapses to one column on mobile.
+
+Practical guides reuse the same article layout through `GuideLayout.astro`.
+Shared technical prose rules in `assets/article.css` support numbered steps,
+code examples and source tables. Tables and code scroll within the document
+when needed; screenshots keep their natural proportions and link to the full
+image. Guide pages use a compact description, a return link and no sales CTA.
 
 ### `resource-links`
 
