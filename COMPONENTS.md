@@ -241,6 +241,8 @@ Shared technical prose rules in `assets/article.css` support numbered steps,
 code examples and source tables. Tables and code scroll within the document
 when needed; screenshots keep their natural proportions and link to the full
 image. Guide pages use a compact description, a return link and no sales CTA.
+Generated code examples keep Astro's `github-dark` syntax palette inside
+`pre.astro-code.github-dark`; those colours are not page-level design tokens.
 
 ### `resource-links`
 
@@ -269,6 +271,16 @@ Default:
 - on mobile each table row becomes a compact labeled grid with no horizontal page overflow;
 - blue is reserved for active controls and links;
 - the complete dataset is built into the page and does not require third-party services at runtime.
+
+### `catalog-page`
+
+The approved standalone game catalogue at `/game/` reuses LearnCS typography,
+white page background, blue controls, and image-led cards. Its class and topic
+filters, screenshot galleries, and image dialog stay inside `.catalog-page`;
+JavaScript has its own scope. Images preserve their intrinsic proportions and
+use a responsive maximum. Data is embedded, screenshots load from Steam CDN.
+Publish the supplied document through `public/game/index.html` without a sales
+CTA or course schema. Link to it from `/students/`, not from the homepage.
 
 ## Variants
 

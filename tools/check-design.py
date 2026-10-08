@@ -258,8 +258,23 @@ def check_box_shadows(lines: list[str]) -> list[str]:
 def check_hardcoded_hex(paths: list[Path]) -> list[str]:
     errors: list[str] = []
     hex_re = re.compile(r"#[0-9a-fA-F]{3,8}\b")
+    # Astro's approved github-dark syntax theme is separate from page colours.
+    syntax_hex = {"#24292e", "#e1e4e8", "#79b8ff", "#9ecbff"}
+    syntax_block_re = re.compile(
+        r'<pre\b[^>]*\bclass="astro-code github-dark"[^>]*>.*?</pre>',
+        re.DOTALL,
+    )
     for path in paths:
         text = path.read_text(encoding="utf-8")
+        if path.suffix == ".html":
+            text = syntax_block_re.sub(
+                lambda block: hex_re.sub(
+                    lambda color: " " * len(color[0])
+                    if color[0].lower() in syntax_hex else color[0],
+                    block[0],
+                ),
+                text,
+            )
         for number, line in enumerate(text.splitlines(), start=1):
             for value in hex_re.findall(line):
                 if value.lower() not in ALLOWED_HEX:
