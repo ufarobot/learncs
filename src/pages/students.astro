@@ -3,96 +3,82 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../data/site.js';
 
 const title = 'Ученикам — learncs.ru';
-const description = 'Ссылки для первого занятия learncs.ru: Code.org, Google Sites, IntelliJ IDEA, Karel и Informatics.';
+const description = 'Курсы LearnCS, учебник, игры для информатики, задания и инструкции по установке программ.';
 const canonical = new URL('students/', site.url).href;
 
 const linkGroups = [
   {
-    id: 'start',
-    title: '1. С чего начать',
-    links: [
+    "id": "courses",
+    "title": "Курсы и задания",
+    "links": [
       {
-        label: 'Code.org: стартовый раздел',
-        href: 'https://studio.code.org/sections/VBKDMT',
-        note: 'Откройте раздел и пройдите первые задания перед основным курсом. Кодовое слово для своего имени возьмите у учителя.'
+        "label": "Мои курсы в LMS",
+        "href": "https://lms.learncs.ru/dashboard",
+        "note": "Войдите в аккаунт LearnCS и откройте свой курс."
       }
     ]
   },
   {
-    id: 'course',
-    title: '2. Материалы курса',
-    links: [
+    "id": "materials",
+    "title": "Учебник и игры",
+    "links": [
       {
-        label: 'Модуль 1',
-        href: 'https://sites.google.com/view/learncsm1/%D0%BC%D0%BE%D0%B4%D1%83%D0%BB%D1%8C-1',
-        note: 'Сначала заведите Gmail. Затем отправьте письмо учителю на ufarobot@gmail.com: напишите имя ученика.'
+        "label": "Игры для информатики",
+        "href": "/game/",
+        "note": "Игры по темам информатики 7–9 классов: скриншоты, цены и отзывы."
       },
       {
-        label: 'M1 Karel: стартовый архив',
-        href: 'https://lms.learncs.ru/asset-v1:Ishimbaev+Karel+2026+type@asset+block@M1_Karel.zip',
-        note: 'Архив для Модуля 1. Скачайте его, распакуйте и откройте всю папку проекта в IntelliJ IDEA.'
-      },
-      {
-        label: 'Модуль 2',
-        href: 'https://sites.google.com/view/learncsm1/%D0%BC%D0%BE%D0%B4%D1%83%D0%BB%D1%8C-2-%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D0%BA%D0%B0-%D0%B8-%D0%B0%D0%BD%D0%B8%D0%BC%D0%B0%D1%86%D0%B8%D1%8F',
-        note: 'Материалы второго модуля на Google Sites. Доступ может открываться после входа в Gmail.'
-      },
-      {
-        label: 'Информатикс',
-        href: 'https://sites.google.com/view/learncsm1/informatics',
-        note: 'Раздел курса с заданиями на Informatics. Если раньше входили через Gmail, теперь входите по той же почте и паролю, без кнопки Gmail.'
-      },
-      {
-        label: 'Модуль 3',
-        href: 'https://sites.google.com/view/learncsm1/%D0%BC%D0%BE%D0%B4%D1%83%D0%BB%D1%8C-3',
-        note: 'Материалы третьего модуля на Google Sites. Открывайте после первых двух модулей.'
-      },
-      {
-        label: 'Игры для информатики',
-        href: '/game/',
-        note: 'Игры по темам информатики 7–9 классов: скриншоты, цены и отзывы'
+        "label": "Учебник LearnCS",
+        "href": "https://book.learncs.ru/",
+        "note": "Материалы по математике, информатике и программированию. Учебник пополняется."
       }
     ]
   },
   {
-    id: 'tools',
-    title: '3. IntelliJ IDEA',
-    links: [
+    "id": "tools",
+    "title": "Подготовка компьютера",
+    "note": "Устанавливайте программы, которые указал преподаватель.",
+    "links": [
       {
-        label: 'IntelliJ IDEA Community Edition: Windows',
-        href: 'https://download.jetbrains.com/idea/ideaIC-2025.2.6.2.exe',
-        note: 'Версия для обычных компьютеров на Windows 10/11.'
+        "label": "Python и PyCharm: установка",
+        "href": "/software/",
+        "note": "Инструкции на русском языке, установщики и запуск первой программы."
       },
       {
-        label: 'IntelliJ IDEA Community Edition: Windows ARM64 / Parallels',
-        href: 'https://download.jetbrains.com/idea/ideaIC-2025.2.6.2-aarch64.exe',
-        note: 'Версия для Windows 11 ARM, например в Parallels на Mac.'
+        "label": "IntelliJ IDEA",
+        "href": "https://www.jetbrains.com/ru-ru/idea/download/",
+        "note": "Официальная страница загрузки. Выберите версию для своей операционной системы."
       },
       {
-        label: 'IntelliJ IDEA Community Edition: Mac Apple Silicon',
-        href: 'https://download.jetbrains.com/idea/ideaIC-2025.2.6.2-aarch64.dmg',
-        note: 'Для Mac с процессорами Apple M1, M2, M3, M4 и новее.'
+        "label": "Стартовый проект Карела",
+        "href": "https://lms.learncs.ru/asset-v1:Ishimbaev+Karel+2026+type@asset+block@M1_Karel.zip",
+        "note": "Для курса по Карелу: скачайте архив, распакуйте и откройте папку проекта в IntelliJ IDEA."
       },
       {
-        label: 'IntelliJ IDEA Community Edition: Mac Intel',
-        href: 'https://download.jetbrains.com/idea/ideaIC-2025.2.6.2.dmg',
-        note: 'Для старых Mac с процессором Intel.'
+        "label": "Среды программирования на олимпиадах",
+        "href": "/software/olympiads/",
+        "note": "Подтверждённые требования организаторов и ссылки на источники."
       }
     ]
   },
   {
-    id: 'informatics',
-    title: '4. Informatics',
-    links: [
+    "id": "practice",
+    "title": "Другие платформы для заданий",
+    "links": [
       {
-        label: 'Informatics: основной вход',
-        href: 'https://informatics.msk.ru/enrol/index.php?id=5742',
-        note: 'Если раньше входили через Gmail, теперь входите по той же почте и паролю, без кнопки Gmail.'
+        "label": "Code.org",
+        "href": "https://studio.code.org/users/sign_in",
+        "note": "Если преподаватель назначил задания на Code.org, войдите в свой аккаунт."
       },
       {
-        label: 'Informatics: запасной вход',
-        href: 'https://informatics.mccme.ru/enrol/index.php?id=5742',
-        note: 'Используйте, если основной адрес не открывается. Вход тот же: по почте и паролю, без кнопки Gmail.'
+        "label": "Informatics",
+        "href": "https://informatics.msk.ru/enrol/index.php?id=5742",
+        "note": "Открывайте, если преподаватель дал ссылку на этот курс."
+      },
+      {
+        "label": "Informatics: запасной адрес",
+        "href": "https://informatics.mccme.ru/enrol/index.php?id=5742",
+        "note": "Используйте, если основной адрес не открывается."
       }
     ]
   }
@@ -103,6 +89,8 @@ const linkGroups = [
   description={description}
   canonical={canonical}
   courseSchema={false}
+  showHeaderCta={false}
+  showFooterCta={false}
   basePath="../"
 >
   <section class="section resource-page">
@@ -110,13 +98,14 @@ const linkGroups = [
       <div class="section-head resource-page-head">
         <p class="pretitle">learncs.ru</p>
         <h1>Ученикам</h1>
-        <p>Откройте ссылки по порядку: сначала Code.org, затем материалы курса, установка среды и вход в Informatics.</p>
+        <p>Курсы, задания, учебник и программы для занятий.</p>
       </div>
 
       <div class="resource-link-layout" aria-label="Полезные ссылки">
         {linkGroups.map((group) => (
           <section class="resource-link-group" aria-labelledby={`resource-${group.id}`}>
             <h2 id={`resource-${group.id}`}>{group.title}</h2>
+            {group.note && <p>{group.note}</p>}
             <ul class="resource-link-list">
               {group.links.map((link) => (
                 <li class="resource-link-item">
