@@ -244,6 +244,18 @@ image. Guide pages use a compact description, a return link and no sales CTA.
 Generated code examples keep Astro's `github-dark` syntax palette inside
 `pre.astro-code.github-dark`; those colours are not page-level design tokens.
 
+### `site-nav`: student resources
+
+The homepage groups learning resources under the single `Ученикам` entry;
+its existing school ranking and enquiry actions stay separate. Student pages,
+games, and installation guides share `studentNav`: Ученикам, Мои курсы,
+Учебник, Игры, Установка. Installation opens the software group inside the
+student hub, which includes Python/PyCharm, IDEA, and Karel. Mark the exact
+current page with `aria-current="page"`; a guide within installation uses
+`aria-current="location"`. Use the existing header and menu behavior, without
+an additional fixed navigation bar. Internal links stay in the current tab.
+The standalone game catalogue mirrors these labels and destinations.
+
 ### `resource-links`
 
 Use for compact utility pages where the primary job is to collect external and internal links, such as `/students/`.
@@ -251,7 +263,8 @@ Use for compact utility pages where the primary job is to collect external and i
 Default:
 
 - compact page heading with one explanatory line;
-- link groups separated by quiet top dividers;
+- related links are grouped into three columns on desktop, one column at the existing narrow breakpoint;
+- use clear section headings and quiet top dividers;
 - blue is used only for functional links;
 - helper text stays muted and short;
 - no nested cards, decorative media, or conversion panel by default;

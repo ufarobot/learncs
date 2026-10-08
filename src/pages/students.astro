@@ -15,28 +15,27 @@ const linkGroups = [
         "label": "Мои курсы в LMS",
         "href": "https://lms.learncs.ru/dashboard",
         "note": "Войдите в аккаунт LearnCS и откройте свой курс."
-      }
-    ]
-  },
-  {
-    "id": "materials",
-    "title": "Учебник и игры",
-    "links": [
-      {
-        "label": "Игры для информатики",
-        "href": "/game/",
-        "note": "Игры по темам информатики 7–9 классов: скриншоты, цены и отзывы."
       },
       {
-        "label": "Учебник LearnCS",
-        "href": "https://book.learncs.ru/",
-        "note": "Материалы по математике, информатике и программированию. Учебник пополняется."
+        "label": "Code.org",
+        "href": "https://studio.code.org/users/sign_in",
+        "note": "Если преподаватель назначил задания на Code.org, войдите в свой аккаунт."
+      },
+      {
+        "label": "Informatics",
+        "href": "https://informatics.msk.ru/enrol/index.php?id=5742",
+        "note": "Открывайте, если преподаватель дал ссылку на этот курс."
+      },
+      {
+        "label": "Informatics: запасной адрес",
+        "href": "https://informatics.mccme.ru/enrol/index.php?id=5742",
+        "note": "Используйте, если основной адрес не открывается."
       }
     ]
   },
   {
     "id": "tools",
-    "title": "Подготовка компьютера",
+    "title": "Установка программ",
     "note": "Устанавливайте программы, которые указал преподаватель.",
     "links": [
       {
@@ -62,23 +61,18 @@ const linkGroups = [
     ]
   },
   {
-    "id": "practice",
-    "title": "Другие платформы для заданий",
+    "id": "materials",
+    "title": "Учебник и игры",
     "links": [
       {
-        "label": "Code.org",
-        "href": "https://studio.code.org/users/sign_in",
-        "note": "Если преподаватель назначил задания на Code.org, войдите в свой аккаунт."
+        "label": "Игры для информатики",
+        "href": "/game/",
+        "note": "Игры по темам информатики 7–9 классов: скриншоты, цены и отзывы."
       },
       {
-        "label": "Informatics",
-        "href": "https://informatics.msk.ru/enrol/index.php?id=5742",
-        "note": "Открывайте, если преподаватель дал ссылку на этот курс."
-      },
-      {
-        "label": "Informatics: запасной адрес",
-        "href": "https://informatics.mccme.ru/enrol/index.php?id=5742",
-        "note": "Используйте, если основной адрес не открывается."
+        "label": "Учебник LearnCS",
+        "href": "https://book.learncs.ru/",
+        "note": "Материалы по математике, информатике и программированию. Учебник пополняется."
       }
     ]
   }
@@ -98,7 +92,7 @@ const linkGroups = [
       <div class="section-head resource-page-head">
         <p class="pretitle">learncs.ru</p>
         <h1>Ученикам</h1>
-        <p>Курсы, задания, учебник и программы для занятий.</p>
+        <p>Всё для занятий: курсы и задания, установка программ, учебник и игры.</p>
       </div>
 
       <div class="resource-link-layout" aria-label="Полезные ссылки">
@@ -109,7 +103,7 @@ const linkGroups = [
             <ul class="resource-link-list">
               {group.links.map((link) => (
                 <li class="resource-link-item">
-                  <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
+                  <a href={link.href}>{link.label}</a>
                   <p>{link.note}</p>
                 </li>
               ))}

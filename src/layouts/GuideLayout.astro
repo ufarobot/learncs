@@ -3,7 +3,7 @@ import BaseLayout from './BaseLayout.astro';
 import { site } from '../data/site.js';
 
 const { frontmatter } = Astro.props;
-const { title, description, path, basePath, backHref = '/', backLabel = 'Главная' } = frontmatter;
+const { title, description, path, basePath, backHref = '/students/', backLabel = 'Ученикам' } = frontmatter;
 ---
 <BaseLayout
   title={`${title} — learncs.ru`}
