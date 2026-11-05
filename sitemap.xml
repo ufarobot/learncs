@@ -449,6 +449,14 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://learncs.ru/software/java/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://learncs.ru/software/cpp/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://learncs.ru/software/olympiads/</loc>
     <priority>0.7</priority>
   </url>

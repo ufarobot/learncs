@@ -8,6 +8,8 @@ const routes = [
   { path: '/ratings/vsosh-schools/', priority: '0.8' },
   { path: '/students/', priority: '0.8' },
   { path: '/software/', priority: '0.8' },
+  { path: '/software/java/', priority: '0.8' },
+  { path: '/software/cpp/', priority: '0.8' },
   { path: '/software/olympiads/', priority: '0.7' },
 ];
 

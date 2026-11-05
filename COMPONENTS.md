@@ -250,7 +250,7 @@ The homepage groups learning resources under the single `Ученикам` entry
 its existing school ranking and enquiry actions stay separate. Student pages,
 games, and installation guides share `studentNav`: Ученикам, Мои курсы,
 Учебник, Игры, Установка. Installation opens the software group inside the
-student hub, which includes Python/PyCharm, IDEA, and Karel. Mark the exact
+student hub, which includes Java/IDEA, C++/CLion, Python/PyCharm, and Karel. Mark the exact
 current page with `aria-current="page"`; a guide within installation uses
 `aria-current="location"`. Use the existing header and menu behavior, without
 an additional fixed navigation bar. Internal links stay in the current tab.

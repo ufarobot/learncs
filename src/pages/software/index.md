@@ -1,26 +1,40 @@
 ---
 layout: ../../layouts/GuideLayout.astro
-title: Установка Python и PyCharm
-description: "Пошаговая инструкция для Windows и Mac: скачайте программы, создайте проект и запустите первый файл."
+title: Установка Python и PyCharm в России
+description: "Прямые ссылки на Python и PyCharm, установка в Windows и macOS и запуск первой программы."
 path: software/
 basePath: ../
+backHref: /students/#resource-tools
+backLabel: Установка программ
 ---
+
+Инструкции: [Java и IntelliJ IDEA](/software/java/) · [C++ и CLion](/software/cpp/) · **Python и PyCharm**.
 
 Для занятий нужны две программы. **Python** выполняет ваш код. **PyCharm** помогает писать, запускать и проверять программы.
 
 Выберите свой компьютер: [Windows](#windows) · [Mac](#mac). После установки переходите к [созданию проекта](#project).
 
-В этой инструкции для первой домашней установки выбран **Python 3.13.16**. Это не утверждение о версии на олимпиаде: перед соревнованием сверяйте её с памяткой своей площадки. Если преподаватель уже назначил другую версию Python, используйте её.
+В этой инструкции для первой домашней установки выбран **Python 3.14.10**, из той же ветки 3.14, что и в LMS. Перед соревнованием сверяйте версию с памяткой своей площадки. Если преподаватель уже назначил другую версию Python, используйте её.
 
 О подготовке к соревнованиям: [какие программы предусмотрены требованиями ВсОШ и что известно о площадках Татарстана](/software/olympiads/).
 
-## Где скачать PyCharm
+## Скачивание из России
 
-**Официальный вариант:** [страница PyCharm на русском](https://www.jetbrains.com/ru-ru/pycharm/download/). На 1 октября 2026 года актуальный стабильный выпуск — **2026.2.3**. Базовых бесплатных возможностей достаточно для этих занятий; после пробного периода Pro они остаются доступны. Покупать Pro для выполнения этой инструкции не требуется. [Объяснение JetBrains](https://www.jetbrains.com/help/pycharm/unified-pycharm.html).
+В инструкции используем **PyCharm 2025.3**, как в LMS LearnCS. Основные ссылки ведут на стороннее зеркало **mirror.ismdeep.com** и позволяют скачать установщик напрямую, без перехода на страницу загрузок JetBrains.
 
-Если вы пользуетесь несколькими программами JetBrains, их можно устанавливать и обновлять через [Toolbox App](https://www.jetbrains.com/toolbox-app/). Установите Toolbox, найдите PyCharm и нажмите Install. Для конкретного выпуска откройте Available versions. [Инструкция JetBrains](https://www.jetbrains.com/help/pycharm/installation-guide.html#toolbox).
+| Компьютер | Скачать PyCharm 2025.3 |
+| --- | --- |
+| Windows, Intel или AMD (x64) | [Установщик .exe](https://mirror.ismdeep.com/jetbrains/PyCharm/release/2025.3/2025.3/windows/pycharm-2025.3.exe) |
+| Mac, Intel | [Установщик .dmg](https://mirror.ismdeep.com/jetbrains/PyCharm/release/2025.3/2025.3/mac/pycharm-2025.3.dmg) |
+| Mac, Apple Silicon (чипы M1, M2 и новее) | [Установщик .dmg](https://mirror.ismdeep.com/jetbrains/PyCharm/release/2025.3/2025.3/macM1/pycharm-2025.3-aarch64.dmg) |
 
-**Загрузки LearnCS:** открытая сборка **PyCharm Community Edition 2025.3** из [официального выпуска JetBrains](https://github.com/JetBrains/intellij-community/releases/tag/pycharm/2025.3). Мы размещаем неизменённые установщики в GitHub Releases проекта LearnCS. Это отдельная сборка открытых компонентов; пробного Pro в ней нет. Используйте этот вариант, если основной сайт JetBrains недоступен. Доступность GitHub из вашей российской сети заранее не подтверждена.
+На Mac тип процессора указан в **меню Apple → Об этом Mac**. В Windows откройте **Параметры → Система → О системе → Тип системы**. Приведённый Windows-файл рассчитан на x64; для Windows на ARM нужен отдельный установщик.
+
+В PyCharm 2025.3 базовые возможности Python бесплатны и остаются доступными после пробного периода Pro. Для выполнения этой инструкции подписка не требуется. [Пояснение JetBrains](https://www.jetbrains.com/help/pycharm/unified-pycharm.html).
+
+### Собственные загрузки LearnCS
+
+**Загрузки LearnCS:** открытая сборка **PyCharm Community Edition 2025.3** из [официального выпуска JetBrains](https://github.com/JetBrains/intellij-community/releases/tag/pycharm/2025.3). Мы размещаем неизменённые установщики в GitHub Releases проекта LearnCS. Это отдельная сборка открытых компонентов; пробного Pro в ней нет. Это дополнительный вариант, если основная ссылка выше не открывается.
 
 | Компьютер | Скачать из загрузок LearnCS | Технические сведения |
 | --- | --- | --- |
@@ -33,31 +47,31 @@ basePath: ../
 
 <h2 id="windows">Windows</h2>
 
-1. Откройте [страницу Python 3.13.16](https://www.python.org/downloads/release/python-31316/). В таблице Files выберите **Windows installer (64-bit)**. Это обычный установщик; пакет с названием *embeddable* для этой инструкции не нужен.
+1. Скачайте [Python 3.14.10 для Windows x64](https://www.python.org/ftp/python/3.14.10/python-3.14.10-amd64.exe). На [странице выпуска](https://www.python.org/downloads/release/python-31410/) этот файл называется **Windows installer (64-bit)**. Это обычный установщик; пакет с названием *embeddable* для этой инструкции не нужен.
 2. Откройте скачанный `.exe`. Отметьте **Add Python to PATH**, затем нажмите **Install Now**. Дождитесь сообщения об успешной установке.
 3. Откройте новое окно командной строки и выполните:
 
    ```text
-   py -3.13 --version
+   py -3.14 --version
    ```
 
-   Ожидаемый ответ — `Python 3.13.16`.
+   Ожидаемый ответ: `Python 3.14.10`.
 4. Скачайте выбранный выше установщик PyCharm для Windows, откройте `.exe` и пройдите шаги мастера. Затем запустите PyCharm из меню «Пуск».
 5. Перейдите к [созданию проекта](#project).
 
-Порядок установки Python описан в [официальном руководстве для Windows](https://docs.python.org/3.13/using/windows.html#the-full-installer). Если компьютер школьный и установка запрещена, её должен выполнить администратор.
+Порядок установки Python описан в [официальном руководстве для Windows](https://docs.python.org/3.14/using/windows.html#the-full-installer). Если компьютер школьный и установка запрещена, её должен выполнить администратор.
 
 <h2 id="mac">Mac</h2>
 
-1. Откройте [страницу Python 3.13.16](https://www.python.org/downloads/release/python-31316/) и выберите **macOS installer**. Этот установщик Python подходит и для Apple Silicon, и для Intel.
-2. Откройте скачанный `.pkg` и пройдите шаги установки. Затем в папке **Программы → Python 3.13** запустите **Install Certificates.command** и дождитесь завершения.
+1. Скачайте [Python 3.14.10 для macOS](https://www.python.org/ftp/python/3.14.10/python-3.14.10-macos11.pkg). Этот установщик Python подходит и для Apple Silicon, и для Intel.
+2. Откройте скачанный `.pkg` и пройдите шаги установки. Затем в папке **Программы → Python 3.14** запустите **Install Certificates.command** и дождитесь завершения.
 3. Откройте «Терминал» и выполните:
 
    ```text
-   python3.13 --version
+   python3.14 --version
    ```
 
-   Ожидаемый ответ — `Python 3.13.16`.
+   Ожидаемый ответ: `Python 3.14.10`.
 4. Скачайте выбранный выше PyCharm для Mac. Для компьютеров с чипом M1, M2, M3 и следующих поколений выбирайте **Apple Silicon**. Откройте `.dmg` и перетащите **PyCharm.app** или **PyCharm CE.app** в **Applications**.
 5. Запустите PyCharm из папки «Программы» и переходите к [созданию проекта](#project).
 
@@ -66,13 +80,13 @@ basePath: ../
 <figcaption>Установка PyCharm на Mac: перетащите приложение в Applications</figcaption>
 </figure>
 
-Порядок установки Python описан в [официальном руководстве для macOS](https://docs.python.org/3.13/using/mac.html). Системный Python, который уже может быть на Mac, удалять или заменять не нужно.
+Порядок установки Python описан в [официальном руководстве для macOS](https://docs.python.org/3.14/using/mac.html). Системный Python, который уже может быть на Mac, удалять или заменять не нужно.
 
 <h2 id="project">Создайте проект</h2>
 
-Проект — это папка с вашими программами и их настройками. При первом запуске PyCharm прочитайте условия использования. Для совпадения названий кнопок с инструкцией выберите английский интерфейс.
+Проект объединяет ваши программы и их настройки в одной папке. При первом запуске PyCharm прочитайте условия использования. Для совпадения названий кнопок с инструкцией выберите английский интерфейс.
 
-Снимки ниже сделаны в **PyCharm 2025.3 на Mac**. На них выбран **Python 3.11**; в новом проекте по этой инструкции выберите установленный **Python 3.13**. В более новой версии PyCharm расположение отдельных элементов может отличаться.
+Снимки ниже сделаны в **PyCharm 2025.3 на Mac**. На них выбран **Python 3.11**; в новом проекте по этой инструкции выберите установленный **Python 3.14**. В более новой версии PyCharm расположение отдельных элементов может отличаться.
 
 1. Нажмите **New Project**.
 
@@ -83,7 +97,7 @@ basePath: ../
 
 2. Выберите **Pure Python**. В конце поля **Location** задайте имя папки проекта, например `tlfcs`.
 3. Выберите **Project venv**. PyCharm создаст отдельное окружение Python для этого проекта.
-4. В поле **Python version** выберите **Python 3.13**. Если его нет в списке, нажмите значок папки и укажите установленный интерпретатор. Его расположение можно узнать командой `py -3.13 -c "import sys; print(sys.executable)"` в Windows или `python3.13 -c "import sys; print(sys.executable)"` на Mac. Не копируйте чужой путь со снимка.
+4. В поле **Python version** выберите **Python 3.14**. Если его нет в списке, нажмите значок папки и укажите установленный интерпретатор. Его расположение можно узнать командой `py -3.14 -c "import sys; print(sys.executable)"` в Windows или `python3.14 -c "import sys; print(sys.executable)"` на Mac. Не копируйте чужой путь со снимка.
 5. Оставьте **Create a welcome script** включённым, а **Create Git repository** выключенным. Нажмите **Create** и дождитесь открытия проекта.
 
 <figure>
@@ -91,7 +105,7 @@ basePath: ../
 <figcaption>Настройка проекта: Location, Project venv, Python version и кнопка Create</figcaption>
 </figure>
 
-На снимке показано расположение поля Python version. Номер 3.11 в примере отличается от установленного по этой инструкции Python 3.13.
+На снимке показано расположение поля Python version. Номер 3.11 в примере отличается от установленного по этой инструкции Python 3.14.
 
 [Официальная инструкция создания проекта](https://www.jetbrains.com/help/pycharm/2025.3/creating-empty-project.html).
 
