@@ -14,11 +14,11 @@ backLabel: Установка программ
 
 | Компьютер | Python 3.14.10 | PyCharm 2025.3 |
 | --- | --- | --- |
-| Windows, Intel или AMD (x64) | [Скачать Python](https://www.python.org/ftp/python/3.14.10/python-3.14.10-amd64.exe) | [Скачать PyCharm](https://mirror.ismdeep.com/jetbrains/PyCharm/release/2025.3/2025.3/windows/pycharm-2025.3.exe) |
-| Mac с процессором Intel | [Скачать Python](https://www.python.org/ftp/python/3.14.10/python-3.14.10-macos11.pkg) | [Скачать PyCharm](https://mirror.ismdeep.com/jetbrains/PyCharm/release/2025.3/2025.3/mac/pycharm-2025.3.dmg) |
-| Mac с чипом Apple, серия M | [Скачать Python](https://www.python.org/ftp/python/3.14.10/python-3.14.10-macos11.pkg) | [Скачать PyCharm](https://mirror.ismdeep.com/jetbrains/PyCharm/release/2025.3/2025.3/macM1/pycharm-2025.3-aarch64.dmg) |
+| Windows, Intel или AMD (x64) | [Скачать Python](https://www.python.org/ftp/python/3.14.10/python-3.14.10-amd64.exe) | [Скачать PyCharm](https://github.com/ufarobot/learncs/releases/download/software-pycharm-community-2025.3/pycharm-2025.3.exe) |
+| Mac с процессором Intel | [Скачать Python](https://www.python.org/ftp/python/3.14.10/python-3.14.10-macos11.pkg) | [Скачать PyCharm](https://github.com/JetBrains/intellij-community/releases/download/pycharm/2025.3/pycharm-2025.3.dmg) |
+| Mac с чипом Apple, серия M | [Скачать Python](https://www.python.org/ftp/python/3.14.10/python-3.14.10-macos11.pkg) | [Скачать PyCharm](https://github.com/ufarobot/learncs/releases/download/software-pycharm-community-2025.3/pycharm-2025.3-aarch64.dmg) |
 
-На Mac тип процессора можно посмотреть в **меню Apple → Об этом Mac**. Ссылки PyCharm ведут на зеркало, используемое в LearnCS. Платная подписка для занятий не нужна.
+На Mac тип процессора можно посмотреть в **меню Apple → Об этом Mac**. Установщики PyCharm доступны на GitHub LearnCS и JetBrains. Платная подписка для занятий не нужна.
 
 <h2 id="windows">Windows</h2>
 
