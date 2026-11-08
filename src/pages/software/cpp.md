@@ -12,13 +12,13 @@ backLabel: Установка программ
 
 ## 1. Скачайте CLion
 
-Выберите свой компьютер. Ссылки ведут на зеркало загрузок, которое используется в LearnCS.
+Выберите свой компьютер. Ссылки ведут на официальный сайт JetBrains. Если загрузка недоступна в вашей сети, попробуйте VPN.
 
 | Компьютер | CLion 2026.2.4 |
 | --- | --- |
-| Windows, Intel или AMD | [Скачать](https://mirror.ismdeep.com/jetbrains/CLion/release/2026.2/2026.2.4/windows/CLion-2026.2.4.exe) |
-| Mac, Intel | [Скачать](https://mirror.ismdeep.com/jetbrains/CLion/release/2026.2/2026.2.4/mac/CLion-2026.2.4.dmg) |
-| Mac, чип Apple M1, M2 и новее | [Скачать](https://mirror.ismdeep.com/jetbrains/CLion/release/2026.2/2026.2.4/macM1/CLion-2026.2.4-aarch64.dmg) |
+| Windows, Intel или AMD | [Скачать](https://download.jetbrains.com/cpp/CLion-2026.2.4.exe) |
+| Mac, Intel | [Скачать](https://download.jetbrains.com/cpp/CLion-2026.2.4.dmg) |
+| Mac, чип Apple M1, M2 и новее | [Скачать](https://download.jetbrains.com/cpp/CLion-2026.2.4-aarch64.dmg) |
 
 На Mac тип процессора можно посмотреть в **меню Apple → Об этом Mac**.
 
