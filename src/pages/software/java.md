@@ -12,13 +12,13 @@ backLabel: Установка программ
 
 ## 1. Скачайте IntelliJ IDEA
 
-Выберите свой компьютер. Ссылки ведут на зеркало загрузок, которое используется в LearnCS.
+Выберите свой компьютер. Ссылки ведут на открытый выпуск IntelliJ IDEA от JetBrains на GitHub.
 
 | Компьютер | IntelliJ IDEA 2026.2.3 |
 | --- | --- |
-| Windows, Intel или AMD | [Скачать](https://mirror.ismdeep.com/jetbrains/IDEA/release/2026.2/2026.2.3/windows/idea-2026.2.3.exe) |
-| Mac, Intel | [Скачать](https://mirror.ismdeep.com/jetbrains/IDEA/release/2026.2/2026.2.3/mac/idea-2026.2.3.dmg) |
-| Mac, чип Apple M1, M2 и новее | [Скачать](https://mirror.ismdeep.com/jetbrains/IDEA/release/2026.2/2026.2.3/macM1/idea-2026.2.3-aarch64.dmg) |
+| Windows, Intel или AMD | [Скачать](https://github.com/JetBrains/intellij-community/releases/download/idea/2026.2.3/idea-2026.2.3.exe) |
+| Mac, Intel | [Скачать](https://github.com/JetBrains/intellij-community/releases/download/idea/2026.2.3/idea-2026.2.3.dmg) |
+| Mac, чип Apple M1, M2 и новее | [Скачать](https://github.com/JetBrains/intellij-community/releases/download/idea/2026.2.3/idea-2026.2.3-aarch64.dmg) |
 
 На Mac тип процессора можно посмотреть в **меню Apple → Об этом Mac**.
 
